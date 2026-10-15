@@ -3,23 +3,13 @@ import { Link } from '../utils/navigation';
 
 export function LogoMark({ size = 38 }: { size?: number }) {
   return (
-    <svg
-      aria-hidden="true"
+    <img
+      src="/logo.svg"
+      alt=""
       className="logo-mark"
-      width={size}
+      width={size * 2}
       height={size}
-      viewBox="0 0 48 48"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect width="48" height="48" rx="12" fill="#2e9fe5" />
-      <circle cx="21" cy="22" r="12.5" fill="#fff5ee" stroke="#123e5d" strokeWidth="2.5" />
-      <path d="M21 12.5V15.5M30.5 22H27.5M21 31.5V28.5" stroke="#123e5d" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M21 22L16.8 17.8M21 22L20 27.2" stroke="#123e5d" strokeWidth="2.3" strokeLinecap="round" />
-      <circle cx="21" cy="22" r="2" fill="#123e5d" />
-      <path d="M30 31L37 38" stroke="#123e5d" strokeWidth="3" strokeLinecap="round" />
-      <path d="M33 28H39M35 24H39" stroke="#123e5d" strokeWidth="2" strokeLinecap="round" />
-    </svg>
+    />
   );
 }
 

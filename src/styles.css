@@ -1330,8 +1330,7 @@ h3 {
 }
 
 .filter-panel {
-  position: sticky;
-  top: 96px;
+  position: static;
   display: grid;
   gap: 20px;
 }
