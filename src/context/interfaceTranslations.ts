@@ -5,9 +5,9 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "المواعيد"
   ],
   "About": [
-    "Acerca de MediQ",
+    "Acerca de MediQU",
     "关于",
-    "حول MediQ"
+    "حول MediQU"
   ],
   "Find care": [
     "Buscar atención",
@@ -38,11 +38,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "Cualquier calificación",
     "不限评分",
     "أي تقييم"
-  ],
-  "Fictional clinic reviews. No Google connection.": [
-    "Reseñas ficticias. Sin conexión con Google.",
-    "虚构诊所评价，未连接 Google。",
-    "تقييمات خيالية. لا يوجد اتصال بـ Google."
   ],
   "English": [
     "Inglés",
@@ -314,21 +309,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "正在定位…",
     "جارٍ تحديد الموقع…"
   ],
-  "Use demo location": [
-    "Usar ubicación de demostración",
-    "使用演示地点",
-    "استخدم الموقع التجريبي"
-  ],
-  "Approximate location · fictional clinics": [
-    "Ubicación aproximada · clínicas ficticias",
-    "大致位置 · 虚构诊所",
-    "موقع تقريبي · عيادات خيالية"
-  ],
-  "Demo distances from downtown Durham.": [
-    "Distancias de demostración desde el centro de Durham.",
-    "距达勒姆市中心的演示距离。",
-    "مسافات تجريبية من وسط دورهام."
-  ],
   "Location is unavailable. You can keep searching manually.": [
     "Ubicación no disponible. Puedes seguir buscando manualmente.",
     "无法定位。您仍可手动搜索。",
@@ -343,16 +323,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "Tu navegador pedirá permiso. La ubicación es opcional.",
     "浏览器将请求许可。位置权限是可选的。",
     "سيطلب المتصفح إذنك. مشاركة الموقع اختيارية."
-  ],
-  "Approximate distance to fictional Durham clinics. No live nearby-care data.": [
-    "Distancia aproximada a clínicas ficticias de Durham. No son datos reales de atención cercana.",
-    "到虚构达勒姆诊所的大致距离，并非实时附近诊所数据。",
-    "مسافة تقريبية إلى عيادات دورهام الخيالية. لا توجد بيانات حية للرعاية القريبة."
-  ],
-  "Morning and afternoon prioritize shorter historical visits when sorted by nearest. All data is fictional.": [
-    "Mañana y tarde priorizan visitas históricas más cortas al ordenar por cercanía. Todos los datos son ficticios.",
-    "按最近排序时，上午和下午优先显示历史就诊较短的诊所。所有数据均为虚构。",
-    "يعطي الصباح والمساء الأولوية للزيارات التاريخية الأقصر عند الترتيب حسب الأقرب. جميع البيانات خيالية."
   ],
   "Clinics matching your plan: {count}": [
     "Clínicas que coinciden: {count}",
@@ -404,16 +374,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "重试",
     "حاول مجددًا"
   ],
-  "We couldn’t load the demo clinics": [
-    "No se pudieron cargar las clínicas",
-    "无法加载演示诊所",
-    "تعذر تحميل العيادات التجريبية"
-  ],
-  "The sample service had a problem. Your filters are still here.": [
-    "Hubo un problema. Tus filtros se mantienen.",
-    "演示服务遇到问题。筛选条件已保留。",
-    "حدثت مشكلة في الخدمة التجريبية. فلاترك ما زالت محفوظة."
-  ],
   "No clinics match everything yet": [
     "Ninguna clínica coincide con todo",
     "没有符合所有条件的诊所",
@@ -424,11 +384,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "请扩大距离或移除一个筛选条件。搜索文字将保留。",
     "جرّب مسافة أكبر أو أزل أحد الفلاتر. لن تفقد نص البحث."
   ],
-  "Demo total visit estimate": [
-    "Duración total estimada de demostración",
-    "演示就诊总时长估计",
-    "تقدير تجريبي لمدة الزيارة الكاملة"
-  ],
   "Report a wait": [
     "Reportar una espera",
     "报告等待时间",
@@ -438,11 +393,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "Ver clínica",
     "查看诊所",
     "عرض العيادة"
-  ],
-  "sample reviews": [
-    "reseñas de muestra",
-    "条示例评价",
-    "تقييمات تجريبية"
   ],
   "Learn more": [
     "Más información",
@@ -458,36 +408,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "Cada duración estima la visita completa e incluye una señal de confianza independiente.",
     "每个时长均为完整就诊估计，并附有独立可信度指标。",
     "كل وقت معروض هو تقدير للزيارة الكاملة مع مؤشر موثوقية مستقل."
-  ],
-  "Demo center": [
-    "Centro de demostración",
-    "演示中心位置",
-    "مركز تجريبي"
-  ],
-  "Stylized prototype map": [
-    "Mapa ilustrativo del prototipo",
-    "原型示意地图",
-    "خريطة توضيحية للنموذج"
-  ],
-  "Prototype data": [
-    "Datos del prototipo",
-    "原型数据",
-    "بيانات النموذج الأولي"
-  ],
-  "Durham demo · fictional data": [
-    "Demo de Durham · datos ficticios",
-    "达勒姆演示 · 虚构数据",
-    "عرض دورهام · بيانات خيالية"
-  ],
-  "Fictional clinic": [
-    "Clínica ficticia",
-    "虚构诊所",
-    "عيادة خيالية"
-  ],
-  "Sample": [
-    "Ejemplo",
-    "示例",
-    "عينة"
   ],
   "Stored on this device": [
     "Guardado en este dispositivo",
@@ -579,11 +499,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "预计结束",
     "الانتهاء المتوقع"
   ],
-  "Simulated travel": [
-    "Viaje simulado",
-    "模拟行程",
-    "تنقل محاكى"
-  ],
   "Your arrival buffer": [
     "Tu margen de llegada",
     "您的到达预留时间",
@@ -598,16 +513,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "Reportar después de la visita",
     "就诊后报告",
     "الإبلاغ بعد الزيارة"
-  ],
-  "Current demo estimate": [
-    "Estimación actual de demostración",
-    "当前演示估计",
-    "التقدير التجريبي الحالي"
-  ],
-  "Sample upcoming visit": [
-    "Próxima visita de ejemplo",
-    "示例即将就诊",
-    "زيارة قادمة تجريبية"
   ],
   "Upcoming visit": [
     "Próxima visita",
@@ -689,11 +594,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "选择更稳定的时段",
     "اختر وقتًا أكثر استقرارًا"
   ],
-  "Sample total-visit patterns from the last eight weeks.": [
-    "Patrones de ejemplo de las últimas ocho semanas.",
-    "过去八周的示例完整就诊规律。",
-    "أنماط تجريبية للزيارة الكاملة خلال الأسابيع الثمانية الماضية."
-  ],
   "Modeled history": [
     "Historial modelado",
     "模拟历史",
@@ -764,25 +664,10 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "医生",
     "مقدمو الرعاية"
   ],
-  "Booking placeholder": [
-    "Reserva de demostración",
-    "预约占位功能",
-    "حجز تجريبي"
-  ],
-  "Next simulated availability": [
-    "Próxima disponibilidad simulada",
-    "下次模拟可预约时间",
-    "التوفر المحاكى التالي"
-  ],
   "More than one rating": [
     "Más de una calificación",
     "多维度评价",
     "أكثر من تقييم واحد"
-  ],
-  "Sample clinic experience": [
-    "Experiencia clínica de ejemplo",
-    "示例诊所体验",
-    "تجربة عيادة تجريبية"
   ],
   "Provider": [
     "Profesional",
@@ -829,20 +714,10 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "接受的保险",
     "التأمين المقبول"
   ],
-  "sample list": [
-    "lista de ejemplo",
-    "示例列表",
-    "قائمة تجريبية"
-  ],
   "Appointment or planned arrival": [
     "Cita o llegada prevista",
     "预约或计划到达时间",
     "الموعد أو الوصول المخطط"
-  ],
-  "Simulated travel time": [
-    "Tiempo de viaje simulado",
-    "模拟行程时间",
-    "وقت التنقل المحاكى"
   ],
   "Arrival buffer": [
     "Margen de llegada",
@@ -1054,10 +929,10 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "帮助大家了解时长以外的体验。",
     "يساعد الناس على فهم ما وراء الدقائق."
   ],
-  "Compared with the MediQ estimate, your visit was…": [
-    "Comparada con la estimación de MediQ, tu visita fue…",
-    "与 MediQ 估计相比，您的就诊…",
-    "مقارنة بتقدير MediQ، كانت زيارتك…"
+  "Compared with the MediQU estimate, your visit was…": [
+    "Comparada con la estimación de MediQU, tu visita fue…",
+    "与 MediQU 估计相比，您的就诊…",
+    "مقارنة بتقدير MediQU، كانت زيارتك…"
   ],
   "Shorter": [
     "Más corta",
@@ -1119,11 +994,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "您的隐私选择",
     "خيار الخصوصية الخاص بك"
   ],
-  "This prototype does not require an account.": [
-    "Este prototipo no requiere una cuenta.",
-    "此原型无需账号。",
-    "هذا النموذج لا يتطلب حسابًا."
-  ],
   "Submit anonymously": [
     "Enviar de forma anónima",
     "匿名提交",
@@ -1144,20 +1014,10 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "提交前可检查所有答案。",
     "يمكنك مراجعة كل إجابة قبل الإرسال."
   ],
-  "Submit sample report": [
-    "Enviar reporte de muestra",
-    "提交示例报告",
-    "إرسال تقرير تجريبي"
-  ],
   "Checking report…": [
     "Comprobando reporte…",
     "正在检查报告…",
     "جارٍ التحقق من التقرير…"
-  ],
-  "Sample report added": [
-    "Reporte de muestra añadido",
-    "已添加示例报告",
-    "تمت إضافة التقرير التجريبي"
   ],
   "That’s one more useful signal.": [
     "Una señal útil más.",
@@ -1319,26 +1179,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "期待您的意见。",
     "يسعدنا سماعك."
   ],
-  "Questions, ideas, or a clinic partnership? Try the demo contact form.": [
-    "¿Preguntas, ideas o una colaboración? Prueba el formulario de demostración.",
-    "有问题、想法或诊所合作意向？试用演示联系表单。",
-    "أسئلة أو أفكار أو شراكة عيادة؟ جرّب نموذج الاتصال التجريبي."
-  ],
-  "Demo only · no message is sent": [
-    "Solo demo · no se envía ningún mensaje",
-    "仅演示 · 不会发送消息",
-    "عرض تجريبي فقط · لن تُرسل رسالة"
-  ],
-  "Demo submission complete": [
-    "Envío de demostración completado",
-    "演示提交完成",
-    "اكتمل الإرسال التجريبي"
-  ],
-  "Nothing was sent or saved. A connected contact service would deliver your message here.": [
-    "No se envió ni guardó nada. Un servicio conectado entregaría el mensaje.",
-    "未发送或保存任何内容。连接联系服务后可投递消息。",
-    "لم يُرسل أو يُحفظ شيء. ستوصل خدمة اتصال متصلة رسالتك هنا."
-  ],
   "Try another message": [
     "Probar otro mensaje",
     "尝试另一条消息",
@@ -1389,16 +1229,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "请勿在反馈中包含个人或医疗详情。",
     "شارك ملاحظاتك دون تفاصيل شخصية أو طبية."
   ],
-  "Please use sample text. This form has no email or backend connection.": [
-    "Usa texto de ejemplo. El formulario no tiene conexión de correo ni servidor.",
-    "请使用示例文字。此表单未连接邮件或后端服务。",
-    "يرجى استخدام نص تجريبي. هذا النموذج غير متصل ببريد أو خادم."
-  ],
-  "Submit demo message": [
-    "Enviar mensaje de demostración",
-    "提交演示消息",
-    "إرسال رسالة تجريبية"
-  ],
   "Product tour": [
     "Recorrido del producto",
     "产品导览",
@@ -1434,25 +1264,25 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "查看完整就诊的预计时间，而不只是候诊时间。",
     "اطلع على الوقت المقدر للزيارة الكاملة، بما فيها الانتظار والرعاية."
   ],
-  "See how much confidence MediQ has in each estimate.": [
-    "Consulta la confianza de MediQ en cada estimación.",
-    "了解 MediQ 对每项估计的可信度。",
-    "اطلع على مدى موثوقية كل تقدير في MediQ."
+  "See how much confidence MediQU has in each estimate.": [
+    "Consulta la confianza de MediQU en cada estimación.",
+    "了解 MediQU 对每项估计的可信度。",
+    "اطلع على مدى موثوقية كل تقدير في MediQU."
   ],
   "Plan saved visits and see when to leave.": [
     "Planifica visitas guardadas y consulta cuándo salir.",
     "规划已保存的就诊，查看何时出发。",
     "خطط للزيارات المحفوظة واعرف متى تغادر."
   ],
-  "Share your visit experience to improve MediQ’s timing information.": [
-    "Comparte tu experiencia para mejorar la información de tiempos de MediQ.",
-    "分享就诊体验，帮助改善 MediQ 的时间信息。",
-    "شارك تجربة زيارتك لتحسين معلومات التوقيت في MediQ."
+  "Share your visit experience to improve MediQU’s timing information.": [
+    "Comparte tu experiencia para mejorar la información de tiempos de MediQU.",
+    "分享就诊体验，帮助改善 MediQU 的时间信息。",
+    "شارك تجربة زيارتك لتحسين معلومات التوقيت في MediQU."
   ],
-  "About MediQ": [
-    "Acerca de MediQ",
-    "关于 MediQ",
-    "حول MediQ"
+  "About MediQU": [
+    "Acerca de MediQU",
+    "关于 MediQU",
+    "حول MediQU"
   ],
   "Make room for care, with a clearer picture of your day.": [
     "Haz espacio para la atención con una visión más clara de tu día.",
@@ -1464,10 +1294,10 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "关于页面章节",
     "أقسام التعريف"
   ],
-  "Why MediQ": [
-    "Por qué MediQ",
-    "为什么选择 MediQ",
-    "لماذا MediQ"
+  "Why MediQU": [
+    "Por qué MediQU",
+    "为什么选择 MediQU",
+    "لماذا MediQU"
   ],
   "Patient Journey": [
     "Recorrido del paciente",
@@ -1484,10 +1314,10 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "可靠性",
     "الموثوقية"
   ],
-  "A visit can affect work, childcare, transport, and the rest of your day. MediQ brings clinic options, total visit estimates, and planning tools together so you can make a more informed plan.": [
-    "Una visita puede afectar el trabajo, el cuidado infantil, el transporte y el resto del día. MediQ reúne clínicas, estimaciones de duración total y herramientas para planificar mejor.",
-    "一次就诊会影响工作、育儿、交通和当天其他安排。MediQ 整合诊所选择、总就诊时长估计和规划工具，帮助您做出更充分的安排。",
-    "قد تؤثر الزيارة على العمل ورعاية الأطفال والتنقل وبقية يومك. يجمع MediQ خيارات العيادات وتقديرات مدة الزيارة الكاملة وأدوات التخطيط لتتمكن من وضع خطة أوضح."
+  "A visit can affect work, childcare, transport, and the rest of your day. MediQU brings clinic options, total visit estimates, and planning tools together so you can make a more informed plan.": [
+    "Una visita puede afectar el trabajo, el cuidado infantil, el transporte y el resto del día. MediQU reúne clínicas, estimaciones de duración total y herramientas para planificar mejor.",
+    "一次就诊会影响工作、育儿、交通和当天其他安排。MediQU 整合诊所选择、总就诊时长估计和规划工具，帮助您做出更充分的安排。",
+    "قد تؤثر الزيارة على العمل ورعاية الأطفال والتنقل وبقية يومك. يجمع MediQU خيارات العيادات وتقديرات مدة الزيارة الكاملة وأدوات التخطيط لتتمكن من وضع خطة أوضح."
   ],
   "Compare": [
     "Comparar",
@@ -1539,16 +1369,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "总时长估计涵盖到达到离院。登记包括到达和登记手续；等待是接诊前的时间；诊疗是与医生的时间；离院手续是离开前的最后步骤。",
     "يغطي التقدير الإجمالي الوصول حتى المغادرة. يشمل تسجيل الوصول الحضور والتسجيل؛ والانتظار هو الوقت قبل مقدم الرعاية؛ والرعاية هي الوقت معه؛ وإتمام المغادرة يشمل الخطوات الأخيرة قبل الرحيل."
   ],
-  "minutes · fictional example": [
-    "minutos · ejemplo ficticio",
-    "分钟 · 虚构示例",
-    "دقيقة · مثال خيالي"
-  ],
-  "A range leaves room for variation. Historical patterns help compare times of day. Every clinic and estimate in this prototype is fictional.": [
-    "Un rango refleja la variación. Los patrones históricos ayudan a comparar horarios. Todas las clínicas y estimaciones de este prototipo son ficticias.",
-    "范围体现时间的变化。历史规律帮助比较不同时段。本原型中的所有诊所和估计均为虚构。",
-    "يترك النطاق مجالًا للتغير. تساعد الأنماط التاريخية في مقارنة أوقات اليوم. كل عيادة وتقدير في هذا النموذج خيالي."
-  ],
   "Confidence describes the timing evidence: how recent, plentiful, consistent, and varied the reports are. It is separate from a clinic’s star rating and does not measure medical quality or guarantee a finish time.": [
     "La confianza describe la evidencia de tiempos: actualidad, cantidad, coherencia y diversidad de reportes. Es independiente de las estrellas de la clínica y no mide la calidad médica ni garantiza la hora de finalización.",
     "可信度描述时间证据，包括报告的新鲜度、数量、一致性和多样性。它与诊所星级评分分开，不衡量医疗质量，也不保证结束时间。",
@@ -1559,11 +1379,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "紧急病例、人员变动和患者需求差异会改变就诊时长。请直接向诊所确认营业时间、保险和预约。",
     "قد تغير الحالات العاجلة وتغيرات الموظفين واحتياجات المرضى أوقات الزيارة. أكّد الساعات والتأمين والحجوزات مباشرة مع العيادة."
   ],
-  "Privacy and demo limitations": [
-    "Privacidad y límites de la demo",
-    "隐私与演示限制",
-    "الخصوصية وحدود العرض التجريبي"
-  ],
   "Saved visits, preferences, and reports stay in this browser. Location is optional and is not saved. Do not enter medical or identifying details. There is no live booking, email, Google rating, or clinic connection.": [
     "Las visitas, preferencias y reportes se quedan en este navegador. La ubicación es opcional y no se guarda. No introduzcas datos médicos ni identificativos. No hay conexión real de reservas, correo, Google ni clínicas.",
     "保存的就诊、偏好和报告留在此浏览器中。位置可选且不保存。请勿输入医疗或身份信息。没有实时预约、邮件、Google 评分或诊所连接。",
@@ -1573,11 +1388,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "Acceso de invitado y futuras cuentas",
     "访客访问与未来账号",
     "وصول الضيف والحسابات المستقبلية"
-  ],
-  "All prototype tools are available as a guest. Account sync and any optional Plus features remain future concepts; no pricing or paid service is offered here.": [
-    "Todas las herramientas están disponibles como invitado. La sincronización y las funciones Plus son conceptos futuros; aquí no se ofrecen precios ni servicios de pago.",
-    "所有原型工具均可作为访客使用。账号同步和可选 Plus 功能仍属未来构想；此处不提供定价或付费服务。",
-    "جميع أدوات النموذج متاحة للضيف. مزامنة الحساب وميزات Plus الاختيارية مفاهيم مستقبلية؛ لا توجد أسعار أو خدمات مدفوعة هنا."
   ],
   "Privacy approach": [
     "Enfoque de privacidad",
@@ -1599,16 +1409,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "医疗情况难以预测，您的日程可以更清晰。",
     "الرعاية قد تكون غير متوقعة. جدولك لا ينبغي أن يكون كذلك."
   ],
-  "Prototype only.": [
-    "Solo prototipo.",
-    "仅为原型。",
-    "نموذج أولي فقط."
-  ],
-  "All clinics, people, reports, availability, and estimates are fictional.": [
-    "Todas las clínicas, personas, reportes, disponibilidades y estimaciones son ficticias.",
-    "所有诊所、人员、报告、可预约时间及估计均为虚构。",
-    "جميع العيادات والأشخاص والتقارير والتوفر والتقديرات خيالية."
-  ],
   "Wait estimates are planning information, not medical advice or guarantees. If you believe you are experiencing a medical emergency, contact emergency services.": [
     "Las estimaciones sirven para planificar; no son consejos médicos ni garantías. Si crees que tienes una emergencia médica, contacta con los servicios de emergencia.",
     "等待时间估计仅供规划，并非医疗建议或保证。如您认为自己遇到医疗紧急情况，请联系急救服务。",
@@ -1629,11 +1429,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "未找到该诊所",
     "تعذر العثور على هذه العيادة"
   ],
-  "The clinic may have moved out of this fictional demo set.": [
-    "Es posible que la clínica ya no esté en este conjunto ficticio.",
-    "该诊所可能不在此虚构演示数据中。",
-    "قد تكون العيادة خارج هذه المجموعة التجريبية الخيالية."
-  ],
   "Back to care search": [
     "Volver a buscar atención",
     "返回诊疗搜索",
@@ -1643,11 +1438,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "Esta página no está en el plan.",
     "此页面不在就诊计划中。",
     "هذه الصفحة ليست ضمن خطة الرعاية."
-  ],
-  "Let’s get you back to the fictional Durham clinic guide.": [
-    "Volvamos a la guía de clínicas ficticias de Durham.",
-    "返回虚构的达勒姆诊所指南。",
-    "لنعد إلى دليل عيادات دورهام الخيالي."
   ],
   "Healthcare planning, made human": [
     "Planificación de atención para las personas",
@@ -1669,10 +1459,10 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "浏览无需提供病史。",
     "لا حاجة لسجل طبي للتصفح."
   ],
-  "Welcome to MediQ": [
-    "Bienvenido a MediQ",
-    "欢迎使用 MediQ",
-    "مرحبًا بك في MediQ"
+  "Welcome to MediQU": [
+    "Bienvenido a MediQU",
+    "欢迎使用 MediQU",
+    "مرحبًا بك في MediQU"
   ],
   "How would you like to start?": [
     "¿Cómo quieres empezar?",
@@ -1709,11 +1499,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "无需健康信息",
     "دون معلومات صحية"
   ],
-  "Full prototype access": [
-    "Acceso completo al prototipo",
-    "完整原型访问",
-    "وصول كامل للنموذج"
-  ],
   "Explore as a guest": [
     "Explorar como invitado",
     "以访客身份探索",
@@ -1733,11 +1518,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "La autenticación aún no está conectada.",
     "尚未连接身份验证。",
     "تسجيل الدخول غير متصل بعد."
-  ],
-  "This demo will preview account features without collecting personal or medical information.": [
-    "La demo muestra funciones de cuenta sin recopilar datos personales ni médicos.",
-    "此演示预览账号功能，不收集个人或医疗信息。",
-    "يعاين هذا العرض ميزات الحساب دون جمع معلومات شخصية أو طبية."
   ],
   "Continue with preview": [
     "Continuar con la vista previa",
@@ -1759,10 +1539,10 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "构想",
     "مفهوم"
   ],
-  "See the questions MediQ must answer before any optional planning tier is defined.": [
+  "See the questions MediQU must answer before any optional planning tier is defined.": [
     "Conoce las preguntas pendientes antes de definir un nivel opcional de planificación.",
-    "了解定义可选规划服务前 MediQ 需要解决的问题。",
-    "اطلع على الأسئلة التي يجب على MediQ الإجابة عنها قبل تحديد أي فئة تخطيط اختيارية."
+    "了解定义可选规划服务前 MediQU 需要解决的问题。",
+    "اطلع على الأسئلة التي يجب على MediQU الإجابة عنها قبل تحديد أي فئة تخطيط اختيارية."
   ],
   "View the concept": [
     "Ver el concepto",
@@ -1799,11 +1579,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "已移除保存的就诊。",
     "أُزيلت الزيارة المحفوظة."
   ],
-  "Thank you—your sample report was added.": [
-    "Gracias. Tu reporte de muestra se ha añadido.",
-    "谢谢，已添加您的示例报告。",
-    "شكرًا لك، تمت إضافة تقريرك التجريبي."
-  ],
   "Language preference saved.": [
     "Preferencia de idioma guardada.",
     "语言偏好已保存。",
@@ -1833,11 +1608,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "Los reportes se quedan en este navegador. No incluyas datos personales ni médicos.",
     "报告保留在此浏览器中。请勿包含个人或医疗详情。",
     "تبقى التقارير في هذا المتصفح. لا تُدرج تفاصيل شخصية أو طبية."
-  ],
-  "Fictional number": [
-    "Número ficticio",
-    "虚构号码",
-    "رقم خيالي"
   ],
   "Languages listed": [
     "Idiomas indicados",
@@ -1879,16 +1649,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "比较外部评价来源",
     "قارن مصادر التقييم الخارجية"
   ],
-  "Future queue concept": [
-    "Concepto futuro de cola",
-    "未来排队构想",
-    "مفهوم طابور مستقبلي"
-  ],
-  "Simulated": [
-    "Simulado",
-    "模拟",
-    "محاكاة"
-  ],
   "Know when conditions change": [
     "Entérate de los cambios",
     "了解情况变化",
@@ -1904,40 +1664,10 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "保险覆盖和网络状态可能变化，请在预约前直接确认。",
     "قد تتغير التغطية وحالة الشبكة. أكّد مباشرة قبل الحجز."
   ],
-  "MediQ does not recommend a diagnosis or choose a specialty for you.": [
-    "MediQ no recomienda diagnósticos ni elige una especialidad por ti.",
-    "MediQ 不提供诊断建议，也不为您选择专科。",
-    "لا يوصي MediQ بتشخيص أو يختار تخصصًا لك."
-  ],
-  "Notify me of changes": [
-    "Avisarme de cambios",
-    "通知我变化",
-    "أبلغني بالتغييرات"
-  ],
-  "Demo alert on": [
-    "Alerta demo activada",
-    "演示提醒已开启",
-    "التنبيه التجريبي مفعّل"
-  ],
-  "Booking is a demo placeholder. No appointment was booked.": [
-    "La reserva es una demostración. No se ha reservado ninguna cita.",
-    "预约为演示占位功能，未预约任何就诊。",
-    "الحجز تجريبي. لم يُحجز أي موعد."
-  ],
-  "External reviews are not connected in this prototype.": [
-    "Las reseñas externas no están conectadas en este prototipo.",
-    "此原型未连接外部评价。",
-    "التقييمات الخارجية غير متصلة في هذا النموذج."
-  ],
-  "Simulated estimate-change alert turned off.": [
-    "Alerta simulada de cambios desactivada.",
-    "已关闭模拟估计变化提醒。",
-    "أُوقف تنبيه تغير التقدير المحاكى."
-  ],
-  "Simulated alert on. Production notifications require clinic queue data.": [
-    "Alerta simulada activada. Las notificaciones reales requieren datos de la clínica.",
-    "模拟提醒已开启。正式通知需要诊所排队数据。",
-    "التنبيه المحاكى مفعّل. تتطلب الإشعارات الفعلية بيانات طابور العيادة."
+  "MediQU does not recommend a diagnosis or choose a specialty for you.": [
+    "MediQU no recomienda diagnósticos ni elige una especialidad por ti.",
+    "MediQU 不提供诊断建议，也不为您选择专科。",
+    "لا يوصي MediQU بتشخيص أو يختار تخصصًا لك."
   ],
   "Your plan could not be saved. Please try again.": [
     "No se pudo guardar tu plan. Inténtalo de nuevo.",
@@ -1989,16 +1719,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "分钟前",
     "دقائق مضت"
   ],
-  "sample plans": [
-    "planes de ejemplo",
-    "种示例保险计划",
-    "خطط تجريبية"
-  ],
-  "recent sample reports contribute to this view.": [
-    "reportes recientes de muestra contribuyen a esta vista.",
-    "条近期示例报告用于此视图。",
-    "تقارير تجريبية حديثة تسهم في هذا العرض."
-  ],
   "min estimated visit": [
     "min de visita estimada",
     "分钟预计就诊",
@@ -2013,11 +1733,6 @@ export const interfaceTranslations: Record<string, readonly [string, string, str
     "min de margen",
     "分钟预留",
     "دقيقة احتياطية"
-  ],
-  "min demo visit": [
-    "min de visita demo",
-    "分钟演示就诊",
-    "دقيقة زيارة تجريبية"
   ],
   "about": [
     "aproximadamente",

@@ -12,7 +12,7 @@ import {
 import { useState } from 'react';
 import { LanguageSelector } from '../components/Layout';
 import { Brand } from '../components/Brand';
-import { DemoBadge, SafetyNote } from '../components/UI';
+import { StatusBadge, SafetyNote } from '../components/UI';
 import { useApp } from '../context/AppContext';
 import { Link, navigate } from '../utils/navigation';
 
@@ -26,7 +26,7 @@ export function OnboardingPage() {
         <div className="onboarding-brand-row">
           <Brand />
           <LanguageSelector />
-          <DemoBadge />
+          <StatusBadge />
         </div>
 
         <div className="onboarding-copy">
@@ -35,7 +35,7 @@ export function OnboardingPage() {
           <p> {t("See how long a visit may take, how reliable that estimate is, and when to leave—before your day gets away from you.")} </p>
         </div>
 
-        <div className="preview-card" aria-label={t('Example MediQ visit estimate')}>
+        <div className="preview-card" aria-label={t('Example MediQU visit estimate')}>
           <div className="preview-card-header">
             <span><MapPin aria-hidden="true" /> Durham, NC</span>
             <span className="status status-open"><span /> {t("Open now")}</span>
@@ -66,7 +66,7 @@ export function OnboardingPage() {
 
       <section className="onboarding-options" aria-labelledby="start-title">
         <div className="onboarding-options-inner">
-          <span className="eyebrow">{t("Welcome to MediQ")}</span>
+          <span className="eyebrow">{t("Welcome to MediQU")}</span>
           <h2 id="start-title">{t("How would you like to start?")}</h2>
           <p className="section-intro">{t("You can explore the full care-finding experience without an account.")}</p>
 
@@ -80,7 +80,7 @@ export function OnboardingPage() {
                 <ul>
                   <li><Check aria-hidden="true" /> {t("No sign-up")}</li>
                   <li><Check aria-hidden="true" /> {t("No health information")}</li>
-                  <li><Check aria-hidden="true" /> {t("Full prototype access")}</li>
+                  <li><Check aria-hidden="true" /> {t("Full access")}</li>
                 </ul>
               </div>
               <button className="button button-primary button-large" type="button" onClick={enterAsGuest}> {t("Explore as a guest")} <ArrowRight aria-hidden="true" />
@@ -103,7 +103,7 @@ export function OnboardingPage() {
                   <h3>{t("Explore future Plus")}</h3>
                   <span>{t("Concept")}</span>
                 </div>
-                <p>{t("See the questions MediQ must answer before any optional planning tier is defined.")}</p>
+                <p>{t("See the questions MediQU must answer before any optional planning tier is defined.")}</p>
               </div>
               <Link className="button button-ghost button-large" to="/know#access"> {t("View the concept")} <ArrowRight aria-hidden="true" />
               </Link>

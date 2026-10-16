@@ -1,4 +1,4 @@
-# MediQ upgrade verification
+# MediQU upgrade verification
 
 Verified locally on September 28, 2026 on branch `codex/mediq-platform-upgrade`. No production service, cloud database, domain or email sender was changed.
 

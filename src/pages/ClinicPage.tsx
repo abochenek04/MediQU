@@ -28,7 +28,7 @@ import {
   RatingStars,
   VisitBreakdown,
 } from '../components/ClinicComponents';
-import { DemoBadge, InfoNote, Modal, PageLoader, ReliabilityBadge, SafetyNote } from '../components/UI';
+import { StatusBadge, InfoNote, Modal, PageLoader, ReliabilityBadge, SafetyNote } from '../components/UI';
 import { useApp } from '../context/AppContext';
 import { backendEnabled } from '../services/api';
 import { clinicService } from '../services/clinicService';
@@ -87,7 +87,7 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
         <div className="empty-state">
           <span className="empty-icon"><MapPin aria-hidden="true" /></span>
           <h1>{t("We couldn’t find that clinic")}</h1>
-          <p>{t("The clinic may have moved out of this fictional demo set.")}</p>
+          <p>{t("This clinic is no longer available in the directory.")}</p>
           <Link className="button button-primary" to="/find">{t("Back to care search")}</Link>
         </div>
       </div>
@@ -117,15 +117,15 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
   };
 
   const handleBooking = (providerName?: string) => {
-    pushToast(t('Booking is a demo placeholder. No appointment was booked.'), 'info');
+    pushToast(t('Contact the clinic directly to book an appointment. No appointment has been booked.'), 'info');
   };
 
   const toggleQueueAlert = () => {
     setQueueAlertOn((current) => !current);
     pushToast(
       queueAlertOn
-        ? t('Simulated estimate-change alert turned off.')
-        : t('Simulated alert on. Production notifications require clinic queue data.'),
+        ? t('Estimate-change preference turned off.')
+        : t('Preference selected for this visit. Notifications are not available yet.'),
       'info',
     );
   };
@@ -148,7 +148,7 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
               <div>
                 <div className="title-kicker-row">
                   <span className="eyebrow">{clinic.type}</span>
-                  <DemoBadge label={t("Fictional clinic")} />
+                  <StatusBadge label={t("Clinic details")} />
                 </div>
                 <h1>{clinic.name}</h1>
                 <p><MapPin aria-hidden="true" /> {clinic.address} · {clinic.distanceMiles.toFixed(1)} {t("mi away")}</p>
@@ -171,9 +171,9 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
 
           <div className="clinic-facts">
             <div><span className={`status status-${clinic.status}`}><span /> {clinic.status === 'open' ? t('Open · Closes {time}', { time: clinic.closesAt || '' }) : t('Closed · Opens {time}', { time: clinic.opensAt || '' })}</span><small>{t("Today:")} {clinic.hours.today}</small></div>
-            <div><Phone aria-hidden="true" /><span><strong>{clinic.phone}</strong><small>{t("Fictional number")}</small></span></div>
+            <div><Phone aria-hidden="true" /><span><strong>{clinic.phone}</strong><small>{t("Clinic phone")}</small></span></div>
             <div><Languages aria-hidden="true" /><span><strong>{clinic.languages.join(', ')}</strong><small>{t("Languages listed")}</small></span></div>
-            <div><ShieldCheck aria-hidden="true" /><span><strong>{clinic.insurance.length} {t("sample plans")}</strong><small>{t("Confirm coverage with clinic")}</small></span></div>
+            <div><ShieldCheck aria-hidden="true" /><span><strong>{clinic.insurance.length} {t("insurance plans")}</strong><small>{t("Confirm coverage with clinic")}</small></span></div>
           </div>
         </div>
       </div>
@@ -199,7 +199,7 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
 
           <div className="live-estimate-card">
             <div className="live-number-panel">
-              <span>{t("Demo total visit estimate")}</span>
+              <span>{t("Total visit estimate")}</span>
               <strong>{estimate.totalMinutes}<small> {t("min")}</small></strong>
               <p>{t("Likely range:")} {estimate.range[0]}–{estimate.range[1]} {t("minutes")}</p>
               <div className="live-update"><Clock3 aria-hidden="true" /> {t("Updated")} {estimate.updatedMinutesAgo} {t("minutes ago")}</div>
@@ -210,8 +210,8 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
                 <ReliabilityBadge score={reliability.score} level={reliability.level} />
               </div>
               <VisitBreakdown estimate={estimate} />
-              {backendEnabled && <p className="info-note">{t(estimate.evidenceState === 'ready' ? 'Report-based total. Stage proportions are modeled, not measured.' : 'Not enough fresh reports. The displayed reference is fictional, not a live estimate.')}</p>}
-              <p className="estimate-source-line"><Users aria-hidden="true" /> {estimate.contributingReports} {t("recent sample reports contribute to this view.")}</p>
+              {backendEnabled && <p className="info-note">{t(estimate.evidenceState === 'ready' ? 'Report-based total. Stage proportions are modeled, not measured.' : 'Not enough recent reports for a live estimate. Use the displayed timing as a planning reference.')}</p>}
+              <p className="estimate-source-line"><Users aria-hidden="true" /> {estimate.contributingReports} {t("recent reports contribute to this view.")}</p>
             </div>
             <div className="live-action-panel">
               <CalendarPlus aria-hidden="true" />
@@ -230,7 +230,7 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
               <div>
                 <span className="eyebrow">{t("Historical patterns")}</span>
                 <h2 id="history-title">{t("Choose a steadier time")}</h2>
-                <p>{t("Sample total-visit patterns from the last eight weeks.")}</p>
+                <p>{t("Total-visit patterns from the last eight weeks.")}</p>
               </div>
               <span className="sample-chip">{t("Modeled history")}</span>
             </div>
@@ -276,7 +276,7 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
                       <strong>{report.reportKind === 'current-wait' ? `${report.elapsedMinutes} ${t('min waiting so far')}` : `${report.totalMinutes} ${t('min total')}`} </strong>
                       <span className="mode-pill subtle">{t(formatMode(report.visitMode))}</span>
                     </div>
-                    <p>{report.source === 'patient report' ? t(backendEnabled ? 'Patient report' : 'Patient-submitted sample') : report.source} · {report.anonymous ? t("Anonymous") : t("Source labeled")}</p>
+                    <p>{report.source === 'patient report' ? t('Patient report') : report.source === 'clinic sample' ? t('Clinic report') : t(report.source)} · {report.anonymous ? t("Anonymous") : t("Source labeled")}</p>
                     {report.note && <blockquote>“{report.note}”</blockquote>}
                   </div>
                   <time dateTime={report.submittedAt}>{relativeReportTime(report.submittedAt)}</time>
@@ -299,11 +299,11 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
                   <div className="provider-details">
                     <h3>{provider.name}</h3>
                     <p>{provider.role}</p>
-                    <div className="provider-rating"><RatingStars value={provider.rating} label={`${provider.name} rating`} /><span>{provider.reviewCount} {t("sample reviews")}</span></div>
+                    <div className="provider-rating"><RatingStars value={provider.rating} label={`${provider.name} rating`} /><span>{provider.reviewCount} {t("reviews")}</span></div>
                     <blockquote>“{provider.reviewContext}”</blockquote>
-                    <div className="availability"><Clock3 aria-hidden="true" /><span><small>{t("Next simulated availability")}</small><strong>{provider.nextAvailability}</strong></span></div>
+                    <div className="availability"><Clock3 aria-hidden="true" /><span><small>{t("Next availability")}</small><strong>{provider.nextAvailability}</strong></span></div>
                   </div>
-                  <button className="button button-secondary" type="button" onClick={() => handleBooking(provider.name)}>{t("Booking placeholder")} <ExternalLink aria-hidden="true" /></button>
+                  <button className="button button-secondary" type="button" onClick={() => handleBooking(provider.name)}>{t("Booking information")} <ExternalLink aria-hidden="true" /></button>
                 </article>
               ))}
             </div>
@@ -317,13 +317,13 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
               <h2 id="reviews-title">{t("More than one rating")}</h2>
               <p>{t("Clinic experience and provider experience answer different questions.")}</p>
             </div>
-            <div className="overall-rating"><Star aria-hidden="true" fill="currentColor" /><strong>{averageRating.toFixed(1)}</strong><span>{t("Sample clinic experience")}</span></div>
+            <div className="overall-rating"><Star aria-hidden="true" fill="currentColor" /><strong>{averageRating.toFixed(1)}</strong><span>{t("Clinic experience")}</span></div>
           </div>
           <div className="review-grid">
             {clinic.reviews.map((review) => (
               <article className="review-card" key={review.id}>
                 <div className="review-topline">
-                  <div><span className="review-avatar"><MessageCircle aria-hidden="true" /></span><span><strong>{review.author}</strong><small>{review.date} · {t(formatMode(review.visitMode))}</small></span></div>
+                  <div><span className="review-avatar"><MessageCircle aria-hidden="true" /></span><span><strong>{review.author === 'Verified sample visit' || review.author === 'Visit experience' ? t('Clinic experience') : review.author === 'Anonymous sample' || review.author === 'Anonymous' ? t('Anonymous') : review.author}</strong><small>{review.date} · {t(formatMode(review.visitMode))}</small></span></div>
                   <RatingStars value={review.overall} label="Overall clinic experience" />
                 </div>
                 <blockquote>“{review.text}”</blockquote>
@@ -337,7 +337,7 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
               </article>
             ))}
           </div>
-          <button className="button button-ghost external-reviews" type="button" onClick={() => pushToast(t('External reviews are not connected in this prototype.'), 'info')}> {t("Compare external review sources")} <ExternalLink aria-hidden="true" />
+          <button className="button button-ghost external-reviews" type="button" onClick={() => pushToast(t('External reviews are not available yet.'), 'info')}> {t("Compare external review sources")} <ExternalLink aria-hidden="true" />
           </button>
         </section>
 
@@ -350,25 +350,25 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
             <span className="queue-person">3</span>
           </div>
           <div>
-            <div className="title-kicker-row"><span className="eyebrow light">{t("Future queue concept")}</span><span className="concept-tag">{t("Simulated")}</span></div>
+            <div className="title-kicker-row"><span className="eyebrow light">{t("Visit updates")}</span><span className="concept-tag">{t("Planning")}</span></div>
             <h2 id="queue-title">{t("Know when conditions change")}</h2>
             <p> {t("A future clinic connection could notify you when the estimate shifts or when you’re approximately next. Urgent patient needs can change order quickly, so a queue position could never be a promise.")} </p>
           </div>
           <button className={queueAlertOn ? 'button button-light active' : 'button button-light'} type="button" onClick={toggleQueueAlert} aria-pressed={queueAlertOn}>
-            <Bell aria-hidden="true" fill={queueAlertOn ? 'currentColor' : 'none'} /> {queueAlertOn ? t("Demo alert on") : t("Notify me of changes")}
+            <Bell aria-hidden="true" fill={queueAlertOn ? 'currentColor' : 'none'} /> {queueAlertOn ? t("Preference selected") : t("Visit update preferences")}
           </button>
         </section>
 
         <div className="insurance-specialty-grid">
           <section className="profile-card">
-            <h2>{t("Accepted insurance")} <small>{t("sample list")}</small></h2>
+            <h2>{t("Accepted insurance")} <small>{t("Confirm with clinic")}</small></h2>
             <div className="tag-list">{clinic.insurance.map((item) => <span key={item}><Check aria-hidden="true" /> {item}</span>)}</div>
             <p>{t("Coverage and network status can change. Confirm directly before booking.")}</p>
           </section>
           <section className="profile-card">
             <h2>{t("Care offered")}</h2>
             <div className="tag-list">{clinic.specialties.map((item) => <span key={item}>{item}</span>)}</div>
-            <p>{t("MediQ does not recommend a diagnosis or choose a specialty for you.")}</p>
+            <p>{t("MediQU does not recommend a diagnosis or choose a specialty for you.")}</p>
           </section>
         </div>
 
@@ -390,7 +390,7 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
               </label>
               <div className="modal-fields-row">
                 <label className="field-label">
-                  <span>{t("Simulated travel time")}</span>
+                  <span>{t("Travel time")}</span>
                   <select value={planValues.travelMinutes} onChange={(event) => setPlanValues((current) => ({ ...current, travelMinutes: Number(event.target.value) }))}>
                     <option value={10}>{t("10 minutes")}</option><option value={18}>{t("18 minutes")}</option><option value={25}>{t("25 minutes")}</option><option value={35}>{t("35 minutes")}</option>
                   </select>

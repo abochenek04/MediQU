@@ -1,10 +1,10 @@
-# MediQ 2.1.4 - Complete Repository Onboarding
+# MediQU 2.1.4 - Complete Repository Onboarding
 
-A guide for a reader opening MediQ for the first time.
+A guide for a reader opening MediQU for the first time.
 
 **Snapshot:** October 8, 2026. Source branch: `main`. Source commit: `73f5f74befbb1a7c6726ca4e9401814a4311016b`. This commit restores the completed 2.1.4 source after the 2.1.5 merge. The Git history contains that merge and its revert; the current file tree matches `v2.1.4`.
 
-**Scope:** Every MediQ-owned tracked file, every environment-file role and variable, every project folder, and the local hidden/data/build/test folders present in this checkout. Third-party implementation files, compressed Git objects, generated bundles and private records are grouped explicitly. No actual credentials, passwords, OTPs, session tokens, email addresses from local data, or individual database records are reproduced.
+**Scope:** Every MediQU-owned tracked file, every environment-file role and variable, every project folder, and the local hidden/data/build/test folders present in this checkout. Third-party implementation files, compressed Git objects, generated bundles and private records are grouped explicitly. No actual credentials, passwords, OTPs, session tokens, email addresses from local data, or individual database records are reproduced.
 
 **Reading order:** Read chapters 1-4 to understand the system; chapters 5-10 to find files; chapters 11-14 to follow requests and operate it; appendices to check coverage. The PDF and this README carry the same explanatory content. The existing root README is preserved.
 
@@ -33,7 +33,7 @@ This is a description of the current implementation, not a deployment, a promise
 
 ## 1. Architecture overview
 
-MediQ is a healthcare visit-planning prototype. A visitor can compare fictional clinics, see total-visit timing examples and confidence, save a plan, and submit operational timing reports. Verified accounts can keep private settings and saved care across devices. The core idea is planning an entire visit, not just the waiting-room segment.
+MediQU is a healthcare visit-planning prototype. A visitor can compare fictional clinics, see total-visit timing examples and confidence, save a plan, and submit operational timing reports. Verified accounts can keep private settings and saved care across devices. The core idea is planning an entire visit, not just the waiting-room segment.
 
 The project is one repository containing a browser application and a separate server application. Locally they are two running processes. In a hosted configuration the server can serve the built browser files and the API from one address.
 
@@ -231,7 +231,7 @@ The examples and deploy files contain placeholder configuration, not purchased h
 
 ## 5. Browser files: boot, pages and reusable components
 
-The catalogs below give each MediQ-owned file its own entry. Read "purpose" and "connections" together: a page does not normally write SQL, and a component does not own a network account session. Imports assemble the system described in chapter 1.
+The catalogs below give each MediQU-owned file its own entry. Read "purpose" and "connections" together: a page does not normally write SQL, and a component does not own a network account session. Imports assemble the system described in chapter 1.
 
 ### `src/App.tsx` - Provider composition and route dispatch
 
@@ -239,7 +239,7 @@ Wraps the app in AppProvider, waits for account restoration, then chooses a page
 
 ### `src/components/Brand.tsx` - Reusable inline brand
 
-LogoMark draws a small SVG clock/search motif. Brand combines it with the rendered MediQ wordmark in an internal navigation Link and supports a compact size. It consumes translated accessibility text. The SVG is code-defined rather than loaded from an external image server.
+LogoMark draws a small SVG clock/search motif. Brand combines it with the rendered MediQU wordmark in an internal navigation Link and supports a compact size. It consumes translated accessibility text. The SVG is code-defined rather than loaded from an external image server.
 
 ### `src/components/ClinicComponents.tsx` - Shared clinic presentation and exploration
 
@@ -321,7 +321,7 @@ References vite/client so TypeScript understands browser import.meta.env and Vit
 
 ### `src/context/AppContext.tsx` - Browser session and shared state coordinator
 
-AppProvider owns user/profile/admin readiness, saved IDs/plans, current submissions, language, tour and toasts. refreshAccount reads /me before protected UI appears; generations/request IDs/data revisions protect against stale identity and save snapshots. clearPrivate resets only MediQ state on account changes. Cross-tab broadcasts/storage signals, focus and 30-second checks restore sessions; visible interaction sends presence once per minute. Account saves/preferences use the API; guest personal changes stay in memory. useApp enforces provider use.
+AppProvider owns user/profile/admin readiness, saved IDs/plans, current submissions, language, tour and toasts. refreshAccount reads /me before protected UI appears; generations/request IDs/data revisions protect against stale identity and save snapshots. clearPrivate resets only MediQU state on account changes. Cross-tab broadcasts/storage signals, focus and 30-second checks restore sessions; visible interaction sends presence once per minute. Account saves/preferences use the API; guest personal changes stay in memory. useApp enforces provider use.
 
 ### `src/context/expandedTranslations.ts` - Named catalog assembler
 
@@ -637,7 +637,7 @@ The direct dependencies at this source snapshot are:
 | `typescript` | `5.9.3` (devDependencies) | Type checks/build metadata and AST parsing for translation audit. |
 | `vite` | `^8.2.2` (devDependencies) | Development server, /api proxy, browser production bundler and smoke-test module loader. |
 
-SQLite is supplied by Node's `node:sqlite`, not a separate npm SQLite driver in this manifest. The code uses synchronous DB operations inside a single API process. Better Auth itself pulls other adapters, query/crypto/HTTP utilities and schema packages; having an adapter installed does not mean MediQ uses its database vendor.
+SQLite is supplied by Node's `node:sqlite`, not a separate npm SQLite driver in this manifest. The code uses synchronous DB operations inside a single API process. Better Auth itself pulls other adapters, query/crypto/HTTP utilities and schema packages; having an adapter installed does not mean MediQU uses its database vendor.
 
 ### 9.1 Every installed top-level package family
 
@@ -848,8 +848,8 @@ Runtime schema validation.
 - `node_modules/.vite/`: Vite optimized dependency cache; `deps/` contains generated JS, maps, metadata and its own package.json. Local `deps 2/` is duplicate cached content, not a second application. Changes here can occur simply by starting dev.
 - `node_modules/.vite-temp/`: temporary transformed Vite configuration/cache area; empty at inspection.
 - Package `dist/`, `lib/`, `src/`, `types/`, nested dependencies and platform binaries: external implementations distributed by package authors. Their nested folder purposes inherit this group explanation.
-- Package README/license/package.json files: external usage/legal/manifests, not MediQ documentation or product data. Type files describe library contracts. Source maps map generated code to package source. Native .node/executable files match operating system and CPU architecture.
-- Folders with names such as `node 2`, `core 2`, `utils 2`, `pluginutils 2` and `semantic-conventions 2` are present local duplicates. They are not imported intentionally by MediQ source. Explicit compiler types reduce unintended ambient-type discovery. Their origin is not established from their names alone.
+- Package README/license/package.json files: external usage/legal/manifests, not MediQU documentation or product data. Type files describe library contracts. Source maps map generated code to package source. Native .node/executable files match operating system and CPU architecture.
+- Folders with names such as `node 2`, `core 2`, `utils 2`, `pluginutils 2` and `semantic-conventions 2` are present local duplicates. They are not imported intentionally by MediQU source. Explicit compiler types reduce unintended ambient-type discovery. Their origin is not established from their names alone.
 
 This snapshot tracks 4,643 node_modules paths in Git, although .gitignore excludes new dependency paths. It also has additional ignored installed packages. This is historical repository content, not a recommendation to version installed libraries. No dependency cleanup, upgrade or license evaluation is performed by this documentation task.
 
@@ -870,7 +870,7 @@ Git stores revision history separately from working source. A branch is a refere
 | `.git/ORIG_HEAD` | Previous head recorded by operations such as merge, helpful for recovery. |
 | `.git/AUTO_MERGE` | Git-maintained auto-merge reference/state from merge tooling. Its presence alone is not proof of an active unresolved merge. |
 | `.git/COMMIT_EDITMSG` | Last prepared commit-message text. |
-| `.git/description` | Repository description, often a default Git value; not MediQ marketing copy. |
+| `.git/description` | Repository description, often a default Git value; not MediQU marketing copy. |
 | `.git/info/exclude` | Checkout-specific ignore additions, unlike tracked .gitignore. |
 | `.git/objects/00` through `.git/objects/ff` | Hash-prefix buckets for compressed loose commits, trees and file blobs; each has the same function. |
 | `.git/objects/pack/` | Packed history storage: .pack data, .idx lookup and .rev reverse index. Current pack is `pack-244c2169bf59bc9da3752feb14f823358a5a2054` with those three extensions. |
@@ -1193,7 +1193,7 @@ A static rewrite fixes deep links; it does not run the API. Preview on its own i
 
 ### 14.4 Documentation authority and delivery
 
-This guide was built from current tracked source plus a privacy-preserving local file inventory. It groups external/generated content explicitly rather than suggesting each dependency is authored by MediQ. Existing docs contain historical assumptions; particularly product-background.md and the ignored personal setup guide require context.
+This guide was built from current tracked source plus a privacy-preserving local file inventory. It groups external/generated content explicitly rather than suggesting each dependency is authored by MediQU. Existing docs contain historical assumptions; particularly product-background.md and the ignored personal setup guide require context.
 
 The two deliverables are docs/onboarding/README.md and docs/onboarding/MediQ-2.1.4-onboarding.pdf. They are documentation, not runtime imports. The PDF contains the same sections/catalogs/coverage as the README, with pagination, table of contents and bookmarks. No source, dependency, env, database or root README edit is required for these deliverables.
 
@@ -1406,7 +1406,7 @@ The `node_modules/` family includes each package root/scoped child described in 
 
 ## Appendix C. Glossary and source navigation
 
-| Term | Meaning in MediQ |
+| Term | Meaning in MediQU |
 | --- | --- |
 | SPA | Single-page application; browser React changes pages without replacing the HTML document for ordinary links. |
 | API | Server HTTP operations used for accounts, directory, reports and private saves. |

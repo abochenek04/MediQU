@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import { CircleAlert, Info, ShieldCheck, X } from 'lucide-react';
 import type { ConfidenceLevel } from '../types';
 
-export function DemoBadge({ label = 'Prototype data' }: { label?: string }) {
+export function StatusBadge({ label = 'Care planning' }: { label?: string }) {
   const { t } = useApp();
   return (
     <span className="demo-badge">

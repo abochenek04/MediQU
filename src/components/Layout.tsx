@@ -6,7 +6,7 @@ import {
   MapPin,
   MessageSquarePlus,
 } from 'lucide-react';
-import { internalEnabled, backendEnabled } from '../services/api';
+import { internalEnabled } from '../services/api';
 import type { ReactNode } from 'react';
 import { languages } from '../data/mockData';
 import { useApp } from '../context/AppContext';
@@ -61,7 +61,7 @@ export function Layout({ children, currentPath }: { children: ReactNode; current
           <div className="footer-note">
             <span className="demo-dot" />
             <p>
-              <strong>{t("Prototype only.")}</strong> {t(backendEnabled ? 'Directory fixtures are fictional. Accepted reports are stored by the configured service.' : 'All clinics, people, reports, availability, and estimates are fictional.')} </p>
+              <strong>{t("Plan with confidence.")}</strong> {t('Confirm hours, insurance, and bookings directly with the clinic.')} </p>
           </div>
           <div className="footer-links">
             <Link to="/contact">{t('Contact Us')}</Link>

@@ -6422,7 +6422,7 @@ h3 {
 .profile-grid > *, .history-chart-wrap, .chart-scroll { min-width: 0; }
 .chart-scroll { max-width: 100%; overflow-x: auto; }
 
-/* MediQ blue/orange identity and account surfaces. Text uses darker variants for contrast. */
+/* MediQU blue/orange identity and account surfaces. Text uses darker variants for contrast. */
 :root { --brand-primary: #2e9fe5; --brand-secondary: #d1601a; --brand-on-color: #04131e; }
 .find-hero, .onboarding-intro { background: var(--brand-primary); color: var(--brand-on-color); }
 .find-hero h1, .find-hero-copy > p, .find-hero .eyebrow, .find-hero .demo-badge,

@@ -1,6 +1,6 @@
-# MediQ
+# MediQU
 
-**Know before you go.** MediQ helps people compare total visit times and plan around care. It retains the React 19 / TypeScript / Vite interface and six clearly fictional Durham clinics. The upgrade adds a durable Node/SQLite API, Better Auth accounts, private settings and saved plans, shared validated reports, conservative estimates, seven languages and staging-only administration.
+**Know before you go.** MediQU helps people compare total visit times and plan around care. It retains the React 19 / TypeScript / Vite interface and six clearly fictional Durham clinics. The upgrade adds a durable Node/SQLite API, Better Auth accounts, private settings and saved plans, shared validated reports, conservative estimates, seven languages and staging-only administration.
 
 No live clinic directory, ratings source, travel routing, booking or notification provider is connected. Fictional data is not medical advice. **Saved visit plans are not clinic reservations.**
 
@@ -95,4 +95,4 @@ Direct routes work through the Node server's SPA fallback. Original Netlify/Verc
 
 Local → staging validation → deliberate production promotion. Nothing here deploys automatically or modifies the existing public site. Separate services/disks/secrets/senders prevent test data crossing into production. Disk-backed single-instance hosting has brief restart outages and is not horizontally scalable; see the runbook. Real clinic data/source permissions, external integrations, sender/domain configuration, monitoring, backups and outside reviews remain explicit launch tasks.
 
-MediQ does not diagnose, guarantee visit times, or claim HIPAA/security certification. Contact emergency services for a suspected emergency. Complete privacy, security, clinical-safety, accessibility and translation review before collecting real pilot data.
+MediQU does not diagnose, guarantee visit times, or claim HIPAA/security certification. Contact emergency services for a suspected emergency. Complete privacy, security, clinical-safety, accessibility and translation review before collecting real pilot data.

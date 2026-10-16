@@ -12,7 +12,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { DemoBadge, SafetyNote } from '../components/UI';
+import { StatusBadge, SafetyNote } from '../components/UI';
 import { useApp } from '../context/AppContext';
 import { clinicService } from '../services/clinicService';
 import type { Clinic } from '../types';
@@ -50,7 +50,7 @@ export function SavedPage() {
             <h1>{t("Appointments")}</h1>
             <p>{t("Keep the parts of your day in one place—appointment, travel, buffer, and expected visit time.")}</p>
           </div>
-          <DemoBadge label={t(user ? 'Saved to your private account' : 'Temporary guest session')} />
+          <StatusBadge label={t(user ? 'Saved to your private account' : 'Temporary guest session')} />
         </div>
 
         <p className="info-note">{t('Saved visit plans are not confirmed clinic bookings.')}</p>
@@ -79,14 +79,14 @@ export function SavedPage() {
                     <div className="appointment-identity">
                       <div className="title-kicker-row">
                         <span className="mode-pill">{appointment.visitMode === 'walk-in' ? t("Walk-in plan") : appointment.visitMode === 'urgent' ? t("Urgent visit plan") : t("Scheduled visit")}</span>
-                        {appointment.isSample && <span className="sample-chip">{t("Sample")}</span>}
+                        {appointment.isSample && <span className="sample-chip">{t("Visit plan")}</span>}
                       </div>
                       <h2>{clinic.name}</h2>
                       <p><MapPin aria-hidden="true" /> {clinic.address}</p>
                       <p><CalendarDays aria-hidden="true" /> {formatDateTime(appointment.appointmentTime)}</p>
                     </div>
                     <div className="appointment-live">
-                      <span>{t("Current demo estimate")}</span>
+                      <span>{t("Current estimate")}</span>
                       <strong>{plan.estimate.totalMinutes} {t("min")}</strong>
                       <small>{t("Updated")} {plan.estimate.updatedMinutesAgo}{t("m ago")}</small>
                     </div>
@@ -115,7 +115,7 @@ export function SavedPage() {
                   </div>
 
                   <div className="plan-explanation">
-                    <div><Car aria-hidden="true" /><span><strong>{appointment.travelMinutes} {t("min")}</strong><small>{t("Simulated travel")}</small></span></div>
+                    <div><Car aria-hidden="true" /><span><strong>{appointment.travelMinutes} {t("min")}</strong><small>{t("Travel time")}</small></span></div>
                     <div><Route aria-hidden="true" /><span><strong>{appointment.bufferMinutes} {t("min")}</strong><small>{t("Your arrival buffer")}</small></span></div>
                     <div><ShieldCheck aria-hidden="true" /><span><strong>{clinic.reliability.score}% · {clinic.reliability.level}</strong><small>{t("Estimate confidence")}</small></span></div>
                   </div>
@@ -148,7 +148,7 @@ export function SavedPage() {
               {savedClinics.map((clinic) => (
                 <article key={clinic.id}>
                   <div className="saved-clinic-icon" style={{ background: `${clinic.accent}22`, color: clinic.accent }}><Bookmark aria-hidden="true" fill="currentColor" /></div>
-                  <div><span>{clinic.type}</span><h3>{clinic.name}</h3><p>{clinic.distanceMiles.toFixed(1)} mi · {clinic.estimates[0].totalMinutes} {t("min demo visit")}</p></div>
+                  <div><span>{clinic.type}</span><h3>{clinic.name}</h3><p>{clinic.distanceMiles.toFixed(1)} mi · {clinic.estimates[0].totalMinutes} {t("min total visit")}</p></div>
                   <Link to={`/clinic/${clinic.id}`} aria-label={t('View {clinic}', { clinic: clinic.name })}><ArrowRight aria-hidden="true" /></Link>
                   <button type="button" onClick={() => toggleSavedClinic(clinic.id)}>{t("Remove")}</button>
                 </article>

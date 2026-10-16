@@ -84,3 +84,58 @@ test('delayed account refresh cannot undo a save or restore private data after l
  clearTestLimits();await signup(page,`other-${Date.now()}@example.test`);await visit(page,'/saved');await expect(page.locator('.saved-clinic-grid')).toHaveCount(0);await expect(page.locator('.appointment-list')).toHaveCount(0);
  await page.getByRole('button',{name:'Sign out',exact:true}).click();await login(page,email);await visit(page,'/saved');await expect(page.locator('.saved-clinic-grid')).toContainText('Brightwell');
 });
+
+test('device location is opt-in, refreshes from Durham to Chicago and updates real search distances',async({page,context})=>{
+ await context.grantPermissions(['geolocation']);
+ await context.setGeolocation({latitude:35.994,longitude:-78.899});
+ await page.addInitScript(()=>{
+  const original=navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
+  (window as unknown as {locationOptions:PositionOptions[]}).locationOptions=[];
+  navigator.geolocation.getCurrentPosition=(success,error,options)=>{
+   (window as unknown as {locationOptions:PositionOptions[]}).locationOptions.push(options||{});
+   return original(success,error,options);
+  };
+ });
+ const positions:{latitude:number;longitude:number}[]=[];
+ await page.route('https://api.bigdatacloud.net/data/reverse-geocode-client?**',route=>{
+  const url=new URL(route.request().url());const latitude=Number(url.searchParams.get('latitude'));const longitude=Number(url.searchParams.get('longitude'));
+  positions.push({latitude,longitude});
+  const chicago=latitude>40;
+  return route.fulfill({json:{latitude,longitude,lookupSource:'coordinates',city:chicago?'Chicago':'Durham',countryCode:'US',principalSubdivisionCode:chicago?'US-IL':'US-NC'}});
+ });
+ await visit(page);
+ expect(positions).toHaveLength(0);
+ expect(await page.evaluate(()=>(window as unknown as {locationOptions:PositionOptions[]}).locationOptions)).toHaveLength(0);
+ await page.getByRole('button',{name:'Use my location',exact:true}).click();
+ await expect(page.locator('.search-location')).toContainText('Near Durham, NC');
+ await expect(page.locator('.find-hero .demo-badge')).toHaveText('Durham, NC');
+ await expect(page.locator('.clinic-card')).toHaveCount(6);
+ await context.setGeolocation({latitude:41.8781,longitude:-87.6298});
+ await page.getByRole('button',{name:'Use my location',exact:true}).click();
+ await expect(page.locator('.search-location')).toContainText('Near Chicago, IL');
+ await expect(page.locator('#clinic-results .eyebrow')).toContainText('Care near Chicago, IL');
+ await expect(page.locator('.clinic-card')).toHaveCount(0);
+ expect(positions).toEqual([{latitude:35.99,longitude:-78.9},{latitude:41.88,longitude:-87.63}]);
+ const options=await page.evaluate(()=>(window as unknown as {locationOptions:PositionOptions[]}).locationOptions);
+ expect(options).toHaveLength(2);expect(options.every(o=>o.maximumAge===0&&o.enableHighAccuracy===true)).toBe(true);
+ await page.getByRole('button',{name:'Use Durham location',exact:true}).click();
+ await expect(page.locator('.search-location')).toContainText('Near Durham, North Carolina');
+ await expect(page.locator('.clinic-card')).toHaveCount(6);
+});
+
+test('denied device permission never calls city lookup; lookup failure still uses device coordinates',async({page,context})=>{
+ await context.grantPermissions([]);
+ let lookups=0;
+ await page.route('https://api.bigdatacloud.net/data/reverse-geocode-client?**',route=>{lookups++;return route.fulfill({status:503,json:{error:'Unavailable'}});});
+ await visit(page);
+ await page.getByRole('button',{name:'Use my location',exact:true}).click();
+ await expect(page.locator('.location-status[role="status"]')).toContainText('Location permission was denied');
+ expect(lookups).toBe(0);
+ await expect(page.locator('.clinic-card')).toHaveCount(6);
+ await context.grantPermissions(['geolocation']);await context.setGeolocation({latitude:41.8781,longitude:-87.6298});
+ await page.getByRole('button',{name:'Use my location',exact:true}).click();
+ await expect(page.locator('.location-status[role="status"]')).toContainText('City name is unavailable');
+ await expect(page.locator('.search-location')).toContainText('41.88, -87.63');
+ await expect(page.locator('.clinic-card')).toHaveCount(0);
+ expect(lookups).toBe(1);
+});

@@ -37,5 +37,5 @@ export function writeClinic(db: DB, clinic: Clinic, fictional = true) {
  for (const provider of clinic.providers) db.prepare('INSERT INTO providers VALUES (?,?,?)').run(provider.id,clinic.id,JSON.stringify(provider));
  for (const language of clinic.languages) db.prepare('INSERT INTO clinic_languages VALUES (?,?)').run(clinic.id,language);
  for (const insurance of clinic.insurance) db.prepare('INSERT INTO clinic_insurance VALUES (?,?)').run(clinic.id,insurance);
- db.prepare('INSERT INTO source_metadata VALUES (?,?,?,?) ON CONFLICT(clinic_id) DO UPDATE SET source=excluded.source,fictional=excluded.fictional,refreshed_at=excluded.refreshed_at').run(clinic.id,fictional?'MediQ fictional fixtures':'Authorized directory adapter',Number(fictional),Date.now());
+ db.prepare('INSERT INTO source_metadata VALUES (?,?,?,?) ON CONFLICT(clinic_id) DO UPDATE SET source=excluded.source,fictional=excluded.fictional,refreshed_at=excluded.refreshed_at').run(clinic.id,fictional?'MediQU fictional fixtures':'Authorized directory adapter',Number(fictional),Date.now());
 }

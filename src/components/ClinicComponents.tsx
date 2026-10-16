@@ -106,7 +106,7 @@ export function ClinicCard({
 
       <div className="estimate-panel" data-tour="estimates">
         <div>
-          <span className="estimate-label">{t("Demo total visit estimate")}</span>
+          <span className="estimate-label">{t("Total visit estimate")}</span>
           <strong className="estimate-number">{estimate.totalMinutes}<small> {t("min")}</small></strong>
           <span className="estimate-range">{t('Usually {low}–{high} min', { low: estimate.range[0], high: estimate.range[1] })}</span>
         </div>
@@ -120,7 +120,7 @@ export function ClinicCard({
       <VisitBreakdown estimate={estimate} compact />
 
       <div className="clinic-supporting">
-        {clinic.rating && <span><Star aria-hidden="true" /> {clinic.rating.rating.toFixed(1)} · {clinic.rating.reviewCount} {t('sample reviews')}</span>}
+        {clinic.rating && <span><Star aria-hidden="true" /> {clinic.rating.rating.toFixed(1)} · {clinic.rating.reviewCount} {t('reviews')}</span>}
         <span><Languages aria-hidden="true" /> {clinic.languages.join(' · ')}</span>
         <span><MessageSquarePlus aria-hidden="true" /> {t('{count} recent reports', { count: estimate.contributingReports })}</span>
       </div>
@@ -155,7 +155,7 @@ export function MapView({
 
   return (
     <div className="map-experience">
-      <div className="mock-map" aria-label={t("Stylized map of fictional clinics near Durham")}>
+      <div className="mock-map" aria-label={t("Clinic overview near Durham")}>
         <div className="map-grid" aria-hidden="true" />
         <div className="road road-one" aria-hidden="true" />
         <div className="road road-two" aria-hidden="true" />
@@ -165,7 +165,7 @@ export function MapView({
         <span className="map-area area-three" aria-hidden="true">LAKEWOOD</span>
         <div className="user-pin" style={{ left: '51%', top: '43%' }}>
           <span><Navigation aria-hidden="true" /></span>
-          <small>{t("Demo center")}</small>
+          <small>{t("Durham center")}</small>
         </div>
         {clinics.map((clinic, index) => {
           const estimate = clinic.estimates.find((item) => item.mode === preferredMode) || clinic.estimates[0];
@@ -184,7 +184,7 @@ export function MapView({
             </button>
           );
         })}
-        <div className="map-legend"><span className="demo-dot" /> {t("Stylized prototype map")}</div>
+        <div className="map-legend"><span className="demo-dot" /> {t("Clinic overview")}</div>
       </div>
       <aside className="map-side-list" aria-label={t("Map results")}>
         <p className="map-result-count">{clinics.length} nearby options</p>

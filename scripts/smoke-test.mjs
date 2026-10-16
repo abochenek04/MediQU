@@ -117,8 +117,9 @@ try {
     }
     const { requestApproximateLocation } = await vite.ssrLoadModule('/src/services/locationService.ts');
     const approximate = await requestApproximateLocation({ getCurrentPosition(success, error, options) {
-      assert.equal(options.enableHighAccuracy, false);
-      assert.equal(options.timeout, 10000);
+      assert.equal(options.enableHighAccuracy, true);
+      assert.equal(options.timeout, 15000);
+      assert.equal(options.maximumAge, 0);
       success({ coords: { latitude: 35.9982123, longitude: -78.9019234 } });
     } });
     assert.deepEqual(approximate, { latitude: 36, longitude: -78.9 });

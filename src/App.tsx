@@ -25,7 +25,7 @@ function AppRoutes() {
   const location = useLocationPath();
 
   useEffect(() => {
-    document.title = `${t(pageTitle(location.pathname))} — MediQ`;
+    document.title = `${t(pageTitle(location.pathname))} — MediQU`;
     const skip = document.querySelector('.skip-link'); if (skip) skip.textContent = t('Skip to main content');
   }, [location.pathname, t]);
 
@@ -53,7 +53,7 @@ function AppRoutes() {
         <div className="empty-state">
           <span className="empty-code">404</span>
           <h1>{t("This page isn’t in the care plan.")}</h1>
-          <p>{t("Let’s get you back to the fictional Durham clinic guide.")}</p>
+          <p>{t("Let’s get you back to the Durham clinic guide.")}</p>
           <Link className="button button-primary" to="/find">{t("Find care")}</Link>
         </div>
       </div>

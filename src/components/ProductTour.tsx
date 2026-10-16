@@ -7,9 +7,9 @@ const steps = [
   ['find', 'Find care', 'Start here to find and compare care.'],
   ['filters', 'Filter care', 'Filter by specialty, insurance, language, rating, visit type, and more.'],
   ['estimates', 'The entire visit', 'See the estimated time for the entire visit, not just the waiting room.'],
-  ['reliability', 'Estimate confidence', 'See how much confidence MediQ has in each estimate.'],
+  ['reliability', 'Estimate confidence', 'See how much confidence MediQU has in each estimate.'],
   ['appointments', 'Appointments', 'Plan saved visits and see when to leave.'],
-  ['report', 'Report wait', 'Share your visit experience to improve MediQ’s timing information.'],
+  ['report', 'Report wait', 'Share your visit experience to improve MediQU’s timing information.'],
 ];
 export function ProductTour({ currentPath }: { currentPath: string }) {
   const { t, tourDone, finishTour } = useApp();

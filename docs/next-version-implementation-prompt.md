@@ -1,16 +1,16 @@
-# MediQ implementation prompt
+# MediQU implementation prompt
 
-Copy everything below this line into a new MediQ coding task. This is a request to implement the changes, not just propose a plan.
+Copy everything below this line into a new MediQU coding task. This is a request to implement the changes, not just propose a plan.
 
 ---
 
-Implement the following MediQ upgrade in the existing repository. Complete all feasible implementation, integration, testing, and documentation work. Preserve existing working features except for the explicitly requested replacements below. Do not stop after planning, scaffolding, or completing only the easy frontend changes.
+Implement the following MediQU upgrade in the existing repository. Complete all feasible implementation, integration, testing, and documentation work. Preserve existing working features except for the explicitly requested replacements below. Do not stop after planning, scaffolding, or completing only the easy frontend changes.
 
 ## 1. Working rules and repository context
 
 First inspect the current repository, its instructions, Git status, README, `docs/backend-backlog.md`, `docs/verification.md`, and relevant source. Recheck everything because this prompt describes a snapshot and the project may have changed. Preserve any existing uncommitted work. Use a separate development branch or isolated checkout as appropriate; do not publish to production or modify production data as part of this implementation.
 
-At the time this prompt was prepared, MediQ was a React 19 / TypeScript / Vite frontend with fictional Durham clinics, simulated accounts/integrations, and browser-local persistence. There was no real backend. Important integration points:
+At the time this prompt was prepared, MediQU was a React 19 / TypeScript / Vite frontend with fictional Durham clinics, simulated accounts/integrations, and browser-local persistence. There was no real backend. Important integration points:
 
 - `src/context/AppContext.tsx`: shared state, localStorage persistence, and translation lookup.
 - `src/context/interfaceTranslations.ts`: currently positional Spanish/Chinese/Arabic translations; expand safely or refactor without breaking existing locales.

@@ -4,10 +4,10 @@ import { Link } from '../utils/navigation';
 export function LogoMark({ size = 38 }: { size?: number }) {
   return (
     <img
-      src="/logo.svg"
+      src="/logo.svg?v=mq-1"
       alt=""
       className="logo-mark"
-      width={size * 2}
+      width={size}
       height={size}
     />
   );
@@ -16,9 +16,9 @@ export function LogoMark({ size = 38 }: { size?: number }) {
 export function Brand({ compact = false }: { compact?: boolean }) {
   const { t } = useApp();
   return (
-    <Link className="brand" to="/find" aria-label={t('MediQ home')}>
+    <Link className="brand" to="/find" aria-label={t('MediQU home')}>
       <LogoMark size={compact ? 34 : 40} />
-      <span className="brand-word">MediQ</span>
+      <span className="brand-word">MediQU</span>
     </Link>
   );
 }

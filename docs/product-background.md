@@ -1,6 +1,6 @@
-# MediQ product background
+# MediQU product background
 
-The patient-facing About page now focuses on Why MediQ, Patient Journey, Wait Estimates, and Reliability. The prior guide's implementation and research context is retained here for future product work.
+The patient-facing About page now focuses on Why MediQU, Patient Journey, Wait Estimates, and Reliability. The prior guide's implementation and research context is retained here for future product work.
 
 ## Data and integrity
 

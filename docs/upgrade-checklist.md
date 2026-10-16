@@ -29,7 +29,7 @@ Executed sequence: baseline/architecture → durable API/auth/schema/jobs → ac
 
 ## Deliberate compatibility changes
 
-Verified accounts replace the preview. Account private data is now persisted by the server. Guest saved items, preferences and tour/drafts reset on a full reload/new tab; accepted backend reports remain shared. Legacy MediQ personal storage keys are removed without clearing unrelated storage. Language choices expand to seven; search defaults to recommended relevance and preserves explicit sorts. Plans remain distinct from bookings. Prototype-only assurances about browser-local data were replaced with the implemented privacy model. All original routes remain available.
+Verified accounts replace the preview. Account private data is now persisted by the server. Guest saved items, preferences and tour/drafts reset on a full reload/new tab; accepted backend reports remain shared. Legacy MediQU personal storage keys are removed without clearing unrelated storage. Language choices expand to seven; search defaults to recommended relevance and preserves explicit sorts. Plans remain distinct from bookings. Prototype-only assurances about browser-local data were replaced with the implemented privacy model. All original routes remain available.
 
 ## Exact remaining owner actions
 

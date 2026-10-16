@@ -13,7 +13,7 @@ import {
   UserRoundCheck,
 } from 'lucide-react';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { DemoBadge, InfoNote, SafetyNote } from '../components/UI';
+import { StatusBadge, InfoNote, SafetyNote } from '../components/UI';
 import { useApp } from '../context/AppContext';
 import { backendEnabled } from '../services/api';
 import { clinicService } from '../services/clinicService';
@@ -109,7 +109,7 @@ export function ReportPage() {
         <div className="shell report-shell">
           <section className="report-confirmation">
             <div className="confirmation-mark"><Check aria-hidden="true" /></div>
-            <DemoBadge label={t(confirmation.review ? 'Report received for review.' : backendEnabled ? 'Report accepted. Thank you.' : 'Sample report added')} />
+            <StatusBadge label={t(confirmation.review ? 'Report received for review.' : backendEnabled ? 'Report accepted. Thank you.' : 'Report added')} />
             <h1>{t("That’s one more useful signal.")}</h1>
             <p>
               {t('Report saved for {clinic}: {minutes} minutes.', { clinic: clinic?.name || '', minutes: confirmation.totalMinutes })}
@@ -241,7 +241,7 @@ export function ReportPage() {
                 <span>{t("Required")}</span>
               </div>
               <fieldset className="choice-fieldset">
-                <legend>{t("Compared with the MediQ estimate, your visit was…")}</legend>
+                <legend>{t("Compared with the MediQU estimate, your visit was…")}</legend>
                 <div className="choice-row">
                   {([
                     ['shorter', 'Shorter', 'Finished sooner'],
@@ -292,7 +292,7 @@ export function ReportPage() {
             <div className="form-section-number"><LockKeyhole aria-hidden="true" /></div>
             <div className="form-section-content">
               <div className="form-section-heading">
-                <div><h2 id="privacy-choice-title">{t("Your privacy choice")}</h2><p>{t("This prototype does not require an account.")}</p></div>
+                <div><h2 id="privacy-choice-title">{t("Your privacy choice")}</h2><p>{t("No account is required to report a visit.")}</p></div>
               </div>
               <label className="toggle-row">
                 <span><strong>{t("Submit anonymously")}</strong><small>{t("No name or account label will appear with this report.")}</small></span>
@@ -306,7 +306,7 @@ export function ReportPage() {
           <div className="report-submit-row">
             <div><UserRoundCheck aria-hidden="true" /><span><strong>{t("Ready to help the next patient?")}</strong><small>{t("You can review every answer before submitting.")}</small></span></div>
             <button className="button button-coral button-large" type="submit" disabled={submitting}>
-              {submitting ? t("Checking report…") : t(backendEnabled ? 'Submit report' : 'Submit sample report')} <ArrowRight aria-hidden="true" />
+              {submitting ? t("Checking report…") : t('Submit report')} <ArrowRight aria-hidden="true" />
             </button>
           </div>
         </form>

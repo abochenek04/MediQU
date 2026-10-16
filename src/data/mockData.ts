@@ -162,13 +162,13 @@ export const clinics: Clinic[] = [
     ],
     reviews: [
       {
-        id: 'bw-v1', author: 'Verified sample visit', date: 'Sep 7', overall: 5,
+        id: 'bw-v1', author: 'Visit experience', date: 'Sep 7', overall: 5,
         providerExperience: 5, communication: 5, waitAccuracy: 4, accessibility: 5,
         feltRushed: false, visitMode: 'walk-in',
         text: 'The front desk explained each step, and the total visit was close to the estimate.',
       },
       {
-        id: 'bw-v2', author: 'Anonymous sample', date: 'Sep 5', overall: 4,
+        id: 'bw-v2', author: 'Anonymous', date: 'Sep 5', overall: 4,
         providerExperience: 5, communication: 4, waitAccuracy: 3, accessibility: 4,
         feltRushed: false, visitMode: 'urgent',
         text: 'It became busier after I arrived, but staff told us why the timing had changed.',
@@ -251,13 +251,13 @@ export const clinics: Clinic[] = [
     ],
     reviews: [
       {
-        id: 'jf-v1', author: 'Verified sample visit', date: 'Sep 6', overall: 5,
+        id: 'jf-v1', author: 'Visit experience', date: 'Sep 6', overall: 5,
         providerExperience: 5, communication: 5, waitAccuracy: 4, accessibility: 4,
         feltRushed: false, visitMode: 'scheduled',
         text: 'My appointment began a little late, but the care team kept me updated throughout.',
       },
       {
-        id: 'jf-v2', author: 'Anonymous sample', date: 'Aug 30', overall: 4,
+        id: 'jf-v2', author: 'Anonymous', date: 'Aug 30', overall: 4,
         providerExperience: 4, communication: 4, waitAccuracy: 3, accessibility: 5,
         feltRushed: false, visitMode: 'walk-in',
         text: 'The walk-in line took longer than I expected; the visit itself was thoughtful.',
@@ -340,13 +340,13 @@ export const clinics: Clinic[] = [
     ],
     reviews: [
       {
-        id: 'lo-v1', author: 'Verified sample visit', date: 'Sep 7', overall: 5,
+        id: 'lo-v1', author: 'Visit experience', date: 'Sep 7', overall: 5,
         providerExperience: 5, communication: 5, waitAccuracy: 5, accessibility: 4,
         feltRushed: false, visitMode: 'scheduled',
         text: 'The estimate made arranging school pickup much easier, and the visit stayed on track.',
       },
       {
-        id: 'lo-v2', author: 'Anonymous sample', date: 'Sep 2', overall: 4,
+        id: 'lo-v2', author: 'Anonymous', date: 'Sep 2', overall: 4,
         providerExperience: 5, communication: 4, waitAccuracy: 4, accessibility: 4,
         feltRushed: false, visitMode: 'walk-in',
         text: 'Busy, but organized. We knew where we were in the process.',
@@ -418,7 +418,7 @@ export const clinics: Clinic[] = [
     ],
     reviews: [
       {
-        id: 'sw-v1', author: 'Verified sample visit', date: 'Sep 3', overall: 5,
+        id: 'sw-v1', author: 'Visit experience', date: 'Sep 3', overall: 5,
         providerExperience: 5, communication: 5, waitAccuracy: 4, accessibility: 4,
         feltRushed: false, visitMode: 'scheduled',
         text: 'The visit ran a little long, but I had time to ask every question I brought.',
@@ -499,7 +499,7 @@ export const clinics: Clinic[] = [
     ],
     reviews: [
       {
-        id: 'bc-v1', author: 'Anonymous sample', date: 'Sep 4', overall: 4,
+        id: 'bc-v1', author: 'Anonymous', date: 'Sep 4', overall: 4,
         providerExperience: 5, communication: 4, waitAccuracy: 2, accessibility: 5,
         feltRushed: false, visitMode: 'walk-in',
         text: 'The wait changed a lot, though staff were kind and the sliding-scale process was clear.',
@@ -566,7 +566,7 @@ export const clinics: Clinic[] = [
     ],
     reviews: [
       {
-        id: 'eq-v1', author: 'Anonymous sample', date: 'Sep 1', overall: 4,
+        id: 'eq-v1', author: 'Anonymous', date: 'Sep 1', overall: 4,
         providerExperience: 4, communication: 4, waitAccuracy: 5, accessibility: 3,
         feltRushed: true, visitMode: 'walk-in',
         text: 'Very quick overall. The visit moved fast, so I was glad I had my questions ready.',

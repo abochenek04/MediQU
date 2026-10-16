@@ -16,10 +16,10 @@ import {
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { ClinicCard, MapView } from '../components/ClinicComponents';
-import { DemoBadge, InfoNote, PageLoader, SafetyNote } from '../components/UI';
+import { StatusBadge, InfoNote, PageLoader, SafetyNote } from '../components/UI';
 import { useApp } from '../context/AppContext';
 import { clinicLanguageOptions, insurancePlans, specialtyOptions } from '../data/mockData';
-import { requestApproximateLocation } from '../services/locationService';
+import { requestApproximateLocation, resolveLocationName } from '../services/locationService';
 import { clinicService, defaultSearchFilters } from '../services/clinicService';
 import type { Clinic, SearchFilters, VisitMode } from '../types';
 import { Link, navigate } from '../utils/navigation';
@@ -43,10 +43,12 @@ export function FindCarePage() {
   const [selectedClinicId, setSelectedClinicId] = useState('');
   const [upcomingClinic, setUpcomingClinic] = useState<Clinic | undefined>();
   const [locationBusy, setLocationBusy] = useState(false);
-  const [locationMessage, setLocationMessage] = useState('Demo distances from downtown Durham.');
+  const [locationMessage, setLocationMessage] = useState('Distances from downtown Durham.');
+  const [locationName, setLocationName] = useState('');
+  const locationLookup = useRef<AbortController | null>(null);
   const requestId = useRef(0);
   const locationRequestId = useRef(0);
-  useEffect(() => () => { requestId.current++; locationRequestId.current++; }, []);
+  useEffect(() => () => { requestId.current++; locationRequestId.current++; locationLookup.current?.abort(); }, []);
   const upcoming = savedAppointments[0];
 
   const loadResults = async () => {
@@ -123,21 +125,47 @@ export function FindCarePage() {
     if (key === 'medicaid') updateFilter('insurance', filters.insurance === 'Medicaid' ? '' : 'Medicaid');
   };
 
-  const useLocation = () => {
-    if (!navigator.geolocation) { setLocationMessage('Location is unavailable. You can keep searching manually.'); return; }
+  const useLocation = async () => {
     const id = ++locationRequestId.current;
+    locationLookup.current?.abort();
+    const controller = new AbortController();
+    locationLookup.current = controller;
     setLocationBusy(true);
-    setLocationMessage('Your browser will ask for permission. Location is optional.');
-    void requestApproximateLocation(navigator.geolocation).then(origin => {
+    setLocationMessage('Requesting your current device location. Allow access in your browser if prompted.');
+    try {
+      const origin = await requestApproximateLocation(navigator.geolocation);
       if (id !== locationRequestId.current) return;
       setFilters(current => ({ ...current, origin }));
-      setLocationBusy(false);
-      setLocationMessage('Approximate distance to fictional Durham clinics. No live nearby-care data.');
-    }, () => {
+      setLocationName(`${origin.latitude.toFixed(2)}, ${origin.longitude.toFixed(2)}`);
+      setLocationMessage('Location found. Distances use your device’s approximate position.');
+      try {
+        const name = await resolveLocationName(origin, controller.signal);
+        if (id === locationRequestId.current) setLocationName(name);
+      } catch {
+        if (id === locationRequestId.current) setLocationMessage('Device location found. City name is unavailable; distances still use your location.');
+      }
+    } catch (error) {
       if (id !== locationRequestId.current) return;
-      setLocationBusy(false);
-      setLocationMessage('Location was not available. You can keep searching manually.');
-    });
+      setFilters(current => ({ ...current, origin: undefined }));
+      setLocationName('');
+      const code = (error as { code?: number } | null)?.code;
+      setLocationMessage(code === 1
+        ? 'Location permission was denied. Allow location in your browser’s site settings and try again. Using Durham until then.'
+        : code === 3
+          ? 'Location request timed out. Try again with device Location Services enabled. Using Durham until then.'
+          : 'Device location is unavailable. Enable Location Services and use HTTPS or localhost. Using Durham until then.');
+    } finally {
+      if (id === locationRequestId.current) setLocationBusy(false);
+    }
+  };
+
+  const resetLocation = () => {
+    locationRequestId.current++;
+    locationLookup.current?.abort();
+    setLocationBusy(false);
+    setLocationName('');
+    setFilters(current => ({ ...current, origin: undefined }));
+    setLocationMessage('Distances from downtown Durham.');
   };
 
   const clearFilters = () => {
@@ -153,7 +181,7 @@ export function FindCarePage() {
         <div className="hero-orbit orbit-two" aria-hidden="true" />
         <div className="shell find-hero-inner">
           <div className="find-hero-copy">
-            <DemoBadge label={t("Durham demo · fictional data")} />
+            <StatusBadge label={locationName || t("Durham, North Carolina")} />
             <span className="eyebrow light">{t('heroEyebrow')}</span>
             <h1>{t('heroTitle')}</h1>
             <p>{t('heroBody')}</p>
@@ -177,10 +205,11 @@ export function FindCarePage() {
               <button className="button button-coral" type="submit">{t("Search")} <ArrowRight aria-hidden="true" /></button>
             </div>
             <div className="search-location">
-              <span><MapPin aria-hidden="true" /> {t(filters.origin ? t("Approximate location · fictional clinics") : t("Near Durham, North Carolina"))}</span>
+              <span><MapPin aria-hidden="true" /> {filters.origin ? t("Near {location}", { location: locationName }) : t("Near Durham, North Carolina")}</span>
               <button type="button" disabled={locationBusy} onClick={useLocation}><LocateFixed aria-hidden="true" /> {t(locationBusy ? t("Locating…") : t("Use my location"))}</button>
             </div>
-            <p className="location-status" role="status">{t(locationMessage)} {filters.origin && <button className="text-button" type="button" onClick={() => { locationRequestId.current++; setLocationBusy(false); setFilters(current => ({ ...current, origin: undefined })); setLocationMessage('Demo distances from downtown Durham.'); }}>{t('Use demo location')}</button>}</p>
+            <p className="location-status" role="status">{t(locationMessage)} {filters.origin && <button className="text-button" type="button" onClick={resetLocation}>{t('Use Durham location')}</button>}</p>
+            <p className="location-status">{t('When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.')}</p>
           </form>
 
           <div className="quick-filters" aria-label={t('Quick picks')}>
@@ -202,7 +231,7 @@ export function FindCarePage() {
               <strong>{new Date(upcoming.appointmentTime).getDate()}</strong>
             </div>
             <div className="upcoming-main">
-              <div className="upcoming-kicker"><CalendarClock aria-hidden="true" /> {upcoming.isSample ? t("Sample upcoming visit") : t("Upcoming visit")}</div>
+              <div className="upcoming-kicker"><CalendarClock aria-hidden="true" /> {t("Upcoming visit")}</div>
               <h2 id="upcoming-title">{upcomingClinic.name}</h2>
               <p>{formatDateTime(upcoming.appointmentTime)} · {upcomingClinic.address}</p>
             </div>
@@ -229,7 +258,7 @@ export function FindCarePage() {
 
             <label className="field-label">
               <span>{t("Location")}</span>
-              <input aria-label={t("Search location or neighborhood")} placeholder={t("Durham neighborhood or ZIP")} value={filters.query} onChange={event => updateFilter("query", event.target.value)} />
+              <input aria-label={t("Search location or neighborhood")} placeholder={t("Neighborhood or ZIP")} value={filters.query} onChange={event => updateFilter("query", event.target.value)} />
             </label>
             <label className="field-label">
               <span>{t("Within")}</span>
@@ -274,7 +303,7 @@ export function FindCarePage() {
                 <option value={0}>{t('Any rating')}</option>
                 {[3, 3.5, 4, 4.5].map(rating => <option key={rating} value={rating}>{rating}+ / 5</option>)}
               </select><ChevronDown aria-hidden="true" />
-            </div><small>{t('Fictional clinic reviews. No Google connection.')}</small></label>
+            </div><small>{t('Clinic experience ratings. Separate from Google reviews.')}</small></label>
             <fieldset className="filter-fieldset">
               <legend>{t("Visit type")}</legend>
               {(['all', 'scheduled', 'walk-in', 'urgent'] as const).map((mode) => (
@@ -311,7 +340,7 @@ export function FindCarePage() {
 
             <div className="results-toolbar">
               <div>
-                <span className="eyebrow">{t("Care near Durham")}</span>
+                <span className="eyebrow">{filters.origin ? t("Care near {location}", { location: locationName }) : t("Care near Durham")}</span>
                 <h2 id="results-title">{loading ? t('Finding options…') : t('Clinics matching your plan: {count}', { count: sortedResults.length })}</h2>
                 <p>{t("Every time shown is a total-visit estimate with a separate confidence signal.")}</p>
               </div>
@@ -340,8 +369,8 @@ export function FindCarePage() {
             ) : error ? (
               <div className="empty-state" role="alert">
                 <span className="empty-icon"><Timer aria-hidden="true" /></span>
-                <h3>{t("We couldn’t load the demo clinics")}</h3>
-                <p>{t("The sample service had a problem. Your filters are still here.")}</p>
+                <h3>{t("We couldn’t load the clinics")}</h3>
+                <p>{t("The directory is unavailable. Your filters are still here.")}</p>
                 <button className="button button-primary" type="button" onClick={loadResults}>{t("Try again")}</button>
               </div>
             ) : sortedResults.length === 0 ? (

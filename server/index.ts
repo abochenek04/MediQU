@@ -32,5 +32,5 @@ const server=createServer(async(req,res)=>{
   res.setHeader('Cache-Control',type==='.html'?'no-cache':'public, max-age=3600');res.end(data);
  }catch{res.writeHead(500);res.end('Service unavailable');}
 });
-server.listen(config.port,config.host,()=>console.log(`MediQ ${config.environment} API on ${config.host}:${config.port}`));
+server.listen(config.port,config.host,()=>console.log(`MediQU ${config.environment} API on ${config.host}:${config.port}`));
 const shutdown=()=>server.close(()=>{void stopJobs().finally(()=>{app.close();process.exit(0);});});process.on('SIGTERM',shutdown);process.on('SIGINT',shutdown);

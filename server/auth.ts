@@ -8,7 +8,7 @@ import { countEvent, type DB } from './database.ts';
 
 export function makeAuth(db: DB, config: ServerConfig) {
  return betterAuth({
-  appName: 'MediQ', baseURL: config.origin, basePath: '/api/auth', secret: config.secret,
+  appName: 'MediQU', baseURL: config.origin, basePath: '/api/auth', secret: config.secret,
   database: db, trustedOrigins: [config.origin],
   emailAndPassword: { enabled: true, requireEmailVerification: true, autoSignIn: false, minPasswordLength: 12, maxPasswordLength: 128, revokeSessionsOnPasswordReset: true },
   emailVerification: { autoSignInAfterVerification: false },
@@ -33,8 +33,8 @@ export function makeAuth(db: DB, config: ServerConfig) {
    async sendVerificationOTP({email,otp,type}) {
     limit(db,`mail-cooldown:${hash(config.secret,email)}`,1,60000);
     limit(db,`mail-daily:${hash(config.secret,email)}`,20,86400000);
-    const subject = type === 'forget-password' ? 'MediQ password reset / Restablecer contraseña / 重置密码 / إعادة تعيين كلمة المرور / Reset hasła / પાસવર્ડ રીસેટ / पासवर्ड रीसेट' : 'MediQ email verification / Verificar correo / 验证邮箱 / تحقق البريد / Weryfikacja e-mail / ઈમેલ ચકાસણી / ईमेल सत्यापन';
-    const text = `MediQ\n${otp}\n\nExpires in 10 minutes. Do not share this code.\nCaduca en 10 minutos. No compartas este código.\n10 分钟后失效。请勿分享此验证码。\nتنتهي صلاحيته خلال 10 دقائق. لا تشارك الرمز.\nWygasa za 10 minut. Nie udostępniaj kodu.\n10 મિનિટમાં સમાપ્ત થશે. કોડ શેર કરશો નહીં.\n10 मिनट में समाप्त होगा। कोड साझा न करें.\n\nIf you did not request this, ignore this message.`;
+    const subject = type === 'forget-password' ? 'MediQU password reset / Restablecer contraseña / 重置密码 / إعادة تعيين كلمة المرور / Reset hasła / પાસવર્ડ રીસેટ / पासवर्ड रीसेट' : 'MediQU email verification / Verificar correo / 验证邮箱 / تحقق البريد / Weryfikacja e-mail / ઈમેલ ચકાસણી / ईमेल सत्यापन';
+    const text = `MediQU\n${otp}\n\nExpires in 10 minutes. Do not share this code.\nCaduca en 10 minutos. No compartas este código.\n10 分钟后失效。请勿分享此验证码。\nتنتهي صلاحيته خلال 10 دقائق. لا تشارك الرمز.\nWygasa za 10 minut. Nie udostępniaj kodu.\n10 મિનિટમાં સમાપ્ત થશે. કોડ શેર કરશો નહીં.\n10 मिनट में समाप्त होगा। कोड साझा न करें.\n\nIf you did not request this, ignore this message.`;
     if (config.mailMode === 'file') {
      if (!['development','test'].includes(config.environment)) throw new Error('Local mail is forbidden outside development/test');
      mkdirSync(config.mailDirectory,{recursive:true,mode:0o700});

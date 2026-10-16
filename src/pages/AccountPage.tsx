@@ -32,8 +32,8 @@ export function AccountPage({mode}:{mode:'signup'|'login'|'verify'|'reset'}){
    await authRequest('/email-otp/request-password-reset',{email:normalized});setResetSent(true);lastCodeAt=Date.now();setCooldown(60);setMessage('If eligible, a code has been sent. Check your inbox and spam folder.');
   }
  });};
- return <div className="shell page-space account-shell"><section className="account-card"><span className="eyebrow">MediQ</span><h1>{t(title)}</h1>
-  {!backendEnabled?<div className="info-note"><p>{t('Fictional demo mode. Start the local API or configure the backend to use real accounts.')}</p><Link to="/find">{t('Continue as a guest')}</Link></div>:<>
+ return <div className="shell page-space account-shell"><section className="account-card"><span className="eyebrow">MediQU</span><h1>{t(title)}</h1>
+  {!backendEnabled?<div className="info-note"><p>{t('Account services are currently unavailable. Continue browsing as a guest.')}</p><Link to="/find">{t('Continue as a guest')}</Link></div>:<>
   {user&&<p>{t('You are signed in as {email}.',{email:user.email})} <Link to="/settings">{t('Settings')}</Link></p>}
   {mode==='verify'&&<p>{t('Enter the six-digit code. It expires after 10 minutes. Your account stays pending until verification.')}</p>}
   {mode==='signup'&&<p>{t('Already registered? Sign in or reset your password. Signup responses protect account privacy.')}</p>}

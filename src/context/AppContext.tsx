@@ -48,7 +48,7 @@ export function AppProvider({children}:{children:ReactNode}) {
   }catch(error){if(request===restoreRequest.current){setAccountError(errorKey(error));setAccountReady(false);}}
  },[clearPrivate]);
  useEffect(()=>{
-  // Only legacy MediQ keys; never clear unrelated browser storage.
+  // Only legacy MediQU keys; never clear unrelated browser storage.
   try{for(const key of ['mediq-saved-clinics','mediq-appointments','mediq-reports','mediq-language','mediq-tour-v1','mediq-onboarded'])localStorage.removeItem(key);}catch{/* Storage may be disabled. */}
   void refreshAccount();
   const changed=()=>{restoreRequest.current++;clearPrivate();setAccountReady(!backendEnabled);void refreshAccount();};
@@ -83,7 +83,7 @@ export function AppProvider({children}:{children:ReactNode}) {
  const submitReport=useCallback(async(draft:WaitReportDraft)=>{
   const epoch=generation.current;const result=await clinicService.submitWaitReport(draft);if(epoch!==generation.current)throw new Error('ACCOUNT_CHANGED');
   if(result.moderationStatus!=='review')setSubmittedReports(current=>[result,...current.filter(r=>r.id!==result.id)]);
-  pushToast(t(result.moderationStatus==='review'?'Report received for review.':backendEnabled?'Report accepted. Thank you.':'Thank you—your sample report was added.'),'success');return result;
+  pushToast(t(result.moderationStatus==='review'?'Report received for review.':backendEnabled?'Report accepted. Thank you.':'Thank you—your report was added.'),'success');return result;
  },[pushToast,t]);
  const setLanguage=useCallback((next:string)=>{
   if(!(supportedLanguages as readonly string[]).includes(next))return;const epoch=generation.current;

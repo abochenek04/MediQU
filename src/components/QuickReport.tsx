@@ -27,13 +27,13 @@ export function QuickReport({ clinic, mode, onClose }: { clinic: Clinic; mode: V
     catch { setError('Your report could not be saved. Please try again.'); }
     finally { lock.current = false; setBusy(false); }
   };
-  return <Modal title={t(done ? (review ? 'Report received for review.' : backendEnabled ? 'Report accepted. Thank you.' : 'Sample report added') : 'Report a wait')} onClose={onClose}>
+  return <Modal title={t(done ? (review ? 'Report received for review.' : backendEnabled ? 'Report accepted. Thank you.' : 'Report added') : 'Report a wait')} onClose={onClose}>
     {done ? <div className="quick-confirmation" role="status">
-      <p>{t(review ? 'Your report needs review before it appears publicly.' : backendEnabled ? 'Accepted reports remain shared when your guest session resets.' : 'This sample report lasts for the current page session.')}</p>
+      <p>{t(review ? 'Your report needs review before it appears publicly.' : backendEnabled ? 'Accepted reports remain shared when your guest session resets.' : 'This report lasts for the current page session.')}</p>
       <p>{kind === 'current' && t('An ongoing wait is kept separate from completed visit totals.')}</p>
       <button className="button button-primary button-full" onClick={onClose}>{t('Back to Find Care')}</button>
     </div> : <form onSubmit={submit} noValidate>
-      <p className="demo-badge">{t('Prototype data')}</p>
+      <p className="demo-badge">{t('Care planning')}</p>
       <label className="field-label"><span>{t('Clinic')}</span><input value={clinic.name} readOnly /></label>
       <label className="field-label"><span>{t('Visit type')}</span><select value={draft.visitMode} onChange={e => setDraft({ ...draft, visitMode: e.target.value as VisitMode })}>
         {clinic.visitModes.map(value => <option key={value} value={value}>{t(value === 'walk-in' ? 'Walk-in' : value === 'urgent' ? 'Urgent visit' : 'Scheduled')}</option>)}
@@ -48,7 +48,7 @@ export function QuickReport({ clinic, mode, onClose }: { clinic: Clinic; mode: V
       <p className="field-hint">{t('For today’s visit. Use the full report for earlier visits or detailed times.')}</p>
       <label className="checkbox-line"><input type="checkbox" checked={draft.anonymous} onChange={e => setDraft({ ...draft, anonymous: e.target.checked })} />{t('Submit anonymously')}</label>
       {error && <p className="field-error" role="alert">{t(error)}</p>}
-      <button disabled={busy} className="button button-primary button-full" type="submit">{t(busy ? 'Checking report…' : backendEnabled ? 'Submit report' : 'Submit sample report')}</button>
+      <button disabled={busy} className="button button-primary button-full" type="submit">{t(busy ? 'Checking report…' : 'Submit report')}</button>
       <div className="modal-actions"><button className="text-button" type="button" onClick={onClose}>{t('Cancel')}</button><Link to={`/report?clinic=${clinic.id}`}>{t('Open full report')}</Link></div>
     </form>}
   </Modal>;
