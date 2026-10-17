@@ -18,7 +18,8 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { ClinicCard, MapView } from '../components/ClinicComponents';
 import { StatusBadge, InfoNote, PageLoader, SafetyNote } from '../components/UI';
 import { useApp } from '../context/AppContext';
-import { clinicLanguageOptions, insurancePlans, specialtyOptions } from '../data/mockData';
+import { getClinicEstimate, hasEstimate } from '../utils/estimates';
+import { clinicLanguageOptions, insurancePlans, specialtyOptions } from '../data/catalog';
 import { requestApproximateLocation, resolveLocationName } from '../services/locationService';
 import { clinicService, defaultSearchFilters } from '../services/clinicService';
 import type { Clinic, SearchFilters, VisitMode } from '../types';
@@ -88,7 +89,7 @@ export function FindCarePage() {
   const sortedResults = useMemo(() => {
     const copy = [...results];
     if (sort === 'shortest') {
-      return copy.sort((a, b) => (a.estimates.find(e => e.mode === filters.visitMode) || a.estimates[0]).totalMinutes - (b.estimates.find(e => e.mode === filters.visitMode) || b.estimates[0]).totalMinutes);
+      return copy.sort((a, b) => (hasEstimate(getClinicEstimate(a, filters.visitMode)) ? getClinicEstimate(a, filters.visitMode).totalMinutes : Infinity) - (hasEstimate(getClinicEstimate(b, filters.visitMode)) ? getClinicEstimate(b, filters.visitMode).totalMinutes : Infinity));
     }
     if (sort === 'reliability') {
       return copy.sort((a, b) => (b.estimates.find(e => e.mode === filters.visitMode)?.reliability || b.reliability).score - (a.estimates.find(e => e.mode === filters.visitMode)?.reliability || a.reliability).score);
@@ -242,7 +243,7 @@ export function FindCarePage() {
               </div>
               <div>
                 <span>{t("Current visit estimate")}</span>
-                <strong>{upcomingPlan.estimate.totalMinutes} {t("min")}</strong>
+                <strong>{hasEstimate(upcomingPlan.estimate) ? `${upcomingPlan.estimate.totalMinutes} ${t("min")}` : t("Estimate unavailable")}</strong>
               </div>
             </div>
             <Link className="button button-secondary" to="/saved">{t("View plan")} <ArrowRight aria-hidden="true" /></Link>
@@ -376,8 +377,8 @@ export function FindCarePage() {
             ) : sortedResults.length === 0 ? (
               <div className="empty-state">
                 <span className="empty-icon"><Search aria-hidden="true" /></span>
-                <h3>{t("No clinics match everything yet")}</h3>
-                <p>{t("Try a wider distance or remove one filter. You won’t lose your search text.")}</p>
+                <h3>{t(!filters.query && !activeFilterCount ? "No clinics are available yet" : "No clinics match everything yet")}</h3>
+                <p>{t(!filters.query && !activeFilterCount ? "Clinics will appear here as real directory information is added." : "Try a wider distance or remove one filter. You won’t lose your search text.")}</p>
                 <button className="button button-primary" type="button" onClick={clearFilters}>{t("Clear filters")}</button>
               </div>
             ) : view === 'map' ? (
@@ -400,7 +401,7 @@ export function FindCarePage() {
                 <Sparkles aria-hidden="true" />
                 <div>
                   <strong>{t("Why confidence matters")}</strong>
-                  <p>{t("A 45-minute estimate with low confidence may be harder to plan around than a 55-minute estimate backed by fresh, consistent reports.")}</p>
+                  <p>{t("Recent, consistent reports help make visit estimates more reliable.")}</p>
                 </div>
                 <Link to="/know#reliability">{t("Learn more")} <ArrowRight aria-hidden="true" /></Link>
               </div>

@@ -307,5 +307,18 @@
   "Location permission was denied. Allow location in your browser’s site settings and try again. Using Durham until then.": "تم رفض إذن الموقع. اسمح بالموقع في إعدادات الموقع بالمتصفح وحاول مجدداً. نستخدم دورهام حتى ذلك الحين.",
   "Location request timed out. Try again with device Location Services enabled. Using Durham until then.": "انتهت مهلة طلب الموقع. فعّل خدمات الموقع في الجهاز وحاول مجدداً. نستخدم دورهام حتى ذلك الحين.",
   "Device location is unavailable. Enable Location Services and use HTTPS or localhost. Using Durham until then.": "موقع الجهاز غير متاح. فعّل خدمات الموقع واستخدم HTTPS أو localhost. نستخدم دورهام حتى ذلك الحين.",
-  "When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.": "عند استخدام موقع الجهاز، تُشارك الإحداثيات التقريبية مع BigDataCloud لمعرفة مدينتك. لا يحفظ MediQU موقعك."
+  "When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.": "عند استخدام موقع الجهاز، تُشارك الإحداثيات التقريبية مع BigDataCloud لمعرفة مدينتك. لا يحفظ MediQU موقعك.",
+  "Clinic directory": "دليل العيادات",
+  "Clinics will appear here as real directory information is added.": "ستظهر العيادات هنا عند إضافة معلومات حقيقية إلى الدليل.",
+  "Visit estimates will appear when enough recent reports are available.": "ستظهر تقديرات الزيارة عند توفر تقارير حديثة كافية.",
+  "Stage timing is not available yet.": "توقيت المراحل غير متاح بعد.",
+  "Estimate unavailable": "التقدير غير متاح",
+  "Map view is not connected yet. Browse the clinic list below.": "عرض الخريطة غير متصل بعد. تصفح قائمة العيادات أدناه.",
+  "History is not available yet.": "السجل غير متاح بعد.",
+  "Recent, consistent reports help make visit estimates more reliable.": "تساعد التقارير الحديثة والمتسقة على تحسين موثوقية تقديرات الزيارة.",
+  "No clinics are available yet": "لا توجد عيادات متاحة بعد",
+  "No clinics are available for reporting yet.": "لا توجد عيادات متاحة للإبلاغ بعد.",
+  "Not enough recent reports for an estimate.": "لا توجد تقارير حديثة كافية للتقدير.",
+  "Approximate": "تقريبي",
+  "Detailed": "تفصيلي"
 }

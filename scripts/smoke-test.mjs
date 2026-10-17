@@ -42,11 +42,16 @@ try {
   const assets = [...index.matchAll(/(?:src|href)="(\/assets\/[^"]+)"/g)].map((match) => match[1]);
   if (assets.length < 2) throw new Error('Built CSS/JavaScript assets were not found.');
 
+  const fixtureNames = ['Brightwell Urgent Care', 'Juniper Family Health', 'Maya Brooks'];
   for (const asset of assets) {
     const response = await fetch(`${base}${asset}`);
     const bytes = await response.arrayBuffer();
     if (!response.ok || bytes.byteLength === 0) {
       throw new Error(`Built asset failed: ${asset}`);
+    }
+    if (asset.endsWith('.js')) {
+      const script = new TextDecoder().decode(bytes);
+      for (const name of fixtureNames) assert(!script.includes(name), `Fixture leaked into public bundle: ${name}`);
     }
     process.stdout.write(`✓ ${asset} available\n`);
   }
@@ -63,7 +68,7 @@ try {
   for (const clinicId of requiredClinicIds) {
     if (!dataSource.includes(`id: '${clinicId}'`)) throw new Error(`Missing clinic fixture: ${clinicId}`);
   }
-  process.stdout.write('✓ six fictional clinic fixtures present\n');
+  process.stdout.write('✓ six archived clinic fixtures retained outside the public application bundle\n');
 
   globalThis.window = {
     setTimeout,
@@ -75,7 +80,10 @@ try {
     logLevel: 'silent',
   });
   try {
-    const { mockClinicService: clinicService } = await vite.ssrLoadModule('/src/services/clinicService.ts');
+    const { emptyClinicService } = await vite.ssrLoadModule('/src/services/clinicService.ts');
+    assert.deepEqual(await emptyClinicService.searchClinics({}), []);
+    assert.equal(await emptyClinicService.getClinicById('brightwell-urgent-care'), undefined);
+    const { mockClinicService: clinicService } = await vite.ssrLoadModule('/src/services/fixtureClinicService.ts');
     const baseFilters = {
       query: '', insurance: '', specialty: '', language: '', minimumRating: 0, visitMode: 'all', timing: 'all', maxDistance: 25,
     };

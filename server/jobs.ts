@@ -6,7 +6,7 @@ import { countEvent, transaction, writeClinic, type DB } from './database.ts';
 import type { Clinic } from '../src/types.ts';
 import type { ServerConfig } from './config.ts';
 export function recalculate(db:DB,now=Date.now()) {
- for(const row of db.prepare('SELECT document FROM clinics').all()){
+ for(const row of db.prepare('SELECT c.document FROM clinics c JOIN source_metadata s ON s.clinic_id=c.id WHERE s.fictional=0').all()){
   const clinic=JSON.parse(row.document as string) as Clinic;
   for(const mode of clinic.visitModes){
    const evidence=db.prepare('SELECT kind,total_minutes,elapsed_minutes,submitted_at,status FROM reports WHERE clinic_id=? AND mode=?').all(clinic.id,mode) as unknown as Evidence[];

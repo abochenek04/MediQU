@@ -13,11 +13,16 @@ const steps = [
 ];
 export function ProductTour({ currentPath }: { currentPath: string }) {
   const { t, tourDone, finishTour } = useApp();
-  const [step, setStep] = useState<number | null>(() => {
-    return currentPath === '/find' && !tourDone ? 0 : null;
-  });
+  const [step, setStep] = useState<number | null>(null);
   const [rect, setRect] = useState<DOMRect | null>(null);
   const finish = () => { setStep(null); finishTour(); };
+  useEffect(() => {
+    if (currentPath === '/find' && !tourDone) {
+      setStep(0);
+      // Remember the first showing, so reloading mid-tour does not restart it.
+      finishTour();
+    }
+  }, [currentPath, tourDone, finishTour]);
   useEffect(() => {
     const replay = () => { navigate('/find'); setStep(0); };
     window.addEventListener('mediq:tour', replay);

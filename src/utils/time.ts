@@ -1,3 +1,4 @@
+import { getClinicEstimate } from './estimates';
 import type { Clinic, SavedAppointment } from '../types';
 
 export const formatDate = (iso: string, options?: Intl.DateTimeFormatOptions) =>
@@ -29,7 +30,7 @@ export const getVisitPlan = (appointment: SavedAppointment, clinic: Clinic) => {
     appointmentDate.getTime() - (appointment.travelMinutes + appointment.bufferMinutes) * 60000,
   );
   const estimate =
-    clinic.estimates.find((item) => item.mode === appointment.visitMode) || clinic.estimates[0];
+    getClinicEstimate(clinic, appointment.visitMode);
   const likelyFinish = new Date(appointmentDate.getTime() + estimate.totalMinutes * 60000);
 
   return { leaveBy, likelyFinish, estimate };

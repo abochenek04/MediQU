@@ -111,6 +111,7 @@ export interface SearchOrigin {
 }
 
 export interface Clinic {
+  directorySource?: 'approved';
   id: string;
   name: string;
   type: string;

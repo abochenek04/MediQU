@@ -1,6 +1,5 @@
 import {
   ArrowRight,
-  BadgeCheck,
   Bookmark,
   Check,
   Clock3,
@@ -35,30 +34,11 @@ export function OnboardingPage() {
           <p> {t("See how long a visit may take, how reliable that estimate is, and when to leave—before your day gets away from you.")} </p>
         </div>
 
-        <div className="preview-card" aria-label={t('Example MediQU visit estimate')}>
-          <div className="preview-card-header">
-            <span><MapPin aria-hidden="true" /> Durham, NC</span>
-            <span className="status status-open"><span /> {t("Open now")}</span>
-          </div>
-          <div className="preview-time-row">
-            <div>
-              <small>{t("Estimated total visit")}</small>
-              <strong>54 <span>{t("min")}</span></strong>
-            </div>
-            <div className="preview-confidence">
-              <BadgeCheck aria-hidden="true" />
-              <span><b>91%</b> {t("confidence")}</span>
-            </div>
-          </div>
-          <div className="preview-timeline" aria-hidden="true">
-            <span style={{ flex: 7 }} />
-            <span style={{ flex: 24 }} />
-            <span style={{ flex: 17 }} />
-            <span style={{ flex: 6 }} />
-          </div>
-          <div className="preview-labels">
-            <span>{t("Check in")}</span><span>{t("Wait")}</span><span>{t("Care")}</span><span>{t("Check out")}</span>
-          </div>
+        <div className="preview-card" aria-label={t('Clinic directory')}>
+          <div className="preview-card-header"><span><MapPin aria-hidden="true" /> {t('Clinic directory')}</span></div>
+          <div className="preview-time-row"><div><small>{t('Total visit estimate')}</small><strong>—</strong></div></div>
+          <p>{t('Clinics will appear here as real directory information is added.')}</p>
+          <div className="preview-labels"><span>{t('Check in')}</span><span>{t('Wait')}</span><span>{t('Care')}</span><span>{t('Check out')}</span></div>
         </div>
 
         <p className="onboarding-data-note"><LockKeyhole aria-hidden="true" /> {t("No medical history is needed to browse.")}</p>

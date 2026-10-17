@@ -675,5 +675,18 @@
   "Location permission was denied. Allow location in your browser’s site settings and try again. Using Durham until then.": "Odmówiono dostępu do lokalizacji. Zezwól na dostęp w ustawieniach witryny i spróbuj ponownie. Do tego czasu używamy Durham.",
   "Location request timed out. Try again with device Location Services enabled. Using Durham until then.": "Upłynął czas oczekiwania na lokalizację. Włącz usługi lokalizacji urządzenia i spróbuj ponownie. Do tego czasu używamy Durham.",
   "Device location is unavailable. Enable Location Services and use HTTPS or localhost. Using Durham until then.": "Lokalizacja urządzenia jest niedostępna. Włącz usługi lokalizacji i używaj HTTPS lub localhost. Do tego czasu używamy Durham.",
-  "When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.": "Gdy używasz lokalizacji urządzenia, przybliżone współrzędne są udostępniane BigDataCloud, aby ustalić miasto. MediQU nie zapisuje Twojej lokalizacji."
+  "When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.": "Gdy używasz lokalizacji urządzenia, przybliżone współrzędne są udostępniane BigDataCloud, aby ustalić miasto. MediQU nie zapisuje Twojej lokalizacji.",
+  "Clinic directory": "Katalog placówek",
+  "Clinics will appear here as real directory information is added.": "Placówki pojawią się tutaj po dodaniu rzeczywistych danych do katalogu.",
+  "Visit estimates will appear when enough recent reports are available.": "Szacowany czas wizyty pojawi się po zebraniu wystarczającej liczby aktualnych zgłoszeń.",
+  "Stage timing is not available yet.": "Czasy poszczególnych etapów nie są jeszcze dostępne.",
+  "Estimate unavailable": "Szacunek niedostępny",
+  "Map view is not connected yet. Browse the clinic list below.": "Mapa nie jest jeszcze podłączona. Przeglądaj listę placówek poniżej.",
+  "History is not available yet.": "Dane historyczne nie są jeszcze dostępne.",
+  "Recent, consistent reports help make visit estimates more reliable.": "Aktualne i spójne zgłoszenia zwiększają wiarygodność szacunków wizyt.",
+  "No clinics are available yet": "Nie ma jeszcze dostępnych placówek",
+  "No clinics are available for reporting yet.": "Nie ma jeszcze placówek, dla których można przesłać zgłoszenie.",
+  "Not enough recent reports for an estimate.": "Za mało aktualnych zgłoszeń do obliczenia szacunku.",
+  "Approximate": "Przybliżone",
+  "Detailed": "Szczegółowe"
 }

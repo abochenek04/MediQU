@@ -675,5 +675,18 @@
   "Location permission was denied. Allow location in your browser’s site settings and try again. Using Durham until then.": "સ્થાનની પરવાનગી નકારાઈ. બ્રાઉઝરની સાઇટ સેટિંગ્સમાં સ્થાનની પરવાનગી આપીને ફરી પ્રયાસ કરો. ત્યાં સુધી Durham વપરાશે.",
   "Location request timed out. Try again with device Location Services enabled. Using Durham until then.": "સ્થાનની વિનંતીનો સમય પૂરો થયો. ઉપકરણની સ્થાન સેવાઓ ચાલુ કરીને ફરી પ્રયાસ કરો. ત્યાં સુધી Durham વપરાશે.",
   "Device location is unavailable. Enable Location Services and use HTTPS or localhost. Using Durham until then.": "ઉપકરણનું સ્થાન ઉપલબ્ધ નથી. સ્થાન સેવાઓ ચાલુ કરો અને HTTPS અથવા localhost વાપરો. ત્યાં સુધી Durham વપરાશે.",
-  "When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.": "ઉપકરણનું સ્થાન વાપરતી વખતે તમારું શહેર શોધવા અંદાજિત નિર્દેશાંકો BigDataCloud સાથે શેર થાય છે. MediQU તમારું સ્થાન સાચવતું નથી."
+  "When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.": "ઉપકરણનું સ્થાન વાપરતી વખતે તમારું શહેર શોધવા અંદાજિત નિર્દેશાંકો BigDataCloud સાથે શેર થાય છે. MediQU તમારું સ્થાન સાચવતું નથી.",
+  "Clinic directory": "ક્લિનિક ડિરેક્ટરી",
+  "Clinics will appear here as real directory information is added.": "વાસ્તવિક ડિરેક્ટરી માહિતી ઉમેરાશે ત્યારે ક્લિનિક અહીં દેખાશે.",
+  "Visit estimates will appear when enough recent reports are available.": "પૂરતા તાજેતરના અહેવાલો મળશે ત્યારે મુલાકાતના અંદાજ દેખાશે.",
+  "Stage timing is not available yet.": "તબક્કાનો સમય હજી ઉપલબ્ધ નથી.",
+  "Estimate unavailable": "અંદાજ ઉપલબ્ધ નથી",
+  "Map view is not connected yet. Browse the clinic list below.": "નકશાનું દૃશ્ય હજી જોડાયેલું નથી. નીચેની ક્લિનિક યાદી જુઓ.",
+  "History is not available yet.": "ઇતિહાસ હજી ઉપલબ્ધ નથી.",
+  "Recent, consistent reports help make visit estimates more reliable.": "તાજેતરના અને સુસંગત અહેવાલો મુલાકાતના અંદાજ વધુ વિશ્વસનીય બનાવે છે.",
+  "No clinics are available yet": "હજી કોઈ ક્લિનિક ઉપલબ્ધ નથી",
+  "No clinics are available for reporting yet.": "અહેવાલ આપવા માટે હજી કોઈ ક્લિનિક ઉપલબ્ધ નથી.",
+  "Not enough recent reports for an estimate.": "અંદાજ માટે પૂરતા તાજેતરના અહેવાલો નથી.",
+  "Approximate": "અંદાજિત",
+  "Detailed": "વિગતવાર"
 }

@@ -1,8 +1,12 @@
 # MediQU
 
-**Know before you go.** MediQU helps people compare total visit times and plan around care. It retains the React 19 / TypeScript / Vite interface and six clearly fictional Durham clinics. The upgrade adds a durable Node/SQLite API, Better Auth accounts, private settings and saved plans, shared validated reports, conservative estimates, seven languages and staging-only administration.
+**Version 3.1.1 — real-data foundation.** MediQU keeps the care search, accounts, reports, saved plans, location lookup and first-visit tour. The public directory starts empty until approved real clinic records are added.
 
-No live clinic directory, ratings source, travel routing, booking or notification provider is connected. Fictional data is not medical advice. **Saved visit plans are not clinic reservations.**
+Fictional clinics, providers, reviews, histories and sample appointments remain in `src/data/mockData.ts` for reference and isolated tests, but are disconnected from the application. Existing database records are preserved. Public API reads require `source_metadata.fictional = 0`; records flagged fictional or missing source metadata are excluded from search, detail pages, saved care and reporting. Correcting a fixture does not automatically approve it as real data.
+
+`npm run db:seed` initializes the launch checklist only. It no longer adds clinics. Approved directory imports use `writeClinic(db, clinic, false)` after source review; `server/integrations.ts` retains the directory-adapter extension point. A clinic can be published without timing reports: the interface shows “Estimate unavailable” until the estimator has sufficient recent accepted reports. No generated total or stage proportions fill that gap.
+
+No live clinic directory, ratings source, travel routing, booking or notification provider is connected. **Saved visit plans are not clinic reservations.**
 
 ## Run locally
 
@@ -25,7 +29,7 @@ npm run dev -- --force
 
 Open **http://localhost:4173**. Development verification codes go to private files in `.data/development/mail`; they are not emailed. Sign up → enter the code at `/verify` → sign in. Account data persists in `.data/development/mediq.sqlite`. See the [complete setup/release runbook](docs/runbook.md) for secrets, real email, cloud hosting, administrator bootstrap and rollback. The requested personal `README-LOCAL-SETUP.md` is deliberately Git-ignored; all reproducible instructions are also tracked.
 
-To browse without an API, set `VITE_DATA_MODE=demo` and restart Vite. This explicitly labeled fictional mode uses temporary memory and disables account actions. Configured backend mode reports service failures and never silently falls back to demo data.
+To browse without an API, set `VITE_DATA_MODE=demo` and restart Vite. Without a backend the directory stays empty and account actions are unavailable. Configured backend mode reports service failures and never falls back to fixtures.
 
 ## Commands
 
@@ -33,7 +37,7 @@ To browse without an API, set `VITE_DATA_MODE=demo` and restart Vite. This expli
 | --- | --- |
 | `npm run dev` | Vite on 4173, proxying `/api` to 3001 |
 | `npm run api` | API; applies pending transactional migrations at startup |
-| `npm run db:migrate` / `npm run db:seed` | Migrations / fictional development seed (seed refuses production) |
+| `npm run db:migrate` / `npm run db:seed` | Migrations / launch-checklist initialization (no clinic seed) |
 | `npm run admin:grant -- verified-email` | Trusted terminal-only role grant in development/staging |
 | `npm run jobs` | Estimate recalculation, retention and configured external refresh |
 | `npm run db:backup -- /private/path/snapshot.sqlite` | Consistent SQLite online backup |
@@ -47,7 +51,7 @@ To browse without an API, set `VITE_DATA_MODE=demo` and restart Vite. This expli
 
 ## Preserved product features and routes
 
-Guest-first entry; clinic/provider/symptom search; insurance, specialty, spoken-language, rating, visit-mode, distance and timing filters; synchronized list/map; geolocation with manual fallback; clinic profiles, providers, fictional reviews, historical charts and confidence explanations; quick/full reports; saved clinics and visit planning; leave-by/arrival/finish arithmetic; product tour; About, Contact and footer anchors; responsive navigation, native dialogs, keyboard focus and Arabic RTL.
+Guest-first entry; clinic/provider/symptom search; insurance, specialty, spoken-language, rating, visit-mode, distance and timing filters; list results and a reserved map panel; geolocation with manual fallback; clinic profiles, providers, sourced reviews, historical charts and confidence explanations; quick/full reports; saved clinics and visit planning; leave-by/arrival/finish arithmetic; product tour; About, Contact and footer anchors; responsive navigation, native dialogs, keyboard focus and Arabic RTL.
 
 | Route | Purpose |
 | --- | --- |
@@ -57,7 +61,7 @@ Guest-first entry; clinic/provider/symptom search; insurance, specialty, spoken-
 | `/saved` | Saved visit plans and clinics |
 | `/report` | Full timing report |
 | `/know` | About, privacy, limitations, safety and future Plus concept |
-| `/contact` | Explicitly unsent demo contact form |
+| `/contact` | Message preparation; delivery remains unconnected |
 | `/signup`, `/login`, `/verify`, `/reset-password` | Real account flows when backend is configured |
 | `/settings` | Authenticated private profile and account controls |
 | `/admin` | Development/staging administrator tools; excluded from public builds |
@@ -66,10 +70,10 @@ Direct routes work through the Node server's SPA fallback. Original Netlify/Verc
 
 ## Intentional behavior changes
 
-- **Guest state is temporary memory.** It survives client-side navigation, then resets on reload/new tab/closure. Only named legacy `mediq-*` personal-storage keys are removed; unrelated storage is untouched. The fictional sample plan remains clearly labeled. No guest-to-account merge happens implicitly.
+- **Guest state is temporary memory.** It survives client-side navigation, then resets on reload/new tab/closure. Only named legacy `mediq-*` personal-storage keys are removed; unrelated storage is untouched. Guests start with no saved clinics or visits. The first-visit tour preference alone persists in browser storage. No guest-to-account merge happens implicitly.
 - **Accounts are real.** A normalized unique email/password identity remains pending until its one-time code verifies. Only verified sessions can access private data. Optional sex, gender, kg/cm measurements and age start empty. Passwords are never readable profile fields. Logout, switching, revocation and deletion invalidate private UI state.
 - **Shared reports persist independently.** Guest interface reset does not delete an accepted backend report. Public reports contain operational summaries, never names, email, free-text notes or raw timing entries. Account deletion deletes that account's submitted reports and private records; nonidentifying aggregate event counts remain.
-- **Search uses deterministic concepts and typo tolerance.** `head pain` matches explicitly supported `headache` capabilities; `Brightwel urgent car` matches Brightwell. Exact names outrank strong concepts and weaker fuzzy names. Selected filters are always enforced. Recommended order preserves relevance; nearest/shortest/confidence remain explicit sorts. No search is sent to an AI provider.
+- **Search uses deterministic concepts and typo tolerance.** `head pain` matches explicitly supported `headache` capabilities; name typos can match approved clinic names. Exact names outrank strong concepts and weaker fuzzy names. Selected filters are always enforced. Recommended order preserves relevance; nearest/shortest/confidence remain explicit sorts. No search is sent to an AI provider.
 - **Seven interface languages:** English, Spanish, Chinese, Arabic, Polish, Gujarati and Hindi. Interface choice and clinic spoken-language filtering are separate. Named locale catalogs extend the original three-locale catalog safely. Translation drafts require native-speaker review; directory proper names and original review prose remain source content.
 - **Brand:** primary `#2e9fe5`, secondary `#d1601a`, with darker text and accessible variants.
 
@@ -80,7 +84,7 @@ Direct routes work through the Node server's SPA fallback. Original Netlify/Verc
 | `src/pages`, `src/components` | Existing care UI plus account/settings/internal screens |
 | `src/context/AppContext.tsx` | Session restoration, isolated state, saves and reports |
 | `src/context/translate.ts`, `locales/*.json` | Safe lookup, interpolation and seven languages |
-| `src/services/clinicService.ts` | Compatible demo/backend adapters |
+| `src/services/clinicService.ts` | Approved backend data or an empty offline directory |
 | `src/services/search.ts` | Shared intent, fuzzy name matching, strict filtering |
 | `src/services/locationService.ts`, `src/utils/time.ts`, `src/utils/report.ts` | Preserved location, visit arithmetic and report validation |
 | `src/data/mockData.ts`, `src/types.ts` | Fictional fixtures and shared contracts |

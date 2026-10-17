@@ -12,6 +12,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { getClinicEstimate, hasEstimate } from '../utils/estimates';
 import { StatusBadge, SafetyNote } from '../components/UI';
 import { useApp } from '../context/AppContext';
 import { clinicService } from '../services/clinicService';
@@ -39,6 +40,7 @@ export function SavedPage() {
     return () => { active = false; };
   }, [savedAppointments, savedClinicIds, retry]);
 
+  const visibleAppointments = savedAppointments.filter(appointment => !appointment.isSample && clinicMap[appointment.clinicId]);
   const savedClinics = savedClinicIds.map((id) => clinicMap[id]).filter(Boolean);
 
   return (
@@ -55,7 +57,7 @@ export function SavedPage() {
 
         <p className="info-note">{t('Saved visit plans are not confirmed clinic bookings.')}</p>
         {loadError && <p role="alert">{t('The service is unavailable. Please try again.')} <button className="button button-secondary" onClick={() => setRetry(n => n + 1)}>{t('Try again')}</button></p>}
-        {savedAppointments.length === 0 ? (
+        {visibleAppointments.length === 0 ? (
           <div className="empty-state saved-empty">
             <span className="empty-icon"><CalendarDays aria-hidden="true" /></span>
             <h2>{t("No visits are saved")}</h2>
@@ -64,7 +66,7 @@ export function SavedPage() {
           </div>
         ) : (
           <div className="appointment-list">
-            {savedAppointments.map((appointment) => {
+            {visibleAppointments.map((appointment) => {
               const clinic = clinicMap[appointment.clinicId];
               if (!clinic) return <div className="appointment-skeleton" key={appointment.id} />;
               const plan = getVisitPlan(appointment, clinic);
@@ -87,8 +89,8 @@ export function SavedPage() {
                     </div>
                     <div className="appointment-live">
                       <span>{t("Current estimate")}</span>
-                      <strong>{plan.estimate.totalMinutes} {t("min")}</strong>
-                      <small>{t("Updated")} {plan.estimate.updatedMinutesAgo}{t("m ago")}</small>
+                      <strong>{hasEstimate(plan.estimate) ? `${plan.estimate.totalMinutes} ${t("min")}` : t("Estimate unavailable")}</strong>
+                      {hasEstimate(plan.estimate) && <small>{t("Updated")} {plan.estimate.updatedMinutesAgo}{t("m ago")}</small>}
                     </div>
                   </div>
 
@@ -107,21 +109,21 @@ export function SavedPage() {
                       <span className="plan-stop-icon"><Clock3 aria-hidden="true" /></span>
                       <span><small>{t("Visit begins")}</small><strong>{formatTime(appointment.appointmentTime)}</strong></span>
                     </div>
-                    <div className="plan-connector visit"><span /><small>{t("about")} {plan.estimate.totalMinutes} {t("min")}</small></div>
+                    <div className="plan-connector visit"><span /><small>{t("about")} {hasEstimate(plan.estimate) ? `${plan.estimate.totalMinutes} ${t("min")}` : t("Estimate unavailable")}</small></div>
                     <div className="plan-stop finish-stop">
                       <span className="plan-stop-icon"><Check aria-hidden="true" /></span>
-                      <span><small>{t("Likely finish")}</small><strong>{formatTime(plan.likelyFinish.toISOString())}</strong></span>
+                      <span><small>{t("Likely finish")}</small><strong>{hasEstimate(plan.estimate) ? formatTime(plan.likelyFinish.toISOString()) : "—"}</strong></span>
                     </div>
                   </div>
 
                   <div className="plan-explanation">
                     <div><Car aria-hidden="true" /><span><strong>{appointment.travelMinutes} {t("min")}</strong><small>{t("Travel time")}</small></span></div>
                     <div><Route aria-hidden="true" /><span><strong>{appointment.bufferMinutes} {t("min")}</strong><small>{t("Your arrival buffer")}</small></span></div>
-                    <div><ShieldCheck aria-hidden="true" /><span><strong>{clinic.reliability.score}% · {clinic.reliability.level}</strong><small>{t("Estimate confidence")}</small></span></div>
+                    <div><ShieldCheck aria-hidden="true" /><span><strong>{hasEstimate(plan.estimate) ? `${clinic.reliability.score}% · ${clinic.reliability.level}` : "—"}</strong><small>{t("Estimate confidence")}</small></span></div>
                   </div>
 
                   <div className="appointment-note">
-                    {t('Planning subtracts travel and your buffer from the visit time. Expected finish adds the {minutes}-minute estimate. These are planning aids, not guarantees.', { minutes: plan.estimate.totalMinutes })}
+                    {hasEstimate(plan.estimate) ? t('Planning subtracts travel and your buffer from the visit time. Expected finish adds the {minutes}-minute estimate. These are planning aids, not guarantees.', { minutes: plan.estimate.totalMinutes }) : t('Visit estimates will appear when enough recent reports are available.')}
                   </div>
 
                   <div className="appointment-actions">
@@ -148,7 +150,7 @@ export function SavedPage() {
               {savedClinics.map((clinic) => (
                 <article key={clinic.id}>
                   <div className="saved-clinic-icon" style={{ background: `${clinic.accent}22`, color: clinic.accent }}><Bookmark aria-hidden="true" fill="currentColor" /></div>
-                  <div><span>{clinic.type}</span><h3>{clinic.name}</h3><p>{clinic.distanceMiles.toFixed(1)} mi · {clinic.estimates[0].totalMinutes} {t("min total visit")}</p></div>
+                  <div><span>{clinic.type}</span><h3>{clinic.name}</h3><p>{clinic.distanceMiles.toFixed(1)} mi · {hasEstimate(getClinicEstimate(clinic)) ? `${getClinicEstimate(clinic).totalMinutes} ${t("min total visit")}` : t("Estimate unavailable")}</p></div>
                   <Link to={`/clinic/${clinic.id}`} aria-label={t('View {clinic}', { clinic: clinic.name })}><ArrowRight aria-hidden="true" /></Link>
                   <button type="button" onClick={() => toggleSavedClinic(clinic.id)}>{t("Remove")}</button>
                 </article>

@@ -1,8 +1,6 @@
 import { ArrowRight } from 'lucide-react';
-import { VisitBreakdown } from '../components/ClinicComponents';
 import { StatusBadge, SafetyNote } from '../components/UI';
 import { useApp } from '../context/AppContext';
-import { clinics } from '../data/mockData';
 import { Link } from '../utils/navigation';
 
 export function KnowPage() {
@@ -23,7 +21,7 @@ export function KnowPage() {
       ].map(([title, body], index) => <li key={title}><b>{index + 1}</b><div><h3>{t(title)}</h3><p>{t(body)}</p></div></li>)}
     </ol></section>
     <section id="estimates" className="about-section"><span className="eyebrow">03</span><h2>{t('Wait Estimates')}</h2><p>{t('The total estimate covers arrival through departure. Check in includes arrival and registration; Wait covers time before the provider; Care is time with the provider; Check out covers the final steps before leaving.')}</p>
-      <div className="about-estimate"><strong>54 <small>{t('minutes')}</small></strong><VisitBreakdown estimate={clinics[0].estimates[0]} /></div>
+      <div className="about-estimate"><strong>—</strong><p>{t('Visit estimates will appear when enough recent reports are available.')}</p></div>
       <p>{t('A range leaves room for variation. Historical patterns help compare times of day.')}</p>
     </section>
     <section id="reliability" className="about-section"><span className="eyebrow">04</span><h2>{t('Reliability')}</h2><p>{t('Confidence describes the timing evidence: how recent, plentiful, consistent, and varied the reports are. It is separate from a clinic’s star rating and does not measure medical quality or guarantee a finish time.')}</p>
