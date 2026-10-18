@@ -1,102 +1,23 @@
 # MediQU
 
-**Version 3.1.1 — real-data foundation.** MediQU keeps the care search, accounts, reports, saved plans, location lookup and first-visit tour. The public directory starts empty until approved real clinic records are added.
+**A clearer picture of care before you go.**
 
-Fictional clinics, providers, reviews, histories and sample appointments remain in `src/data/mockData.ts` for reference and isolated tests, but are disconnected from the application. Existing database records are preserved. Public API reads require `source_metadata.fictional = 0`; records flagged fictional or missing source metadata are excluded from search, detail pages, saved care and reporting. Correcting a fixture does not automatically approve it as real data.
+MediQU is a care-navigation platform designed to help people find clinics, understand what to expect from a visit, and plan around their needs. It brings clinic search, patient-reported visit times, and personal visit planning into one accessible experience.
 
-`npm run db:seed` initializes the launch checklist only. It no longer adds clinics. Approved directory imports use `writeClinic(db, clinic, false)` after source review; `server/integrations.ts` retains the directory-adapter extension point. A clinic can be published without timing reports: the interface shows “Estimate unavailable” until the estimator has sufficient recent accepted reports. No generated total or stage proportions fill that gap.
+**Visit the website: [www.mediqu.com](https://www.mediqu.com)**
 
-No live clinic directory, ratings source, travel routing, booking or notification provider is connected. **Saved visit plans are not clinic reservations.**
+## What MediQU offers
 
-## Run locally
+- **Find relevant care:** Search clinic information and filter by location, specialty, insurance, spoken language, and visit type.
+- **Understand the visit:** View available timing estimates and their confidence, with patient reports contributing to a shared picture of the care experience.
+- **Plan ahead:** Save clinics and organize visit plans with travel time, arrival targets, and suggested departure times.
+- **Keep a personal account:** Manage saved information and optional profile details, with email verification, password recovery, and account-deletion controls.
+- **Use a familiar language:** Explore a responsive interface available in English, Spanish, Chinese, Arabic, Polish, Gujarati, and Hindi.
 
-Use Node 24 LTS (minimum 22.13):
+Clinic search depends on approved directory records, and timing estimates require enough recent qualifying reports. Saved visit plans help organize a visit; they are not confirmed clinic reservations.
 
-```sh
-npm ci
-cp .env.example .env
-cp server/.env.example server/.env
-npm run db:migrate
-npm run db:seed
-npm run api
-```
+## How it is built
 
-In another terminal:
+MediQU uses **React and TypeScript** for its interactive interface, with **Vite** preparing the production frontend. A **Node.js API** handles application logic and connects to a persistent **SQLite database** for accounts, profiles, saved plans, and reports. **Better Auth** manages authentication, and **Resend** delivers verification and password-reset emails.
 
-```sh
-npm run dev -- --force
-```
-
-Open **http://localhost:4173**. Development verification codes go to private files in `.data/development/mail`; they are not emailed. Sign up → enter the code at `/verify` → sign in. Account data persists in `.data/development/mediq.sqlite`. See the [complete setup/release runbook](docs/runbook.md) for secrets, real email, cloud hosting, administrator bootstrap and rollback. The requested personal `README-LOCAL-SETUP.md` is deliberately Git-ignored; all reproducible instructions are also tracked.
-
-To browse without an API, set `VITE_DATA_MODE=demo` and restart Vite. Without a backend the directory stays empty and account actions are unavailable. Configured backend mode reports service failures and never falls back to fixtures.
-
-## Commands
-
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Vite on 4173, proxying `/api` to 3001 |
-| `npm run api` | API; applies pending transactional migrations at startup |
-| `npm run db:migrate` / `npm run db:seed` | Migrations / launch-checklist initialization (no clinic seed) |
-| `npm run admin:grant -- verified-email` | Trusted terminal-only role grant in development/staging |
-| `npm run jobs` | Estimate recalculation, retention and configured external refresh |
-| `npm run db:backup -- /private/path/snapshot.sqlite` | Consistent SQLite online backup |
-| `npm run typecheck` | Frontend and backend/test TypeScript |
-| `npm test` | Translation and palette audits, build, and original care/route/asset regression suite |
-| `npm run test:backend` | Fresh-database auth, ownership, reports, search and estimator integration tests |
-| `npm run test:browser` | Real API + Chromium interaction tests; first install `npx playwright install chromium` |
-| `npm run build` / `npm run preview` | Build / local static preview (API still needed in backend mode) |
-| `npm run build:staging` / `npm run build:production` | Separate deployment modes; use matching `.env.*.example` values |
-| `npm run serve:dist` | Original static route-fallback preview |
-
-## Preserved product features and routes
-
-Guest-first entry; clinic/provider/symptom search; insurance, specialty, spoken-language, rating, visit-mode, distance and timing filters; list results and a reserved map panel; geolocation with manual fallback; clinic profiles, providers, sourced reviews, historical charts and confidence explanations; quick/full reports; saved clinics and visit planning; leave-by/arrival/finish arithmetic; product tour; About, Contact and footer anchors; responsive navigation, native dialogs, keyboard focus and Arabic RTL.
-
-| Route | Purpose |
-| --- | --- |
-| `/` | Guest/account onboarding |
-| `/find` | Search, filters, list/map |
-| `/clinic/:id` | Clinic detail, evidence, historical patterns and planning |
-| `/saved` | Saved visit plans and clinics |
-| `/report` | Full timing report |
-| `/know` | About, privacy, limitations, safety and future Plus concept |
-| `/contact` | Message preparation; delivery remains unconnected |
-| `/signup`, `/login`, `/verify`, `/reset-password` | Real account flows when backend is configured |
-| `/settings` | Authenticated private profile and account controls |
-| `/admin` | Development/staging administrator tools; excluded from public builds |
-
-Direct routes work through the Node server's SPA fallback. Original Netlify/Vercel rewrite files remain for frontend-only demos. A static Vite deployment alone cannot provide authentication or persistence.
-
-## Intentional behavior changes
-
-- **Guest state is temporary memory.** It survives client-side navigation, then resets on reload/new tab/closure. Only named legacy `mediq-*` personal-storage keys are removed; unrelated storage is untouched. Guests start with no saved clinics or visits. The first-visit tour preference alone persists in browser storage. No guest-to-account merge happens implicitly.
-- **Accounts are real.** A normalized unique email/password identity remains pending until its one-time code verifies. Only verified sessions can access private data. Optional sex, gender, kg/cm measurements and age start empty. Passwords are never readable profile fields. Logout, switching, revocation and deletion invalidate private UI state.
-- **Shared reports persist independently.** Guest interface reset does not delete an accepted backend report. Public reports contain operational summaries, never names, email, free-text notes or raw timing entries. Account deletion deletes that account's submitted reports and private records; nonidentifying aggregate event counts remain.
-- **Search uses deterministic concepts and typo tolerance.** `head pain` matches explicitly supported `headache` capabilities; name typos can match approved clinic names. Exact names outrank strong concepts and weaker fuzzy names. Selected filters are always enforced. Recommended order preserves relevance; nearest/shortest/confidence remain explicit sorts. No search is sent to an AI provider.
-- **Seven interface languages:** English, Spanish, Chinese, Arabic, Polish, Gujarati and Hindi. Interface choice and clinic spoken-language filtering are separate. Named locale catalogs extend the original three-locale catalog safely. Translation drafts require native-speaker review; directory proper names and original review prose remain source content.
-- **Brand:** primary `#2e9fe5`, secondary `#d1601a`, with darker text and accessible variants.
-
-## Repository guide
-
-| Location | Responsibility |
-| --- | --- |
-| `src/pages`, `src/components` | Existing care UI plus account/settings/internal screens |
-| `src/context/AppContext.tsx` | Session restoration, isolated state, saves and reports |
-| `src/context/translate.ts`, `locales/*.json` | Safe lookup, interpolation and seven languages |
-| `src/services/clinicService.ts` | Approved backend data or an empty offline directory |
-| `src/services/search.ts` | Shared intent, fuzzy name matching, strict filtering |
-| `src/services/locationService.ts`, `src/utils/time.ts`, `src/utils/report.ts` | Preserved location, visit arithmetic and report validation |
-| `src/data/mockData.ts`, `src/types.ts` | Fictional fixtures and shared contracts |
-| `server/` | Auth, API authorization/validation, schema, estimation, jobs, seed and CLI |
-| `tests/`, `scripts/smoke-test.mjs` | API/browser/regression checks |
-| `deploy/`, `.env*.example`, `server/.env*.example` | Independent staging/production deployment templates |
-| `docs/runbook.md` | Cloud/email/local setup, migrations, backup/restore/release |
-| `docs/data-and-estimates.md` | Data handling, estimator, search and metric definitions |
-| `docs/upgrade-checklist.md`, `docs/verification.md` | Acceptance evidence and external blockers |
-
-## Deployment and safety boundaries
-
-Local → staging validation → deliberate production promotion. Nothing here deploys automatically or modifies the existing public site. Separate services/disks/secrets/senders prevent test data crossing into production. Disk-backed single-instance hosting has brief restart outages and is not horizontally scalable; see the runbook. Real clinic data/source permissions, external integrations, sender/domain configuration, monitoring, backups and outside reviews remain explicit launch tasks.
-
-MediQU does not diagnose, guarantee visit times, or claim HIPAA/security certification. Contact emergency services for a suspected emergency. Complete privacy, security, clinical-safety, accessibility and translation review before collecting real pilot data.
+The application runs on **Render**, serving the frontend and backend together over HTTPS. GitHub holds the source code, and updates pushed to the `main` branch trigger an automatic build and deployment. This keeps local development separate from the public website while making releases straightforward.
