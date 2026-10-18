@@ -307,7 +307,7 @@
   "Location permission was denied. Allow location in your browser’s site settings and try again. Using Durham until then.": "位置权限被拒绝。请在浏览器的网站设置中允许位置访问后重试。在此之前使用达勒姆。",
   "Location request timed out. Try again with device Location Services enabled. Using Durham until then.": "位置请求超时。请开启设备定位服务后重试。在此之前使用达勒姆。",
   "Device location is unavailable. Enable Location Services and use HTTPS or localhost. Using Durham until then.": "设备位置不可用。请开启定位服务，并使用 HTTPS 或 localhost。在此之前使用达勒姆。",
-  "When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.": "使用设备位置时，大致坐标会分享给 BigDataCloud 以查找城市。MediQU 不保存您的位置。",
+  "Your approximate location stays on this device and is used to find the nearest city. MediQU does not save your location.": "您的大致位置仅保留在此设备上，用于查找最近的城市。MediQU 不保存您的位置。",
   "Clinic directory": "诊所目录",
   "Clinics will appear here as real directory information is added.": "添加真实目录信息后，诊所将在此显示。",
   "Visit estimates will appear when enough recent reports are available.": "有足够的近期报告后，将显示预计就诊时间。",
@@ -324,5 +324,10 @@
   "Weight (lb)": "体重（磅）",
   "Height (feet and inches)": "身高（英尺和英寸）",
   "{feet} ft {inches} in": "{feet} 英尺 {inches} 英寸",
-  "These fields are private and are never included in reports or activity metrics.": "这些信息为私人信息，不会包含在报告或活动指标中。"
+  "These fields are private and are never included in reports or activity metrics.": "这些信息为私人信息，不会包含在报告或活动指标中。",
+  "Find my location": "查找我的位置",
+  "Clear location": "清除位置",
+  "Location permission was denied. Allow location in your browser’s site settings and try again.": "位置权限被拒绝。请在浏览器的网站设置中允许访问位置后重试。",
+  "Location request timed out. Try again with device Location Services enabled.": "位置请求超时。请启用设备定位服务后重试。",
+  "Device location is unavailable. Enable Location Services and try again.": "无法获取设备位置。请启用定位服务后重试。"
 }

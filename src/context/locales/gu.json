@@ -675,7 +675,7 @@
   "Location permission was denied. Allow location in your browser’s site settings and try again. Using Durham until then.": "સ્થાનની પરવાનગી નકારાઈ. બ્રાઉઝરની સાઇટ સેટિંગ્સમાં સ્થાનની પરવાનગી આપીને ફરી પ્રયાસ કરો. ત્યાં સુધી Durham વપરાશે.",
   "Location request timed out. Try again with device Location Services enabled. Using Durham until then.": "સ્થાનની વિનંતીનો સમય પૂરો થયો. ઉપકરણની સ્થાન સેવાઓ ચાલુ કરીને ફરી પ્રયાસ કરો. ત્યાં સુધી Durham વપરાશે.",
   "Device location is unavailable. Enable Location Services and use HTTPS or localhost. Using Durham until then.": "ઉપકરણનું સ્થાન ઉપલબ્ધ નથી. સ્થાન સેવાઓ ચાલુ કરો અને HTTPS અથવા localhost વાપરો. ત્યાં સુધી Durham વપરાશે.",
-  "When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.": "ઉપકરણનું સ્થાન વાપરતી વખતે તમારું શહેર શોધવા અંદાજિત નિર્દેશાંકો BigDataCloud સાથે શેર થાય છે. MediQU તમારું સ્થાન સાચવતું નથી.",
+  "Your approximate location stays on this device and is used to find the nearest city. MediQU does not save your location.": "તમારું અંદાજિત સ્થાન આ ઉપકરણ પર જ રહે છે અને નજીકનું શહેર શોધવા વપરાય છે. MediQU તમારું સ્થાન સાચવતું નથી.",
   "Clinic directory": "ક્લિનિક ડિરેક્ટરી",
   "Clinics will appear here as real directory information is added.": "વાસ્તવિક ડિરેક્ટરી માહિતી ઉમેરાશે ત્યારે ક્લિનિક અહીં દેખાશે.",
   "Visit estimates will appear when enough recent reports are available.": "પૂરતા તાજેતરના અહેવાલો મળશે ત્યારે મુલાકાતના અંદાજ દેખાશે.",
@@ -692,5 +692,10 @@
   "Weight (lb)": "વજન (પાઉન્ડ)",
   "Height (feet and inches)": "ઊંચાઈ (ફૂટ અને ઇંચ)",
   "{feet} ft {inches} in": "{feet} ફૂટ {inches} ઇંચ",
-  "These fields are private and are never included in reports or activity metrics.": "આ વિગતો ખાનગી છે અને અહેવાલો કે પ્રવૃત્તિના આંકડામાં ક્યારેય સામેલ થતી નથી."
+  "These fields are private and are never included in reports or activity metrics.": "આ વિગતો ખાનગી છે અને અહેવાલો કે પ્રવૃત્તિના આંકડામાં ક્યારેય સામેલ થતી નથી.",
+  "Find my location": "મારું સ્થાન શોધો",
+  "Clear location": "સ્થાન સાફ કરો",
+  "Location permission was denied. Allow location in your browser’s site settings and try again.": "સ્થાનની પરવાનગી નકારવામાં આવી છે. બ્રાઉઝરની સાઇટ સેટિંગ્સમાં સ્થાનની મંજૂરી આપો અને ફરી પ્રયાસ કરો.",
+  "Location request timed out. Try again with device Location Services enabled.": "સ્થાનની વિનંતીનો સમય પૂરો થયો. ઉપકરણની સ્થાન સેવાઓ ચાલુ કરીને ફરી પ્રયાસ કરો.",
+  "Device location is unavailable. Enable Location Services and try again.": "ઉપકરણનું સ્થાન ઉપલબ્ધ નથી. સ્થાન સેવાઓ ચાલુ કરીને ફરી પ્રયાસ કરો."
 }

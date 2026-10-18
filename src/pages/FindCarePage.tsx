@@ -44,7 +44,7 @@ export function FindCarePage() {
   const [selectedClinicId, setSelectedClinicId] = useState('');
   const [upcomingClinic, setUpcomingClinic] = useState<Clinic | undefined>();
   const [locationBusy, setLocationBusy] = useState(false);
-  const [locationMessage, setLocationMessage] = useState('Distances from downtown Durham.');
+  const [locationMessage, setLocationMessage] = useState('');
   const [locationName, setLocationName] = useState('');
   const locationLookup = useRef<AbortController | null>(null);
   const requestId = useRef(0);
@@ -94,8 +94,8 @@ export function FindCarePage() {
     if (sort === 'reliability') {
       return copy.sort((a, b) => (b.estimates.find(e => e.mode === filters.visitMode)?.reliability || b.reliability).score - (a.estimates.find(e => e.mode === filters.visitMode)?.reliability || a.reliability).score);
     }
-    return sort === 'recommended' ? copy : copy.sort((a, b) => a.distanceMiles - b.distanceMiles);
-  }, [results, sort, filters.timing, filters.visitMode]);
+    return sort === 'distance' && filters.origin ? copy.sort((a, b) => a.distanceMiles - b.distanceMiles) : copy;
+  }, [results, sort, filters.timing, filters.visitMode, filters.origin]);
 
   const activeFilterCount = [
     filters.language,
@@ -104,7 +104,7 @@ export function FindCarePage() {
     filters.specialty,
     filters.visitMode !== 'all' ? filters.visitMode : '',
     filters.timing !== 'all' ? filters.timing : '',
-    filters.maxDistance !== 10 ? filters.maxDistance : '',
+    filters.origin && filters.maxDistance !== 10 ? filters.maxDistance : '',
   ].filter(Boolean).length;
 
   const updateFilter = <K extends keyof SearchFilters>(key: K, value: SearchFilters[K]) => {
@@ -132,12 +132,12 @@ export function FindCarePage() {
     const controller = new AbortController();
     locationLookup.current = controller;
     setLocationBusy(true);
+    setLocationName('');
     setLocationMessage('Requesting your current device location. Allow access in your browser if prompted.');
     try {
       const origin = await requestApproximateLocation(navigator.geolocation);
       if (id !== locationRequestId.current) return;
       setFilters(current => ({ ...current, origin }));
-      setLocationName(`${origin.latitude.toFixed(2)}, ${origin.longitude.toFixed(2)}`);
       setLocationMessage('Location found. Distances use your device’s approximate position.');
       try {
         const name = await resolveLocationName(origin, controller.signal);
@@ -151,10 +151,10 @@ export function FindCarePage() {
       setLocationName('');
       const code = (error as { code?: number } | null)?.code;
       setLocationMessage(code === 1
-        ? 'Location permission was denied. Allow location in your browser’s site settings and try again. Using Durham until then.'
+        ? 'Location permission was denied. Allow location in your browser’s site settings and try again.'
         : code === 3
-          ? 'Location request timed out. Try again with device Location Services enabled. Using Durham until then.'
-          : 'Device location is unavailable. Enable Location Services and use HTTPS or localhost. Using Durham until then.');
+          ? 'Location request timed out. Try again with device Location Services enabled.'
+          : 'Device location is unavailable. Enable Location Services and try again.');
     } finally {
       if (id === locationRequestId.current) setLocationBusy(false);
     }
@@ -166,7 +166,8 @@ export function FindCarePage() {
     setLocationBusy(false);
     setLocationName('');
     setFilters(current => ({ ...current, origin: undefined }));
-    setLocationMessage('Distances from downtown Durham.');
+    setLocationMessage('');
+    setSort(current => current === 'distance' ? 'recommended' : current);
   };
 
   const clearFilters = () => {
@@ -182,7 +183,7 @@ export function FindCarePage() {
         <div className="hero-orbit orbit-two" aria-hidden="true" />
         <div className="shell find-hero-inner">
           <div className="find-hero-copy">
-            <StatusBadge label={locationName || t("Durham, North Carolina")} />
+            {locationName && <StatusBadge label={locationName} />}
             <span className="eyebrow light">{t('heroEyebrow')}</span>
             <h1>{t('heroTitle')}</h1>
             <p>{t('heroBody')}</p>
@@ -206,11 +207,11 @@ export function FindCarePage() {
               <button className="button button-coral" type="submit">{t("Search")} <ArrowRight aria-hidden="true" /></button>
             </div>
             <div className="search-location">
-              <span><MapPin aria-hidden="true" /> {filters.origin ? t("Near {location}", { location: locationName }) : t("Near Durham, North Carolina")}</span>
-              <button type="button" disabled={locationBusy} onClick={useLocation}><LocateFixed aria-hidden="true" /> {t(locationBusy ? t("Locating…") : t("Use my location"))}</button>
+              {locationName && <span><MapPin aria-hidden="true" /> {t("Near {location}", { location: locationName })}</span>}
+              <button type="button" disabled={locationBusy} onClick={useLocation}><LocateFixed aria-hidden="true" /> {t(locationBusy ? "Locating…" : "Find my location")}</button>
             </div>
-            <p className="location-status" role="status">{t(locationMessage)} {filters.origin && <button className="text-button" type="button" onClick={resetLocation}>{t('Use Durham location')}</button>}</p>
-            <p className="location-status">{t('When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.')}</p>
+            <p className="location-status" role="status">{t(locationMessage)} {filters.origin && <button className="text-button" type="button" onClick={resetLocation}>{t('Clear location')}</button>}</p>
+            <p className="location-status">{t('Your approximate location stays on this device and is used to find the nearest city. MediQU does not save your location.')} <a href="/data/NOTICE.txt" target="_blank" rel="noreferrer">GeoNames</a></p>
           </form>
 
           <div className="quick-filters" aria-label={t('Quick picks')}>
@@ -264,7 +265,7 @@ export function FindCarePage() {
             <label className="field-label">
               <span>{t("Within")}</span>
               <div className="select-wrap">
-                <select value={filters.maxDistance} onChange={(event) => updateFilter('maxDistance', Number(event.target.value))}>
+                <select aria-label={t("Within")} disabled={!filters.origin} value={filters.maxDistance} onChange={(event) => updateFilter('maxDistance', Number(event.target.value))}>
                   <option value={3}>{t("3 miles")}</option>
                   <option value={5}>{t("5 miles")}</option>
                   <option value={10}>{t("10 miles")}</option>
@@ -341,7 +342,7 @@ export function FindCarePage() {
 
             <div className="results-toolbar">
               <div>
-                <span className="eyebrow">{filters.origin ? t("Care near {location}", { location: locationName }) : t("Care near Durham")}</span>
+                <span className="eyebrow">{locationName ? t("Care near {location}", { location: locationName }) : t("Find care")}</span>
                 <h2 id="results-title">{loading ? t('Finding options…') : t('Clinics matching your plan: {count}', { count: sortedResults.length })}</h2>
                 <p>{t("Every time shown is a total-visit estimate with a separate confidence signal.")}</p>
               </div>
@@ -350,7 +351,7 @@ export function FindCarePage() {
                   <span className="sr-only">{t("Sort results")}</span>
                   <select value={sort} onChange={(event) => setSort(event.target.value as SortMode)}>
                     <option value="recommended">{t("Recommended / relevance")}</option>
-                    <option value="distance">{t("Nearest first")}</option>
+                    <option value="distance" disabled={!filters.origin}>{t("Nearest first")}</option>
                     <option value="shortest">{t("Shortest visit")}</option>
                     <option value="reliability">{t("Highest confidence")}</option>
                   </select>
@@ -387,11 +388,12 @@ export function FindCarePage() {
                 selectedId={selectedClinicId}
                 onSelect={setSelectedClinicId}
                 preferredMode={filters.visitMode}
+                showDistance={!!filters.origin}
               />
             ) : (
               <div className="clinic-list">
                 {sortedResults.map((clinic) => (
-                  <ClinicCard clinic={clinic} key={clinic.id} preferredMode={filters.visitMode} />
+                  <ClinicCard clinic={clinic} key={clinic.id} preferredMode={filters.visitMode} showDistance={!!filters.origin} />
                 ))}
               </div>
             )}

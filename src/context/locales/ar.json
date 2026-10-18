@@ -307,7 +307,7 @@
   "Location permission was denied. Allow location in your browser’s site settings and try again. Using Durham until then.": "تم رفض إذن الموقع. اسمح بالموقع في إعدادات الموقع بالمتصفح وحاول مجدداً. نستخدم دورهام حتى ذلك الحين.",
   "Location request timed out. Try again with device Location Services enabled. Using Durham until then.": "انتهت مهلة طلب الموقع. فعّل خدمات الموقع في الجهاز وحاول مجدداً. نستخدم دورهام حتى ذلك الحين.",
   "Device location is unavailable. Enable Location Services and use HTTPS or localhost. Using Durham until then.": "موقع الجهاز غير متاح. فعّل خدمات الموقع واستخدم HTTPS أو localhost. نستخدم دورهام حتى ذلك الحين.",
-  "When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.": "عند استخدام موقع الجهاز، تُشارك الإحداثيات التقريبية مع BigDataCloud لمعرفة مدينتك. لا يحفظ MediQU موقعك.",
+  "Your approximate location stays on this device and is used to find the nearest city. MediQU does not save your location.": "يبقى موقعك التقريبي على هذا الجهاز ويُستخدم للعثور على أقرب مدينة. لا يحفظ MediQU موقعك.",
   "Clinic directory": "دليل العيادات",
   "Clinics will appear here as real directory information is added.": "ستظهر العيادات هنا عند إضافة معلومات حقيقية إلى الدليل.",
   "Visit estimates will appear when enough recent reports are available.": "ستظهر تقديرات الزيارة عند توفر تقارير حديثة كافية.",
@@ -324,5 +324,10 @@
   "Weight (lb)": "الوزن (رطل)",
   "Height (feet and inches)": "الطول (قدم وبوصة)",
   "{feet} ft {inches} in": "{feet} قدم و{inches} بوصة",
-  "These fields are private and are never included in reports or activity metrics.": "هذه البيانات خاصة ولا تُدرج أبداً في التقارير أو مقاييس النشاط."
+  "These fields are private and are never included in reports or activity metrics.": "هذه البيانات خاصة ولا تُدرج أبداً في التقارير أو مقاييس النشاط.",
+  "Find my location": "تحديد موقعي",
+  "Clear location": "مسح الموقع",
+  "Location permission was denied. Allow location in your browser’s site settings and try again.": "تم رفض إذن الموقع. اسمح بالوصول إلى الموقع في إعدادات الموقع بمتصفحك وحاول مجدداً.",
+  "Location request timed out. Try again with device Location Services enabled.": "انتهت مهلة طلب الموقع. فعّل خدمات الموقع على جهازك وحاول مجدداً.",
+  "Device location is unavailable. Enable Location Services and try again.": "موقع الجهاز غير متاح. فعّل خدمات الموقع وحاول مجدداً."
 }

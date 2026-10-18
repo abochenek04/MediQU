@@ -307,7 +307,7 @@
   "Location permission was denied. Allow location in your browser’s site settings and try again. Using Durham until then.": "Se denegó el permiso de ubicación. Permítelo en la configuración del sitio y vuelve a intentarlo. Hasta entonces se usa Durham.",
   "Location request timed out. Try again with device Location Services enabled. Using Durham until then.": "Se agotó el tiempo de espera. Activa los servicios de ubicación del dispositivo y vuelve a intentarlo. Hasta entonces se usa Durham.",
   "Device location is unavailable. Enable Location Services and use HTTPS or localhost. Using Durham until then.": "La ubicación del dispositivo no está disponible. Activa los servicios de ubicación y usa HTTPS o localhost. Hasta entonces se usa Durham.",
-  "When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.": "Al usar la ubicación del dispositivo, se comparten coordenadas aproximadas con BigDataCloud para encontrar tu ciudad. MediQU no guarda tu ubicación.",
+  "Your approximate location stays on this device and is used to find the nearest city. MediQU does not save your location.": "Tu ubicación aproximada permanece en este dispositivo y se usa para encontrar la ciudad más cercana. MediQU no guarda tu ubicación.",
   "Clinic directory": "Directorio de clínicas",
   "Clinics will appear here as real directory information is added.": "Las clínicas aparecerán aquí a medida que se añadan datos reales al directorio.",
   "Visit estimates will appear when enough recent reports are available.": "Las estimaciones aparecerán cuando haya suficientes informes recientes.",
@@ -324,5 +324,10 @@
   "Weight (lb)": "Peso (lb)",
   "Height (feet and inches)": "Estatura (pies y pulgadas)",
   "{feet} ft {inches} in": "{feet} pies {inches} pulg",
-  "These fields are private and are never included in reports or activity metrics.": "Estos datos son privados y nunca se incluyen en informes ni métricas de actividad."
+  "These fields are private and are never included in reports or activity metrics.": "Estos datos son privados y nunca se incluyen en informes ni métricas de actividad.",
+  "Find my location": "Buscar mi ubicación",
+  "Clear location": "Borrar ubicación",
+  "Location permission was denied. Allow location in your browser’s site settings and try again.": "Se denegó el permiso de ubicación. Permítelo en la configuración del sitio del navegador y vuelve a intentarlo.",
+  "Location request timed out. Try again with device Location Services enabled.": "La solicitud de ubicación agotó el tiempo de espera. Activa los servicios de ubicación e inténtalo de nuevo.",
+  "Device location is unavailable. Enable Location Services and try again.": "La ubicación del dispositivo no está disponible. Activa los servicios de ubicación e inténtalo de nuevo."
 }

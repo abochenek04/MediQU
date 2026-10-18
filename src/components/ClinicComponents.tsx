@@ -56,11 +56,13 @@ export function ClinicCard({
   preferredMode,
   selected = false,
   onSelect,
+  showDistance = false,
 }: {
   clinic: Clinic;
   preferredMode?: VisitMode | 'all';
   selected?: boolean;
   onSelect?: () => void;
+  showDistance?: boolean;
 }) {
   const { savedClinicIds, toggleSavedClinic, t } = useApp();
   const [reportOpen, setReportOpen] = useState(false);
@@ -103,7 +105,7 @@ export function ClinicCard({
           <span aria-hidden="true" />
           {clinic.status === 'open' ? t('Open · Closes {time}', { time: clinic.closesAt || '' }) : t('Closed · Opens {time}', { time: clinic.opensAt || '' })}
         </span>
-        <span><MapPin aria-hidden="true" /> {clinic.distanceMiles.toFixed(1)} mi · {clinic.neighborhood}</span>
+        <span><MapPin aria-hidden="true" /> {showDistance && <>{clinic.distanceMiles.toFixed(1)} mi · </>}{clinic.neighborhood}</span>
       </div>
 
       <div className="estimate-panel" data-tour="estimates">
@@ -144,11 +146,13 @@ export function MapView({
   selectedId,
   onSelect,
   preferredMode,
+  showDistance = false,
 }: {
   clinics: Clinic[];
   selectedId: string;
   onSelect: (id: string) => void;
   preferredMode: VisitMode | 'all';
+  showDistance?: boolean;
 }) {
   const { t } = useApp();
   const selected = clinics.find((clinic) => clinic.id === selectedId) || clinics[0];
@@ -159,7 +163,7 @@ export function MapView({
     <div className="map-experience">
       <div className="mock-map"><p className="info-note">{t('Map view is not connected yet. Browse the clinic list below.')}</p></div>
       <aside className="map-side-list" aria-label={t("Map results")}>
-        <p className="map-result-count">{clinics.length} nearby options</p>
+        <p className="map-result-count">{t('Clinics matching your plan: {count}', { count: clinics.length })}</p>
         {clinics.map((clinic, index) => {
           const estimate = getClinicEstimate(clinic, preferredMode);
           return (
@@ -172,7 +176,7 @@ export function MapView({
               <span className="map-list-index">{index + 1}</span>
               <span>
                 <strong>{clinic.name}</strong>
-                <small>{clinic.distanceMiles.toFixed(1)} mi · {t(formatMode(estimate.mode))}</small>
+                <small>{showDistance && <>{clinic.distanceMiles.toFixed(1)} mi · </>}{t(formatMode(estimate.mode))}</small>
               </span>
               <b>{hasEstimate(estimate) ? `${estimate.totalMinutes}m` : "—"}</b>
             </button>

@@ -92,7 +92,7 @@ test('delayed account refresh cannot undo a save or restore private data after l
  await page.getByRole('button',{name:'Sign out',exact:true}).click();await login(page,email);await visit(page,'/saved');await expect(page.locator('.saved-clinic-grid')).toContainText('Brightwell');
 });
 
-test('device location is opt-in, refreshes from Durham to Chicago and updates real search distances',async({page,context})=>{
+test('device location stays hidden until opt-in and city lookup, refreshes and clears without a default',async({page,context})=>{
  await context.grantPermissions(['geolocation']);
  await context.setGeolocation({latitude:35.994,longitude:-78.899});
  await page.addInitScript(()=>{
@@ -103,48 +103,52 @@ test('device location is opt-in, refreshes from Durham to Chicago and updates re
    return original(success,error,options);
   };
  });
- const positions:{latitude:number;longitude:number}[]=[];
- await page.route('https://api.bigdatacloud.net/data/reverse-geocode-client?**',route=>{
-  const url=new URL(route.request().url());const latitude=Number(url.searchParams.get('latitude'));const longitude=Number(url.searchParams.get('longitude'));
-  positions.push({latitude,longitude});
-  const chicago=latitude>40;
-  return route.fulfill({json:{latitude,longitude,lookupSource:'coordinates',city:chicago?'Chicago':'Durham',countryCode:'US',principalSubdivisionCode:chicago?'US-IL':'US-NC'}});
+ const directoryRequests:string[]=[];const externalRequests:string[]=[];let releaseLookup:(()=>void)|undefined;
+ page.on('request',request=>{if(!new URL(request.url()).hostname.match(/^(localhost|127\.0\.0\.1)$/))externalRequests.push(request.url());});
+ await page.route('**/data/cities.json',async route=>{
+  directoryRequests.push(route.request().url());
+  if(directoryRequests.length===1)await new Promise<void>(resolve=>{releaseLookup=resolve;});
+  return route.continue();
  });
  await visit(page);
- expect(positions).toHaveLength(0);
+ await expect(page.locator('.find-hero .demo-badge')).toHaveCount(0);await expect(page.locator('.search-location span')).toHaveCount(0);await expect(page.locator('.find-hero')).not.toContainText('Durham');await expect(page.getByRole('option',{name:'Nearest first',exact:true})).toHaveJSProperty('disabled',true);await expect(page.getByLabel('Within',{exact:true})).toBeDisabled();
+ expect(directoryRequests).toHaveLength(0);
  expect(await page.evaluate(()=>(window as unknown as {locationOptions:PositionOptions[]}).locationOptions)).toHaveLength(0);
- await page.getByRole('button',{name:'Use my location',exact:true}).click();
+ await page.getByRole('button',{name:'Find my location',exact:true}).click();
+ await expect.poll(()=>!!releaseLookup).toBe(true);await expect(page.locator('.find-hero .demo-badge')).toHaveCount(0);await expect(page.locator('.find-hero')).not.toContainText('35.99');await expect(page.locator('.find-hero')).not.toContainText('-78.90');releaseLookup!();
  await expect(page.locator('.search-location')).toContainText('Near Durham, NC');
  await expect(page.locator('.find-hero .demo-badge')).toHaveText('Durham, NC');
  await expect(page.locator('.clinic-card')).toHaveCount(6);
  await context.setGeolocation({latitude:41.8781,longitude:-87.6298});
- await page.getByRole('button',{name:'Use my location',exact:true}).click();
+ await page.getByRole('button',{name:'Find my location',exact:true}).click();
  await expect(page.locator('.search-location')).toContainText('Near Chicago, IL');
  await expect(page.locator('#clinic-results .eyebrow')).toContainText('Care near Chicago, IL');
  await expect(page.locator('.clinic-card')).toHaveCount(0);
- expect(positions).toEqual([{latitude:35.99,longitude:-78.9},{latitude:41.88,longitude:-87.63}]);
+ expect(directoryRequests).toEqual(['http://localhost:4173/data/cities.json']);expect(externalRequests).toEqual([]);
  const options=await page.evaluate(()=>(window as unknown as {locationOptions:PositionOptions[]}).locationOptions);
- expect(options).toHaveLength(2);expect(options.every(o=>o.maximumAge===0&&o.enableHighAccuracy===true)).toBe(true);
- await page.getByRole('button',{name:'Use Durham location',exact:true}).click();
- await expect(page.locator('.search-location')).toContainText('Near Durham, North Carolina');
+ expect(options).toHaveLength(2);expect(options.every(o=>o.maximumAge===0&&o.enableHighAccuracy===false)).toBe(true);
+ await page.getByRole('button',{name:'Clear location',exact:true}).click();
+ await expect(page.locator('.find-hero .demo-badge')).toHaveCount(0);await expect(page.locator('.search-location span')).toHaveCount(0);await expect(page.locator('.find-hero')).not.toContainText('Durham');await expect(page.getByLabel('Within',{exact:true})).toBeDisabled();
  await expect(page.locator('.clinic-card')).toHaveCount(6);
 });
 
-test('denied device permission never calls city lookup; lookup failure still uses device coordinates',async({page,context})=>{
+test('denied permission and lookup failures never show a guessed city or coordinates',async({page,context})=>{
  await context.grantPermissions([]);
  let lookups=0;
- await page.route('https://api.bigdatacloud.net/data/reverse-geocode-client?**',route=>{lookups++;return route.fulfill({status:503,json:{error:'Unavailable'}});});
+ await page.route('**/data/cities.json',route=>{lookups++;return route.fulfill({status:503,json:{error:'Unavailable'}});});
  await visit(page);
- await page.getByRole('button',{name:'Use my location',exact:true}).click();
+ await page.getByRole('button',{name:'Find my location',exact:true}).click();
  await expect(page.locator('.location-status[role="status"]')).toContainText('Location permission was denied');
  expect(lookups).toBe(0);
  await expect(page.locator('.clinic-card')).toHaveCount(6);
  await context.grantPermissions(['geolocation']);await context.setGeolocation({latitude:41.8781,longitude:-87.6298});
- await page.getByRole('button',{name:'Use my location',exact:true}).click();
+ await page.getByRole('button',{name:'Find my location',exact:true}).click();
  await expect(page.locator('.location-status[role="status"]')).toContainText('City name is unavailable');
- await expect(page.locator('.search-location')).toContainText('41.88, -87.63');
+ await expect(page.locator('.find-hero .demo-badge')).toHaveCount(0);await expect(page.locator('.search-location span')).toHaveCount(0);await expect(page.locator('main')).not.toContainText('41.88');await expect(page.locator('main')).not.toContainText('-87.63');
  await expect(page.locator('.clinic-card')).toHaveCount(0);
  expect(lookups).toBe(1);
+ await page.evaluate(()=>{navigator.geolocation.getCurrentPosition=(_success,error)=>error?.({code:3,message:'Timeout'} as GeolocationPositionError);});
+ await page.getByRole('button',{name:'Find my location',exact:true}).click();await expect(page.locator('.location-status[role="status"]')).toContainText('Location request timed out');await expect(page.locator('.find-hero')).not.toContainText('Durham');await expect(page.locator('.search-location span')).toHaveCount(0);await expect(page.locator('.clinic-card')).toHaveCount(6);
 });
 
 test('tour appears once per browser, stays dismissed on reload and can be replayed manually',async({page,context})=>{
