@@ -320,5 +320,9 @@
   "No clinics are available for reporting yet.": "暂无可提交报告的诊所。",
   "Not enough recent reports for an estimate.": "近期报告不足，无法估计。",
   "Approximate": "大致时间",
-  "Detailed": "详细时间"
+  "Detailed": "详细时间",
+  "Weight (lb)": "体重（磅）",
+  "Height (feet and inches)": "身高（英尺和英寸）",
+  "{feet} ft {inches} in": "{feet} 英尺 {inches} 英寸",
+  "These fields are private and are never included in reports or activity metrics.": "这些信息为私人信息，不会包含在报告或活动指标中。"
 }

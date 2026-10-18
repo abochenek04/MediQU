@@ -320,5 +320,9 @@
   "No clinics are available for reporting yet.": "Todavía no hay clínicas disponibles para enviar informes.",
   "Not enough recent reports for an estimate.": "No hay suficientes informes recientes para una estimación.",
   "Approximate": "Aproximado",
-  "Detailed": "Detallado"
+  "Detailed": "Detallado",
+  "Weight (lb)": "Peso (lb)",
+  "Height (feet and inches)": "Estatura (pies y pulgadas)",
+  "{feet} ft {inches} in": "{feet} pies {inches} pulg",
+  "These fields are private and are never included in reports or activity metrics.": "Estos datos son privados y nunca se incluyen en informes ni métricas de actividad."
 }

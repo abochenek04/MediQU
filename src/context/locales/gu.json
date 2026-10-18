@@ -688,5 +688,9 @@
   "No clinics are available for reporting yet.": "અહેવાલ આપવા માટે હજી કોઈ ક્લિનિક ઉપલબ્ધ નથી.",
   "Not enough recent reports for an estimate.": "અંદાજ માટે પૂરતા તાજેતરના અહેવાલો નથી.",
   "Approximate": "અંદાજિત",
-  "Detailed": "વિગતવાર"
+  "Detailed": "વિગતવાર",
+  "Weight (lb)": "વજન (પાઉન્ડ)",
+  "Height (feet and inches)": "ઊંચાઈ (ફૂટ અને ઇંચ)",
+  "{feet} ft {inches} in": "{feet} ફૂટ {inches} ઇંચ",
+  "These fields are private and are never included in reports or activity metrics.": "આ વિગતો ખાનગી છે અને અહેવાલો કે પ્રવૃત્તિના આંકડામાં ક્યારેય સામેલ થતી નથી."
 }

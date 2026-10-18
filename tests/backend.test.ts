@@ -52,8 +52,8 @@ test('real auth lifecycle, private ownership, atomic deletion and durable reopen
   assert.equal((await a.call(`/api/saved-clinics/${clinics[0].id}`,'PUT')).status,200);
   assert.equal((await b.call(`/api/plans/${plan.id}`)).status,404);
   assert.equal((await guest.call(`/api/plans/${plan.id}`)).status,401);
-  assert.equal((await a.call('/api/profile','PUT',{firstName:'Alice',lastName:'Example',sex:null,gender:null,weightKg:65,heightCm:null,age:null,language:'pl',notifications:false})).status,200);
-  assert.equal((await a.call('/api/me')).data.profile.weightKg,65);
+  assert.equal((await a.call('/api/profile','PUT',{firstName:'Alice',lastName:'Example',sex:null,weightLb:155,heightInches:70,age:null,language:'pl',notifications:false})).status,200);
+  assert.equal((await a.call('/api/me')).data.profile.weightLb,155);
   assert.equal((await a.call('/api/preferences','PUT',{language:'hi'},{'x-mediq-account':'other'})).status,409);
   await a.call('/api/auth/sign-out','POST');assert.equal((await a.call('/api/me')).data.user,null);
   await a.call('/api/auth/sign-in/email','POST',{email:'a@example.test',password:'A-long-password-123'});
@@ -211,4 +211,31 @@ test('3.1.1 excludes archived and unverified clinics without deleting records or
   assert(result.data.estimates.every((e:any)=>e.totalMinutes===0&&e.evidenceState==='insufficient'&&e.stages.length===0));
   assert.equal((await client.call('/api/clinics')).data.length,1);
  }finally{h.close();}
+});
+
+test('profile migration stores pounds/inches, removes gender and runs only once',()=>{
+ const root=mkdtempSync(`${tmpdir()}/mediq-profile-migration-`);
+ const config:ServerConfig={...readConfig(),environment:'test',database:`${root}/db.sqlite`};
+ let db:DatabaseSync|undefined;
+ try{
+  db=new DatabaseSync(config.database);
+  db.exec(readFileSync(new URL('../server/migrations/001_initial.sql',import.meta.url),'utf8'));
+  db.exec('CREATE TABLE migrations (name TEXT PRIMARY KEY, applied_at INTEGER NOT NULL)');
+  db.prepare('INSERT INTO migrations VALUES (?,?)').run('001_initial.sql',Date.now());
+  db.prepare('INSERT INTO environment VALUES (1,?)').run('test');
+  db.prepare('INSERT INTO user(id,name,email,createdAt,updatedAt) VALUES (?,?,?,?,?)').run('migration-user','Test Person','migration@example.test',Date.now(),Date.now());
+  db.prepare('INSERT INTO profiles VALUES (?,?,?,?,?,?,?,?)').run('migration-user','female','old-gender',70,180,25,'pl',1);
+  db.close();db=openDatabase(config);
+  const fields=db.prepare('PRAGMA table_info(profiles)').all().map(r=>r.name);
+  assert(!fields.includes('gender'));assert(!fields.includes('weight_kg'));assert(!fields.includes('height_cm'));
+  const expected={user_id:'migration-user',sex:'female',weight_lb:154,height_inches:71,age:25,language:'pl',notifications:1};
+  assert.deepEqual({...db.prepare('SELECT * FROM profiles').get()},expected);
+  assert.throws(()=>db!.prepare('UPDATE profiles SET weight_lb=155.5').run(),/CHECK/);
+  assert.throws(()=>db!.prepare('UPDATE profiles SET height_inches=119').run(),/CHECK/);
+  db.close();db=openDatabase(config);
+  assert.deepEqual({...db.prepare('SELECT * FROM profiles').get()},expected);
+  assert.equal(db.prepare('SELECT count(*) n FROM migrations').get()?.n,2);
+  db.prepare('DELETE FROM user WHERE id=?').run('migration-user');
+  assert.equal(db.prepare('SELECT count(*) n FROM profiles').get()?.n,0);
+ }finally{db?.close();rmSync(root,{recursive:true,force:true});}
 });

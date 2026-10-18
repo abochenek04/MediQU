@@ -13,6 +13,18 @@ This upgrade preserves the React 19/Vite UI and `ClinicDataService`. The server 
 
 SQLite on a persistent cloud disk is a real durable relational backend, not an in-memory stub. It is deliberately a **single-instance** architecture: no shared network filesystem, multiple API replicas, serverless ephemeral disk or horizontal scaling. This is suitable for a small pilot. A managed PostgreSQL migration and a separate private production operations deployment are future scaling/operations work, not claimed here. Production serves no admin routes; staging tools operate on staging records. A trusted server operator can inspect/repair production through a controlled database maintenance procedure, with a backup and separately recorded change log. Before operating a real multi-clinic production service, establish its private moderation/operations access path.
 
+## Profile measurement storage
+
+The settings form and API use `weightLb` (whole pounds) and `heightInches`
+(total whole inches, displayed as feet and inches). SQLite stores these in
+`profiles.weight_lb` and `profiles.height_inches`; gender is no longer collected
+or stored. Optional values remain nullable and can be cleared. Migration
+`002_imperial_profiles.sql` runs once on startup, removes the old gender column,
+and converts any existing metric measurements, rounded to the nearest whole
+pound/inch. Take a database backup before deploying this schema change. An old
+application build expecting the metric columns cannot run against the migrated
+database; a rollback requires compatible code or the pre-migration backup.
+
 ## Exact local startup
 
 Use Node **24 LTS** (Node >=22.13 works; older supported runtimes may print an experimental SQLite warning). From the repository root:

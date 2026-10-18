@@ -320,5 +320,9 @@
   "No clinics are available for reporting yet.": "لا توجد عيادات متاحة للإبلاغ بعد.",
   "Not enough recent reports for an estimate.": "لا توجد تقارير حديثة كافية للتقدير.",
   "Approximate": "تقريبي",
-  "Detailed": "تفصيلي"
+  "Detailed": "تفصيلي",
+  "Weight (lb)": "الوزن (رطل)",
+  "Height (feet and inches)": "الطول (قدم وبوصة)",
+  "{feet} ft {inches} in": "{feet} قدم و{inches} بوصة",
+  "These fields are private and are never included in reports or activity metrics.": "هذه البيانات خاصة ولا تُدرج أبداً في التقارير أو مقاييس النشاط."
 }

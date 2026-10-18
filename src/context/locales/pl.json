@@ -688,5 +688,9 @@
   "No clinics are available for reporting yet.": "Nie ma jeszcze placówek, dla których można przesłać zgłoszenie.",
   "Not enough recent reports for an estimate.": "Za mało aktualnych zgłoszeń do obliczenia szacunku.",
   "Approximate": "Przybliżone",
-  "Detailed": "Szczegółowe"
+  "Detailed": "Szczegółowe",
+  "Weight (lb)": "Waga (funty)",
+  "Height (feet and inches)": "Wzrost (stopy i cale)",
+  "{feet} ft {inches} in": "{feet} stóp {inches} cali",
+  "These fields are private and are never included in reports or activity metrics.": "Te dane są prywatne i nigdy nie są uwzględniane w zgłoszeniach ani statystykach aktywności."
 }

@@ -83,12 +83,12 @@ export function createApplication(config:ServerConfig) {
    if(path==='/api/me'&&method==='GET') {
     if(!user)return json({user:null,admin:false});
     db.prepare('INSERT OR IGNORE INTO profiles(user_id) VALUES (?)').run(user.id);
-    const profile=db.prepare('SELECT sex,gender,weight_kg AS weightKg,height_cm AS heightCm,age,language,notifications FROM profiles WHERE user_id=?').get(user.id)!;
+    const profile=db.prepare('SELECT sex,weight_lb AS weightLb,height_inches AS heightInches,age,language,notifications FROM profiles WHERE user_id=?').get(user.id)!;
     return json({user:{id:user.id,email:user.email,firstName:user.firstName,lastName:user.lastName,createdAt:user.createdAt},admin,profile:{...profile,notifications:!!profile.notifications},savedClinicIds:db.prepare('SELECT clinic_id FROM saved_clinics WHERE user_id=?').all(user.id).map(r=>r.clinic_id).filter(id=>!!baseClinic(String(id))),savedAppointments:db.prepare('SELECT document FROM visit_plans WHERE user_id=? ORDER BY created_at DESC').all(user.id).map(r=>JSON.parse(r.document as string)).filter(plan=>!plan.isSample&&!!baseClinic(plan.clinicId))});
    }
    if(path==='/api/profile'&&method==='PUT') {
     const owner=requireUser();const data=profileSchema.parse(await request.json());
-    transaction(db,()=>{db.prepare('UPDATE user SET firstName=?,lastName=?,name=?,updatedAt=? WHERE id=?').run(data.firstName,data.lastName,`${data.firstName} ${data.lastName}`,Date.now(),owner.id);db.prepare('INSERT INTO profiles VALUES (?,?,?,?,?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET sex=excluded.sex,gender=excluded.gender,weight_kg=excluded.weight_kg,height_cm=excluded.height_cm,age=excluded.age,language=excluded.language,notifications=excluded.notifications').run(owner.id,data.sex,data.gender||null,data.weightKg,data.heightCm,data.age,data.language,Number(data.notifications));});
+    transaction(db,()=>{db.prepare('UPDATE user SET firstName=?,lastName=?,name=?,updatedAt=? WHERE id=?').run(data.firstName,data.lastName,`${data.firstName} ${data.lastName}`,Date.now(),owner.id);db.prepare('INSERT INTO profiles(user_id,sex,weight_lb,height_inches,age,language,notifications) VALUES (?,?,?,?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET sex=excluded.sex,weight_lb=excluded.weight_lb,height_inches=excluded.height_inches,age=excluded.age,language=excluded.language,notifications=excluded.notifications').run(owner.id,data.sex,data.weightLb,data.heightInches,data.age,data.language,Number(data.notifications));});
     return json({ok:true});
    }
    if(path==='/api/preferences'&&method==='PUT'){const owner=requireUser();const data=preferenceSchema.parse(await request.json());db.prepare('INSERT INTO profiles(user_id,language) VALUES (?,?) ON CONFLICT(user_id) DO UPDATE SET language=excluded.language').run(owner.id,data.language);return json({ok:true});}
