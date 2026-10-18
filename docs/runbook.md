@@ -25,14 +25,27 @@ pound/inch. Take a database backup before deploying this schema change. An old
 application build expecting the metric columns cannot run against the migrated
 database; a rollback requires compatible code or the pre-migration backup.
 
+## Configuration layout
+
+Tracked environment templates live in `config/env/`, with separate `client` and
+`server` files for development, staging and production. They contain placeholders
+only. Actual local settings still belong in the root `.env` and `server/.env`;
+Render receives production values through its environment dashboard. Moving the
+templates does not change where runtime values are loaded.
+
+Secondary TypeScript configurations live in `config/typescript/`. The root
+`tsconfig.json` references the frontend and tooling projects, and `npm run
+typecheck` also checks the server/test project. Render build and start commands
+remain the same.
+
 ## Exact local startup
 
 Use Node **24 LTS** (Node >=22.13 works; older supported runtimes may print an experimental SQLite warning). From the repository root:
 
 ```sh
 npm ci
-cp .env.example .env
-cp server/.env.example server/.env
+cp config/env/client.development.env.example .env
+cp config/env/server.development.env.example server/.env
 npm run db:migrate
 npm run db:seed
 npm run api
@@ -142,7 +155,7 @@ Source: [Render outbound bandwidth](https://render.com/docs/outbound-bandwidth),
 
 Keep independent repositories/services or release branches, databases/disks, auth secrets, mail API keys/senders, domains and monitors. The database stores an environment marker and rejects mismatched `APP_ENV`. Staging is never a replica of production containing private user data. Seed only the fictional directory in development/test/staging (`db:seed` refuses production), and create explicitly designated staging test accounts. Seed reports from the original UI are **not** counted as accepted backend reports.
 
-Browser examples: `.env.staging.example`, `.env.production.example`. Server examples: `server/.env.staging.example`, `server/.env.production.example`. Deploy samples: `deploy/render.staging.yaml`, `deploy/render.production.yaml`. These files contain placeholders, never credentials. Both Blueprints disable automatic deployment. Merely committing or building does not deploy anything.
+Browser examples: `config/env/client.staging.env.example`, `config/env/client.production.env.example`. Server examples: `config/env/server.staging.env.example`, `config/env/server.production.env.example`. Deploy samples: `deploy/render.staging.yaml`, `deploy/render.production.yaml`. These files contain placeholders, never credentials. Both Blueprints disable automatic deployment. Merely committing or building does not deploy anything.
 
 ### Render and Resend setup (owner-controlled steps)
 

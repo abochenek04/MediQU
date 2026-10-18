@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "serve:dist": "node scripts/serve-dist.mjs",
-    "typecheck": "tsc -b && tsc -p tsconfig.server.json",
+    "typecheck": "tsc -b && tsc -p config/typescript/tsconfig.server.json",
     "test": "npm run test:i18n && npm run test:palette && npm run build && npm run test:smoke",
     "test:smoke": "node scripts/smoke-test.mjs",
     "api": "node --import tsx --env-file-if-exists=server/.env server/index.ts",

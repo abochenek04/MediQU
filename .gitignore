@@ -4,12 +4,8 @@ dist/
 .DS_Store
 .env
 .env.*
-!.env.example
-!.env.*.example
 server/.env
 server/.env.*
-!server/.env.example
-!server/.env.*.example
 .data/
 *.sqlite*
 *.db
@@ -17,3 +13,7 @@ server/.env.*
 playwright-report/
 test-results/
 README-LOCAL-SETUP.md
+
+# Track placeholder templates only; keep real config/env values private.
+config/env/*
+!config/env/*.env.example

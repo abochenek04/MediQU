@@ -1,1 +1,0 @@
-{"compilerOptions":{"target":"ES2023","lib":["ES2023","DOM"],"module":"ESNext","moduleResolution":"Bundler","allowImportingTsExtensions":true,"noEmit":true,"strict":true,"skipLibCheck":true,"esModuleInterop":true,"types":["node"]},"include":["server/**/*.ts","tests/**/*.ts"]}

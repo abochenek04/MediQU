@@ -115,16 +115,18 @@ Paths below are relative to the repository root. "Tracked" means part of Git's c
 MediQ_git/
   .git/                  Local Git history, index, refs, logs and hooks
   .data/                 Local databases, local mail, tests and rollback archives
-  .env*                  Browser-side environment configuration and examples
+  .env*                  Ignored local browser environment configuration
   .gitignore             Rules for future untracked files
   README.md              Existing project overview, retained
   README-LOCAL-SETUP.md   Ignored personal setup guide
   package*.json          Dependencies, npm scripts and locked versions
   index.html             Browser HTML entry
   vite.config.ts         Browser build, development port and API proxy
-  tsconfig*.json         TypeScript compiler scopes
+  tsconfig.json          TypeScript project references
+  config/
+    env/                 Browser/server environment templates
+    typescript/          Browser, Node and API compiler scopes
   playwright.config.ts   Browser test runner and test servers
-  vercel.json            Static SPA rewrite template
   src/
     main.tsx, App.tsx     React boot and route selection
     components/          Reusable presentation and interaction
@@ -188,13 +190,13 @@ Environment variables are configuration values supplied outside source code. Exa
 | File | Status and role |
 | --- | --- |
 | `.env` | Actual local browser settings; ignored. Contains VITE_DATA_MODE and VITE_APP_ENV. Current mode is backend/development. |
-| `.env.example` | Tracked browser template for development; contains VITE_DATA_MODE and VITE_APP_ENV. |
-| `.env.staging.example` | Tracked browser template for staging builds; same two keys. |
-| `.env.production.example` | Tracked browser template for public production builds; same two keys. |
+| `config/env/client.development.env.example` | Tracked browser template for development; contains VITE_DATA_MODE and VITE_APP_ENV. |
+| `config/env/client.staging.env.example` | Tracked browser template for staging builds; same two keys. |
+| `config/env/client.production.env.example` | Tracked browser template for public production builds; same two keys. |
 | `server/.env` | Actual local API settings; ignored. Contains APP_ENV, APP_ORIGIN, DATABASE_PATH, PORT, HOST, AUTH_SECRET, MAIL_MODE, SERVE_STATIC and TRUST_PROXY. Actual values are not reproduced. |
-| `server/.env.example` | Tracked development API template, containing the same nine keys. Placeholder AUTH_SECRET is not a production credential. |
-| `server/.env.staging.example` | Tracked staging API template; adds RESEND_API_KEY, MAIL_FROM and RUN_JOBS to the development key set. |
-| `server/.env.production.example` | Tracked production API template; same twelve keys as the staging example, with independent production placeholders. |
+| `config/env/server.development.env.example` | Tracked development API template, containing the same nine keys. Placeholder AUTH_SECRET is not a production credential. |
+| `config/env/server.staging.env.example` | Tracked staging API template; adds RESEND_API_KEY, MAIL_FROM and RUN_JOBS to the development key set. |
+| `config/env/server.production.env.example` | Tracked production API template; same twelve keys as the staging example, with independent production placeholders. |
 
 No actual `.env.staging`, `.env.production`, `.env.local`, mode-local file, or additional real server environment file was present at inspection. `.example` files are not loaded automatically just because they exist. A user must copy a chosen example or set equivalent hosting variables. Do not overwrite an existing real environment file while following setup instructions.
 
@@ -455,15 +457,15 @@ Zod strict schemas accept only known signup/profile/preference/plan/report/corre
 
 A binary operating-system file with folder display information. It has no application, build, database or deployment purpose. Its binary contents are intentionally not decoded. It remains tracked despite its ignore rule; this documentation task does not remove it.
 
-### `.env.example` - Environment template
+### `config/env/client.development.env.example` - Environment template
 
 Tracked example configuration, not a loaded real credential file. Its exact keys, browser/server scope, required setup and differences by environment are documented in chapter 4. Do not deploy placeholder secrets; choose independent server credentials and matching exact browser origin. The .example suffix requires deliberate copying or equivalent injected values.
 
-### `.env.production.example` - Environment template
+### `config/env/client.production.env.example` - Environment template
 
 Tracked example configuration, not a loaded real credential file. Its exact keys, browser/server scope, required setup and differences by environment are documented in chapter 4. Do not deploy placeholder secrets; choose independent server credentials and matching exact browser origin. The .example suffix requires deliberate copying or equivalent injected values.
 
-### `.env.staging.example` - Environment template
+### `config/env/client.staging.env.example` - Environment template
 
 Tracked example configuration, not a loaded real credential file. Its exact keys, browser/server scope, required setup and differences by environment are documented in chapter 4. Do not deploy placeholder secrets; choose independent server credentials and matching exact browser origin. The .example suffix requires deliberate copying or equivalent injected values.
 
@@ -567,7 +569,7 @@ Node test runner creates temporary isolated SQL databases and cookie-aware in-pr
 
 Seven Playwright scenarios operate real Vite/API test servers and separate browser contexts/tabs. Cover guest care navigation/search/map/reports/temporary saves; verified accounts and second-device state; seven languages/RTL; stale search/retry; admin authorization; routes/responsive/dialog keyboard; and delayed account refresh/logout/switching races. Test helper uses only the e2e database/mail. Screenshots and reports are generated diagnostic artifacts.
 
-### `tsconfig.app.json` - Browser TypeScript compilation scope
+### `config/typescript/tsconfig.app.json` - Browser TypeScript compilation scope
 
 Checks src with ES2022+DOM libraries, strict mode, React automatic JSX, JSON imports, bundler resolution and vite/client types. noEmit makes this a type check; Vite handles actual browser compilation. Explicit ambient types avoid accidentally including unrelated installed type packages.
 
@@ -579,7 +581,7 @@ Generated metadata used to accelerate repeated browser type checks. Not human-au
 
 Root build configuration has no direct source files and references browser and Vite-config projects. tsc -b follows this graph. Server/tests are checked through the additional explicit server config in the typecheck command, not this root reference list.
 
-### `tsconfig.node.json` - Vite-config TypeScript scope
+### `config/typescript/tsconfig.node.json` - Vite-config TypeScript scope
 
 Checks vite.config.ts with Node types, bundler resolution and no emitted JavaScript. Composite mode participates in the root reference build. Node-specific config is distinct from browser DOM files.
 
@@ -587,13 +589,13 @@ Checks vite.config.ts with Node types, bundler resolution and no emitted JavaScr
 
 Generated metadata for the Node/Vite configuration project. Can change after a typecheck even when source is unchanged. Like the app cache it is historically tracked, regenerable and not authoritative configuration.
 
-### `tsconfig.server.json` - API and test TypeScript scope
+### `config/typescript/tsconfig.server.json` - API and test TypeScript scope
 
 Checks server/**/*.ts and tests/**/*.ts with ES2023+DOM declarations, Node types, strict mode and explicit .ts import support. DOM here supplies Web Request/Response type declarations used by modern Node; it does not turn the server into a browser process. noEmit means tsx runs TypeScript source at runtime.
 
-### `vercel.json` - Static route fallback template
+### Former Vercel static route fallback template
 
-Rewrites paths to index.html so a static deployment can reload React routes. It is a hosting hint, not deployment evidence or backend provisioning. It does not configure a permanent SQLite volume, email delivery or the Node API, and is not a complete hosting solution for backend mode.
+The unused Vercel configuration has been removed. Production is hosted by Render, and the Node server handles React route fallback. No replacement Vercel configuration is needed.
 
 ### `vite.config.ts` - Development server and browser bundler configuration
 
@@ -603,15 +605,15 @@ Loads VITE_ environment settings, enables the React plugin, sets dev and preview
 
 The three server env examples are cataloged here as well as in chapter 4 so no tracked file is omitted.
 
-### `server/.env.example` - Environment template
+### `config/env/server.development.env.example` - Environment template
 
 Tracked example configuration, not a loaded real credential file. Its exact keys, browser/server scope, required setup and differences by environment are documented in chapter 4. Do not deploy placeholder secrets; choose independent server credentials and matching exact browser origin. The .example suffix requires deliberate copying or equivalent injected values.
 
-### `server/.env.production.example` - Environment template
+### `config/env/server.production.env.example` - Environment template
 
 Tracked example configuration, not a loaded real credential file. Its exact keys, browser/server scope, required setup and differences by environment are documented in chapter 4. Do not deploy placeholder secrets; choose independent server credentials and matching exact browser origin. The .example suffix requires deliberate copying or equivalent injected values.
 
-### `server/.env.staging.example` - Environment template
+### `config/env/server.staging.env.example` - Environment template
 
 Tracked example configuration, not a loaded real credential file. Its exact keys, browser/server scope, required setup and differences by environment are documented in chapter 4. Do not deploy placeholder secrets; choose independent server credentials and matching exact browser origin. The .example suffix requires deliberate copying or equivalent injected values.
 
@@ -997,7 +999,7 @@ These commands are defined in the existing manifest. "Setup" is not a command to
 | `build` | `tsc -b && vite build` | Build/type check: tsc root projects then Vite production-mode browser bundle into dist. Does not separately run server typecheck or deploy. |
 | `preview` | `vite preview` | Local Vite static preview of dist. Current config has no preview /api proxy; do not assume backend account calls work through this preview alone. |
 | `serve:dist` | `node scripts/serve-dist.mjs` | Local custom static-only dist helper; not the backend. |
-| `typecheck` | `tsc -b && tsc -p tsconfig.server.json` | Checks browser/Vite root projects, then server and test compiler scope without emitting server JS. |
+| `typecheck` | `tsc -b && tsc -p config/typescript/tsconfig.server.json` | Checks browser/Vite root projects, then server and test compiler scope without emitting server JS. |
 | `test` | `npm run test:i18n && npm run test:palette && npm run build && npm run test:smoke` | Runs translation audit, palette audit, build and smoke sequentially. Backend and browser tests are separate commands. |
 | `test:smoke` | `node scripts/smoke-test.mjs` | Checks built route fallback/assets and shared product logic using mock service. |
 | `api` | `node --import tsx --env-file-if-exists=server/.env server/index.ts` | Normal backend session: starts Node API with server/.env if present; opens DB and applies pending numbered migrations. |
@@ -1021,8 +1023,8 @@ First-time setup, only if the real files/database are absent:
 
 ```sh
 npm ci
-cp .env.example .env
-cp server/.env.example server/.env
+cp config/env/client.development.env.example .env
+cp config/env/server.development.env.example server/.env
 npm run db:migrate
 npm run db:seed
 ```
@@ -1204,9 +1206,9 @@ The source snapshot contains 4,741 tracked paths: 4,643 installed dependency pat
 The following checklist is an explicit complete inventory of the individually covered original tracked files, not another copy of their explanations:
 
 - [`.DS_Store`](../../.DS_Store)
-- [`.env.example`](../../.env.example)
-- [`.env.production.example`](../../.env.production.example)
-- [`.env.staging.example`](../../.env.staging.example)
+- [`config/env/client.development.env.example`](../../config/env/client.development.env.example)
+- [`config/env/client.production.env.example`](../../config/env/client.production.env.example)
+- [`config/env/client.staging.env.example`](../../config/env/client.staging.env.example)
 - [`.gitignore`](../../.gitignore)
 - [`README.md`](../../README.md)
 - [`deploy/render.production.yaml`](../../deploy/render.production.yaml)
@@ -1230,9 +1232,9 @@ The following checklist is an explicit complete inventory of the individually co
 - [`scripts/palette-audit.mjs`](../../scripts/palette-audit.mjs)
 - [`scripts/serve-dist.mjs`](../../scripts/serve-dist.mjs)
 - [`scripts/smoke-test.mjs`](../../scripts/smoke-test.mjs)
-- [`server/.env.example`](../../server/.env.example)
-- [`server/.env.production.example`](../../server/.env.production.example)
-- [`server/.env.staging.example`](../../server/.env.staging.example)
+- [`config/env/server.development.env.example`](../../config/env/server.development.env.example)
+- [`config/env/server.production.env.example`](../../config/env/server.production.env.example)
+- [`config/env/server.staging.env.example`](../../config/env/server.staging.env.example)
 - [`server/application.ts`](../../server/application.ts)
 - [`server/auth.ts`](../../server/auth.ts)
 - [`server/cli.ts`](../../server/cli.ts)
@@ -1288,13 +1290,12 @@ The following checklist is an explicit complete inventory of the individually co
 - [`src/vite-env.d.ts`](../../src/vite-env.d.ts)
 - [`tests/backend.test.ts`](../../tests/backend.test.ts)
 - [`tests/browser/mediq.spec.ts`](../../tests/browser/mediq.spec.ts)
-- [`tsconfig.app.json`](../../tsconfig.app.json)
+- [`config/typescript/tsconfig.app.json`](../../config/typescript/tsconfig.app.json)
 - [`tsconfig.app.tsbuildinfo`](../../tsconfig.app.tsbuildinfo)
 - [`tsconfig.json`](../../tsconfig.json)
-- [`tsconfig.node.json`](../../tsconfig.node.json)
+- [`config/typescript/tsconfig.node.json`](../../config/typescript/tsconfig.node.json)
 - [`tsconfig.node.tsbuildinfo`](../../tsconfig.node.tsbuildinfo)
-- [`tsconfig.server.json`](../../tsconfig.server.json)
-- [`vercel.json`](../../vercel.json)
+- [`config/typescript/tsconfig.server.json`](../../config/typescript/tsconfig.server.json)
 - [`vite.config.ts`](../../vite.config.ts)
 
 ### Tracked generated distribution files
