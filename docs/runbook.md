@@ -47,6 +47,87 @@ For a standalone frontend demonstration, set `VITE_DATA_MODE=demo` and restart V
 
 ## Separate staging and production
 
+### mediqu.com launch preparation (October 17, 2026)
+
+The reviewed checkout is `v3.1.1`; the local `main` and cached `origin/main`
+still point to the older `a3da3d4` release. Confirm the remote state and promote
+the intended, tested application to `main` before deploying. Local security edits
+are not deployed by editing this repository. Do not overwrite the working branch,
+development environment files, or database when preparing the release.
+
+The production Blueprint explicitly selects `main`, one instance and a persistent
+disk. Automatic deployment stays off for the initial launch: deploy an approved
+commit from `main` manually. A later switch to automatic deployment should require
+passing CI checks and protected `main`. Developing locally does not change the
+public website until changes are pushed and deployed.
+
+Launch order:
+
+1. Review the security changes, test the intended release, and decide what belongs
+   on `main`. Check GitHub's existing deployment integrations before pushing: a
+   push may trigger an older hosting configuration outside this Blueprint.
+2. Protect GitHub, Render, Resend and the domain/DNS account with MFA or passkeys;
+   review collaborators and connected apps. Enable GitHub secret scanning/push
+   protection, dependency alerts, and a `main` ruleset requiring PRs and successful
+   checks, blocking force pushes/deletion. Configure bypass deliberately so a sole
+   maintainer is not locked out. These account settings have not been verified.
+3. Approve hosting costs and create the separate production Render Web Service
+   using `deploy/render.production.yaml`. Keep a single instance, no automatic PR
+   previews and no autoscaling. Use a separate persistent disk and fresh secrets
+   stored in the host's secret manager, never GitHub source or `VITE_*` variables.
+4. Verify a sending domain through Namekeen DNS controls. Create a Resend key with
+   sending access restricted to that domain. Set the service's exact HTTPS origin,
+   `MAIL_FROM`, `RESEND_API_KEY`, and email limits. Use distinct staging secrets.
+5. Deploy the tested `main` commit and verify the temporary HTTPS service URL,
+   real email verification/recovery, account isolation, rate limits, persistence,
+   backups and restore. Production intentionally excludes unapproved/fictional
+   clinics; arrange authorized directory data rather than publishing old fixtures.
+6. Add `www.mediqu.com` and `mediqu.com` to Render. Configure the exact DNS records
+   Render provides through Namekeen, verify TLS, redirect the apex to the canonical
+   `https://www.mediqu.com`, and set `APP_ORIGIN` to that canonical address. Redirect
+   alternate hostnames before users enter account flows. Recheck location lookup,
+   signup, login, password recovery and mobile use on the actual custom domain.
+7. Enable external health/email/disk/backup monitoring. Review bandwidth and build
+   usage alerts and provider limits, and rehearse pausing email or taking the site
+   offline. No DNS, account, purchase, push or deployment change is implied here.
+
+### Abuse and billing controls
+
+`MAIL_DAILY_LIMIT` defaults to 100 attempts per 24-hour window;
+`MAIL_MONTHLY_LIMIT` defaults to 1,000 per 30-day window. These are shared counters
+in the persistent database, independent of recipient/IP. Each window starts when
+its first attempt is reserved, not at a calendar boundary. Reservations happen
+before Resend requests; failed/uncertain provider calls consume capacity too.
+Existing recipient cooldowns and IP/auth rate limits remain in place. A rejection
+at the monthly limit may also consume daily capacity. Local file mail does not
+consume these provider budgets. Changing neither value clears existing counters.
+
+Set either limit to `0` in the service environment and restart/redeploy to pause
+outgoing email. At a cap, verification and recovery email stop, so monitor
+`email_failures` and provider usage; this deliberately favors limiting cost over
+unlimited availability. Never clear production `rate_limits` during an incident
+or redeploy onto a fresh database as a workaround, because that resets budgets.
+
+These controls cap this application's send attempts, not the provider account's
+total bill. Other applications or a stolen key can bypass them. Use a dedicated,
+domain-scoped sending key, MFA, provider quotas and the lowest suitable plan. No
+paid map/AI/booking integrations are installed in the reviewed adapter registry.
+The public reverse-geocoding client does not use a paid API key.
+
+A fixed compute instance does not make all hosting usage fixed-cost. Render can
+charge for excess outbound bandwidth and build minutes. Check actual account
+limits, set the build spend limit and billing alerts, and agree on an incident
+response. A build spend limit is not a universal bandwidth/billing hard cap. For
+stronger traffic protection, review host edge controls or a compatible CDN/WAF
+configuration before launch; application rate limits alone cannot stop all
+distributed attacks or requests for static assets.
+
+Source: [Render outbound bandwidth](https://render.com/docs/outbound-bandwidth),
+[Render FAQ](https://render.com/docs/faq),
+[custom domains](https://render.com/docs/custom-domains),
+[Resend key permissions](https://resend.com/docs/api-reference/api-keys/create-api-key),
+[GitHub push protection](https://docs.github.com/en/code-security/concepts/secret-security/push-protection).
+
 Keep independent repositories/services or release branches, databases/disks, auth secrets, mail API keys/senders, domains and monitors. The database stores an environment marker and rejects mismatched `APP_ENV`. Staging is never a replica of production containing private user data. Seed only the fictional directory in development/test/staging (`db:seed` refuses production), and create explicitly designated staging test accounts. Seed reports from the original UI are **not** counted as accepted backend reports.
 
 Browser examples: `.env.staging.example`, `.env.production.example`. Server examples: `server/.env.staging.example`, `server/.env.production.example`. Deploy samples: `deploy/render.staging.yaml`, `deploy/render.production.yaml`. These files contain placeholders, never credentials. Both Blueprints disable automatic deployment. Merely committing or building does not deploy anything.

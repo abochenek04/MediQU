@@ -3,7 +3,9 @@ services:
   - type: web
     name: mediq-production
     runtime: node
+    branch: main
     plan: starter
+    numInstances: 1
     autoDeployTrigger: off
     buildCommand: npm ci && VITE_DATA_MODE=backend VITE_APP_ENV=production npm run build:production
     startCommand: npm run api
@@ -29,6 +31,10 @@ services:
         value: "true"
       - key: MAIL_MODE
         value: resend
+      - key: MAIL_DAILY_LIMIT
+        value: "100"
+      - key: MAIL_MONTHLY_LIMIT
+        value: "1000"
       - key: AUTH_SECRET
         generateValue: true
       - key: APP_ORIGIN

@@ -1,7 +1,7 @@
 import { betterAuth } from 'better-auth';
 import { emailOTP } from 'better-auth/plugins';
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { hash, limit } from './security.ts';
+import { hash, limit, reserveMailDelivery } from './security.ts';
 import { randomUUID } from 'node:crypto';
 import type { ServerConfig } from './config.ts';
 import { countEvent, type DB } from './database.ts';
@@ -42,6 +42,7 @@ export function makeAuth(db: DB, config: ServerConfig) {
      return;
     }
     try {
+     reserveMailDelivery(db,config.mailDailyLimit,config.mailMonthlyLimit);
      const result = await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${config.resendKey}`,'Content-Type':'application/json'},body:JSON.stringify({from:config.mailFrom,to:[email],subject,text}),signal:AbortSignal.timeout(10000)});
      if (!result.ok) throw new Error('EMAIL_DELIVERY_FAILED');
     } catch {

@@ -7,8 +7,16 @@ import { createApplication } from './application.ts';
 const config=readConfig();const app=createApplication(config);
 const stopJobs=process.env.RUN_JOBS==='true'?startJobSchedule(app.db,config):async()=>{};
 const server=createServer(async(req,res)=>{
+ // Apply these to API, static and error responses alike.
+ res.setHeader('X-Content-Type-Options','nosniff');
+ res.setHeader('Referrer-Policy','same-origin');
+ res.setHeader('X-Frame-Options','DENY');
+ res.setHeader('Permissions-Policy','camera=(), microphone=(), geolocation=(self)');
+ res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.bigdatacloud.net; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
+ if(config.origin.startsWith('https:'))res.setHeader('Strict-Transport-Security','max-age=15552000');
  try{
   const pathname=new URL(req.url||'/',config.origin).pathname;
+  if(decodeURIComponent(pathname).split('/').some(segment=>segment.startsWith('.'))){res.writeHead(404);res.end();return;}
   if(pathname.startsWith('/api/')){
    let length=0;const chunks:Buffer[]=[];
    for await(const chunk of req){length+=chunk.length;if(length>32768){res.writeHead(413);res.end();return;}chunks.push(chunk);}
@@ -22,15 +30,18 @@ const server=createServer(async(req,res)=>{
    res.end(await response.text());return;
   }
   if(!config.serveStatic){res.writeHead(404);res.end('Use the Vite development URL.');return;}
+  if(!['GET','HEAD'].includes(req.method||'GET')){res.writeHead(405,{Allow:'GET, HEAD'});res.end();return;}
   const root=resolve('dist');const file=resolve(root,'.'+decodeURIComponent(pathname));
   if(!file.startsWith(root+'/')&&file!==root){res.writeHead(403);res.end();return;}
   let data:Buffer;let type=extname(file);
   try{data=await readFile(file);}catch{if(type){res.writeHead(404);res.end();return;}data=await readFile(resolve(root,'index.html'));type='.html';}
   res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.md':'text/plain'}as Record<string,string>)[type]||'application/octet-stream');
-  res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','same-origin');
-  res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
-  res.setHeader('Cache-Control',type==='.html'?'no-cache':'public, max-age=3600');res.end(data);
+  res.setHeader('Cache-Control',type==='.html'?'no-cache':'public, max-age=3600');res.end(req.method==='HEAD'?undefined:data);
  }catch{res.writeHead(500);res.end('Service unavailable');}
 });
+server.headersTimeout=10000;
+server.requestTimeout=15000;
+server.setTimeout(30000,socket=>socket.destroy());
+server.maxRequestsPerSocket=100;
 server.listen(config.port,config.host,()=>console.log(`MediQU ${config.environment} API on ${config.host}:${config.port}`));
 const shutdown=()=>server.close(()=>{void stopJobs().finally(()=>{app.close();process.exit(0);});});process.on('SIGTERM',shutdown);process.on('SIGINT',shutdown);

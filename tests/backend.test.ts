@@ -14,10 +14,11 @@ import { initialDraft } from '../src/utils/report.ts';
 import type { SearchFilters } from '../src/types.ts';
 import { clinics } from '../src/data/mockData.ts';
 import { searchDirectory } from '../src/services/search.ts';
+import { reserveMailDelivery } from '../server/security.ts';
 
-function harness(){
+function harness(overrides:Partial<ServerConfig>={}){
  const root=mkdtempSync(`${tmpdir()}/mediq-test-`);
- const config:ServerConfig={...readConfig(),environment:'test',database:`${root}/db.sqlite`,mailDirectory:`${root}/mail`,origin:'http://localhost:4173',mailMode:'file',adminEnabled:true};
+ const config:ServerConfig={...readConfig(),environment:'test',database:`${root}/db.sqlite`,mailDirectory:`${root}/mail`,origin:'http://localhost:4173',mailMode:'file',adminEnabled:true,...overrides};
  const app=createApplication(config);seedApprovedTestClinics(app.db,config);
  function client(ip='test'){
   const cookies=new Map<string,string>();
@@ -71,6 +72,31 @@ test('real auth lifecycle, private ownership, atomic deletion and durable reopen
   assert.equal(h.app.db.prepare('SELECT count(*) n FROM user').get()?.n,1);
   assert.equal(h.app.db.prepare("SELECT value FROM daily_metrics WHERE metric='saved_plans'").get()?.value,1);
  }finally{h.close();}
+});
+
+test('shared email budgets persist across connections, stop at either cap and reopen after their windows',()=>{
+ const h=harness();let second:ReturnType<typeof openDatabase>|undefined;
+ try{
+  const now=Date.now();reserveMailDelivery(h.app.db,2,3,now);
+  second=openDatabase(h.config);reserveMailDelivery(second,2,3,now+1);
+  assert.throws(()=>reserveMailDelivery(second!,2,3,now+2),/RATE_LIMITED/);
+  // A rejected daily reservation must not consume monthly capacity.
+  assert.equal(second.prepare("SELECT count FROM rate_limits WHERE key='mail-global:month'").get()?.count,2);
+  reserveMailDelivery(second,2,3,now+86400001);
+  assert.throws(()=>reserveMailDelivery(second!,2,3,now+2*86400000),/RATE_LIMITED/);
+  reserveMailDelivery(second,2,3,now+30*86400000+1);
+  assert.throws(()=>reserveMailDelivery(second!,0,3,now+30*86400000+2),/RATE_LIMITED/);
+ }finally{second?.close();h.close();}
+});
+
+test('distributed signup cannot exceed the paid email cap; failed sends also consume capacity',async()=>{
+ const h=harness({mailMode:'resend',mailDailyLimit:2,mailMonthlyLimit:2,resendKey:'test-only',mailFrom:'accounts@example.test'});
+ const originalFetch=globalThis.fetch;let sends=0;
+ globalThis.fetch=async(input)=>{assert.equal(input,'https://api.resend.com/emails');sends++;return new Response('{}',{status:sends===1?500:200});};
+ try{
+  for(let i=0;i<4;i++)await h.client(`different-ip-${i}`).call('/api/auth/sign-up/email','POST',{firstName:'Test',lastName:'Person',email:`budget-${i}@example.test`,password:'A-long-password-123'});
+  assert.equal(sends,2,'No provider requests after the shared cap, even across distinct IPs and recipients');
+ }finally{globalThis.fetch=originalFetch;h.close();}
 });
 test('verification expiry, bounded attempts, resend cooldown, uniqueness and recovery',async()=>{
  const h=harness();try{
