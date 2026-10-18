@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { internalEnabled } from '../services/api';
 import type { ReactNode } from 'react';
-import { languages } from '../data/mockData';
+import { languages } from '../data/catalog';
 import { useApp } from '../context/AppContext';
 import { ProductTour } from './ProductTour';
 import { Brand } from './Brand';

@@ -1,11 +1,12 @@
 import { test } from 'node:test';
 import { DatabaseSync, backup } from 'node:sqlite';
-import { openDatabase } from '../server/database.ts';
+import { openDatabase, writeClinic } from '../server/database.ts';
 import assert from 'node:assert/strict';
 import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { createApplication } from '../server/application.ts';
-import { seedDemo } from '../server/seed.ts';
+import { seedDemo } from '../server/fixtureSeed.ts';
+import { seedApprovedTestClinics } from './helpers/approvedFixtures.ts';
 import { readConfig, type ServerConfig } from '../server/config.ts';
 import { estimate } from '../server/estimator.ts';
 import { runJobs } from '../server/jobs.ts';
@@ -17,7 +18,7 @@ import { searchDirectory } from '../src/services/search.ts';
 function harness(){
  const root=mkdtempSync(`${tmpdir()}/mediq-test-`);
  const config:ServerConfig={...readConfig(),environment:'test',database:`${root}/db.sqlite`,mailDirectory:`${root}/mail`,origin:'http://localhost:4173',mailMode:'file',adminEnabled:true};
- const app=createApplication(config);seedDemo(app.db,config);
+ const app=createApplication(config);seedApprovedTestClinics(app.db,config);
  function client(ip='test'){
   const cookies=new Map<string,string>();
   return {cookies,async call(path:string,method='GET',body?:unknown,extra:Record<string,string>={}){
@@ -157,5 +158,31 @@ test('origin and production boundaries, session expiry, retention, job retries a
   await assert.rejects(runJobs(h.app.db,h.config,{directory:{async refresh(){throw new Error('unavailable');}}}),/Job failed/);
   assert.equal(h.app.db.prepare("SELECT attempts FROM job_runs WHERE status='failed'").get()?.attempts,3);
   assert.equal(h.app.db.prepare("SELECT value FROM daily_metrics WHERE metric='job_failures'").get()?.value,1);
+ }finally{h.close();}
+});
+
+
+test('3.1.1 excludes archived and unverified clinics without deleting records or exposing generated timing',async()=>{
+ const h=harness();try{
+  const client=h.client('release-v3');await h.signup(client,`release-${Date.now()}@example.test`);
+  const plan={id:'v3-plan-123456',clinicId:clinics[0].id,appointmentTime:new Date(Date.now()+86400000).toISOString(),visitMode:'walk-in',travelMinutes:0,bufferMinutes:0};
+  assert.equal((await client.call(`/api/saved-clinics/${clinics[0].id}`,'PUT')).status,200);
+  assert.equal((await client.call('/api/plans','PUT',plan)).status,200);
+  h.app.db.exec('UPDATE source_metadata SET fictional=1');
+  h.app.db.prepare('DELETE FROM source_metadata WHERE clinic_id=?').run(clinics[1].id);
+  assert.deepEqual((await client.call('/api/clinics')).data,[]);
+  for(const clinic of clinics)assert.equal((await client.call(`/api/clinics/${clinic.id}`)).status,404);
+  const account=(await client.call('/api/me')).data;assert.deepEqual(account.savedClinicIds,[]);assert.deepEqual(account.savedAppointments,[]);
+  assert.equal((await client.call(`/api/plans/${plan.id}`)).status,404);
+  assert.equal(h.app.db.prepare('SELECT count(*) n FROM clinics').get()!.n,6);
+  assert.equal(h.app.db.prepare('SELECT count(*) n FROM visit_plans').get()!.n,1);
+  // The old seed remains archival and cannot publish clinics in the UI.
+  seedDemo(h.app.db,h.config);assert.deepEqual((await client.call('/api/clinics')).data,[]);
+  const real={...structuredClone(clinics[0]),id:'approved-clinic',name:'Approved clinic',providers:[],reviews:[],historicalWaits:[],takeaway:''};
+  writeClinic(h.app.db,real,false);
+  const result=await client.call('/api/clinics/approved-clinic');assert.equal(result.status,200);
+  assert.equal(result.data.directorySource,'approved');
+  assert(result.data.estimates.every((e:any)=>e.totalMinutes===0&&e.evidenceState==='insufficient'&&e.stages.length===0));
+  assert.equal((await client.call('/api/clinics')).data.length,1);
  }finally{h.close();}
 });

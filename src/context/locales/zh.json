@@ -307,5 +307,18 @@
   "Location permission was denied. Allow location in your browser’s site settings and try again. Using Durham until then.": "位置权限被拒绝。请在浏览器的网站设置中允许位置访问后重试。在此之前使用达勒姆。",
   "Location request timed out. Try again with device Location Services enabled. Using Durham until then.": "位置请求超时。请开启设备定位服务后重试。在此之前使用达勒姆。",
   "Device location is unavailable. Enable Location Services and use HTTPS or localhost. Using Durham until then.": "设备位置不可用。请开启定位服务，并使用 HTTPS 或 localhost。在此之前使用达勒姆。",
-  "When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.": "使用设备位置时，大致坐标会分享给 BigDataCloud 以查找城市。MediQU 不保存您的位置。"
+  "When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.": "使用设备位置时，大致坐标会分享给 BigDataCloud 以查找城市。MediQU 不保存您的位置。",
+  "Clinic directory": "诊所目录",
+  "Clinics will appear here as real directory information is added.": "添加真实目录信息后，诊所将在此显示。",
+  "Visit estimates will appear when enough recent reports are available.": "有足够的近期报告后，将显示预计就诊时间。",
+  "Stage timing is not available yet.": "各阶段时间暂不可用。",
+  "Estimate unavailable": "暂无估计",
+  "Map view is not connected yet. Browse the clinic list below.": "地图视图尚未连接。请浏览下方诊所列表。",
+  "History is not available yet.": "历史数据暂不可用。",
+  "Recent, consistent reports help make visit estimates more reliable.": "近期且一致的报告有助于提高就诊时间估计的可靠性。",
+  "No clinics are available yet": "暂无诊所",
+  "No clinics are available for reporting yet.": "暂无可提交报告的诊所。",
+  "Not enough recent reports for an estimate.": "近期报告不足，无法估计。",
+  "Approximate": "大致时间",
+  "Detailed": "详细时间"
 }

@@ -18,24 +18,25 @@ const authPaths=new Set(['/sign-up/email','/sign-in/email','/sign-out','/get-ses
 export function createApplication(config:ServerConfig) {
  const db=openDatabase(config); const auth=makeAuth(db,config); if(config.adminEnabled)seedTasks(db);
  const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
- const baseClinic=(id:string):Clinic|undefined=>{const r=db.prepare('SELECT document FROM clinics WHERE id=?').get(id);return r?JSON.parse(r.document as string):undefined;};
+ const baseClinic=(id:string):Clinic|undefined=>{const r=db.prepare('SELECT c.document FROM clinics c JOIN source_metadata s ON s.clinic_id=c.id WHERE c.id=? AND s.fictional=0').get(id);return r?JSON.parse(r.document as string):undefined;};
  const clinicView=(id:string)=>{
   const clinic=baseClinic(id); if(!clinic)return;
   const reports=db.prepare("SELECT public_document FROM reports WHERE clinic_id=? AND status='accepted' ORDER BY submitted_at DESC LIMIT 20").all(id).map(r=>JSON.parse(r.public_document as string));
   const evidence=Object.fromEntries(db.prepare('SELECT mode,document FROM estimates WHERE clinic_id=?').all(id).map(r=>[r.mode,JSON.parse(r.document as string)])) as Record<string,EstimateResult>;
+  if(clinic.rating?.source==='demo')delete clinic.rating;
   clinic.recentReports=reports; // Fixture reports are not stored user submissions or metrics.
-  clinic.estimates=clinic.estimates.map(e=>{
+  clinic.estimates=clinic.visitModes.map(mode=>{
+   const e={mode,totalMinutes:0,range:[0,0] as [number,number],stages:[] as import('../src/types.ts').VisitStage[],updatedMinutesAgo:0,contributingReports:0};
    const result=evidence[e.mode];
    const level=result?.state==='ready'?result.confidence:'low';
    const reliability:ReliabilityScore={score:result?.state==='ready'?({low:35,medium:65,high:85}[level]):0,level,
-    summary:result?.state==='ready'?'Confidence reflects recent completed reports, sample size and spread.':'Not enough fresh reports. The displayed reference is fictional, not a live estimate.',
+    summary:result?.state==='ready'?'Confidence reflects recent completed reports, sample size and spread.':'Not enough recent reports for an estimate.',
     factors:[{label:'Completed sample size',score:Math.min(100,(result?.eligibleSamples||0)*5),explanation:'Only accepted completed visits contribute to the total.'},{label:'Fresh evidence',score:result?.state==='ready'?100:0,explanation:'At least one completed report must be less than 24 hours old.'}]};
    if(!result||result.state!=='ready')return {...e,reliability,evidenceState:result?.state||'insufficient',contributingReports:result?.eligibleSamples||0};
-   const total=result.totalMinutes!;let assigned=0;
-   const stages=e.stages.map((s,i)=>{const minutes=i===e.stages.length-1?total-assigned:Math.floor(total*s.minutes/e.totalMinutes);assigned+=minutes;return {...s,minutes};});
+   const total=result.totalMinutes!;const stages:import('../src/types.ts').VisitStage[]=[];
    return {...e,reliability,totalMinutes:total,range:result.range!,stages,evidenceState:'ready',contributingReports:result.eligibleSamples,updatedMinutesAgo:Math.floor((Date.now()-Date.parse(result.calculatedAt))/60000)};
   });
-  return {...clinic,reliability:clinic.estimates[0]?.reliability||clinic.reliability,currentEvidence:evidence};
+  return {...clinic,directorySource:'approved' as const,reliability:clinic.estimates[0]?.reliability||{score:0,level:'low',factors:[],summary:'Not enough recent reports for an estimate.'},currentEvidence:evidence};
  };
  async function handle(request:Request,ip='local'):Promise<Response> {
   const url=new URL(request.url);const path=url.pathname;const method=request.method;
@@ -83,7 +84,7 @@ export function createApplication(config:ServerConfig) {
     if(!user)return json({user:null,admin:false});
     db.prepare('INSERT OR IGNORE INTO profiles(user_id) VALUES (?)').run(user.id);
     const profile=db.prepare('SELECT sex,gender,weight_kg AS weightKg,height_cm AS heightCm,age,language,notifications FROM profiles WHERE user_id=?').get(user.id)!;
-    return json({user:{id:user.id,email:user.email,firstName:user.firstName,lastName:user.lastName,createdAt:user.createdAt},admin,profile:{...profile,notifications:!!profile.notifications},savedClinicIds:db.prepare('SELECT clinic_id FROM saved_clinics WHERE user_id=?').all(user.id).map(r=>r.clinic_id),savedAppointments:db.prepare('SELECT document FROM visit_plans WHERE user_id=? ORDER BY created_at DESC').all(user.id).map(r=>JSON.parse(r.document as string))});
+    return json({user:{id:user.id,email:user.email,firstName:user.firstName,lastName:user.lastName,createdAt:user.createdAt},admin,profile:{...profile,notifications:!!profile.notifications},savedClinicIds:db.prepare('SELECT clinic_id FROM saved_clinics WHERE user_id=?').all(user.id).map(r=>r.clinic_id).filter(id=>!!baseClinic(String(id))),savedAppointments:db.prepare('SELECT document FROM visit_plans WHERE user_id=? ORDER BY created_at DESC').all(user.id).map(r=>JSON.parse(r.document as string)).filter(plan=>!plan.isSample&&!!baseClinic(plan.clinicId))});
    }
    if(path==='/api/profile'&&method==='PUT') {
     const owner=requireUser();const data=profileSchema.parse(await request.json());
@@ -115,10 +116,10 @@ export function createApplication(config:ServerConfig) {
     transaction(db,()=>{const existing=db.prepare('SELECT id FROM visit_plans WHERE user_id=? AND id=?').get(owner.id,plan.id);db.prepare('INSERT INTO visit_plans VALUES (?,?,?,?,?) ON CONFLICT(user_id,id) DO UPDATE SET clinic_id=excluded.clinic_id,document=excluded.document').run(plan.id,owner.id,plan.clinicId,JSON.stringify(plan),Date.now());if(!existing)countEvent(db,'saved_plans');});return json(plan);
    }
    const planPath=path.match(/^\/api\/plans\/([^/]+)$/);
-   if(planPath){const owner=requireUser();const id=decodeURIComponent(planPath[1]);const row=db.prepare('SELECT document FROM visit_plans WHERE user_id=? AND id=?').get(owner.id,id);if(!row)throw new HttpError(404,'NOT_FOUND');if(method==='DELETE'){db.prepare('DELETE FROM visit_plans WHERE user_id=? AND id=?').run(owner.id,id);return json({ok:true});}if(method==='GET')return json(JSON.parse(row.document as string));}
+   if(planPath){const owner=requireUser();const id=decodeURIComponent(planPath[1]);const row=db.prepare('SELECT document FROM visit_plans WHERE user_id=? AND id=?').get(owner.id,id);if(!row)throw new HttpError(404,'NOT_FOUND');if(method==='DELETE'){db.prepare('DELETE FROM visit_plans WHERE user_id=? AND id=?').run(owner.id,id);return json({ok:true});}if(method==='GET'){const plan=JSON.parse(row.document as string);if(plan.isSample||!baseClinic(plan.clinicId))throw new HttpError(404,'NOT_FOUND');return json(plan);}}
    if(path==='/api/clinics'&&method==='GET'){
     const filters=filtersSchema.parse(JSON.parse(url.searchParams.get('filters')||'{}')) as SearchFilters;
-    const clinics=db.prepare('SELECT id FROM clinics').all().map(r=>clinicView(r.id as string)!);return json(searchDirectory(clinics,filters));
+    const clinics=db.prepare('SELECT c.id FROM clinics c JOIN source_metadata s ON s.clinic_id=c.id WHERE s.fictional=0').all().map(r=>clinicView(r.id as string)!);return json(searchDirectory(clinics,filters));
    }
    const clinicPath=path.match(/^\/api\/clinics\/([^/]+)$/);
    if(clinicPath&&method==='GET'){const clinic=clinicView(decodeURIComponent(clinicPath[1]));if(!clinic)throw new HttpError(404,'NOT_FOUND');return json(clinic);}

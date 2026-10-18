@@ -1,6 +1,4 @@
-import { clinics } from '../src/data/mockData.ts';
-import { transaction, writeClinic, type DB } from './database.ts';
-import type { ServerConfig } from './config.ts';
+import { type DB } from './database.ts';
 const tasks = [
  ['cloud','Separate cloud services','Isolation prevents test data entering production.','Create staging and production services with separate disks, secrets and email sender configuration.','Both /api/health endpoints show their intended environment.'],
  ['email','Verify the email sender','Accounts require working verification and recovery email.','Verify a Resend sender domain; configure MAIL_FROM and RESEND_API_KEY in each service.','Complete signup, resend and recovery from an external mailbox.'],
@@ -16,7 +14,3 @@ const tasks = [
  ['notifications','Choose notification delivery with consent','Notification preference does not imply delivery.','Select an authorized delivery provider and implement consent checks through the extension point.','Test opt-in, opt-out and a real sandbox delivery before advertising alerts.'],
 ];
 export function seedTasks(db: DB) { for (const [id,title,why,action,verification] of tasks) db.prepare('INSERT OR IGNORE INTO launch_tasks(id,title,why,action,verification,guide) VALUES (?,?,?,?,?,?)').run(id,title,why,action,verification,'/docs/runbook.md'); }
-export function seedDemo(db: DB, config: ServerConfig) {
- if (!['development','test','staging'].includes(config.environment)) throw new Error('Fictional seed is forbidden in production');
- transaction(db,()=> { for (const clinic of clinics) if (!db.prepare('SELECT id FROM clinics WHERE id=?').get(clinic.id)) writeClinic(db,clinic); seedTasks(db); });
-}

@@ -18,7 +18,7 @@ export function Brand({ compact = false }: { compact?: boolean }) {
   return (
     <Link className="brand" to="/find" aria-label={t('MediQU home')}>
       <LogoMark size={compact ? 34 : 40} />
-      <span className="brand-word">MediQU</span>
+      <span className="brand-word">MediQU<sup className="brand-trademark" aria-hidden="true">™</sup></span>
     </Link>
   );
 }

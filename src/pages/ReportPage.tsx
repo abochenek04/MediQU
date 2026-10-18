@@ -30,7 +30,7 @@ export function ReportPage() {
   const [retry, setRetry] = useState(0);
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [draft, setDraft] = useState<WaitReportDraft>(() => initialDraft(queryClinicId));
-  const [durationMode, setDurationMode] = useState<'exact' | 'range'>('exact');
+  const [durationMode, setDurationMode] = useState<'exact' | 'range'>('range');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [confirmation, setConfirmation] = useState<{ totalMinutes: number; clinicId: string; review?: boolean } | null>(null);
@@ -97,7 +97,7 @@ export function ReportPage() {
 
   const reset = () => {
     setDraft({ ...initialDraft(queryClinicId), visitMode: clinics.find(c => c.id === queryClinicId)?.visitModes[0] || 'scheduled' });
-    setDurationMode('exact');
+    setDurationMode('range');
     setErrors({});
     setConfirmation(null);
   };
@@ -147,6 +147,7 @@ export function ReportPage() {
         <div className="journey-strip" aria-label={t('Visit stages')}>
           {['Check in', 'Wait', 'Care', 'Check out'].map((stage, index) => <span key={stage}><b>{index + 1}</b>{t(stage)}</span>)}
         </div>
+        {!loadError && clinics.length === 0 && <InfoNote>{t('No clinics are available for reporting yet.')}</InfoNote>}
         <form className="report-form" onSubmit={handleSubmit} noValidate>
           {Object.keys(errors).length > 0 && (
             <div className="form-error-summary" role="alert" tabIndex={-1} ref={errorRef}>
@@ -199,8 +200,8 @@ export function ReportPage() {
                 <span>{t("Required")}</span>
               </div>
               <div className="duration-mode-toggle" aria-label={t('How to report visit duration')}>
-                <button type="button" className={durationMode === 'exact' ? 'active' : ''} onClick={() => setDurationMode('exact')} aria-pressed={durationMode === 'exact'}>{t("I know the times")}</button>
-                <button type="button" className={durationMode === 'range' ? 'active' : ''} onClick={() => setDurationMode('range')} aria-pressed={durationMode === 'range'}>{t("Use a total range")}</button>
+                <button type="button" className={durationMode === 'range' ? 'active' : ''} onClick={() => setDurationMode('range')} aria-pressed={durationMode === 'range'}>{t("Approximate")}</button>
+                <button type="button" className={durationMode === 'exact' ? 'active' : ''} onClick={() => setDurationMode('exact')} aria-pressed={durationMode === 'exact'}>{t("Detailed")}</button>
               </div>
               {durationMode === 'exact' ? (
                 <>
@@ -305,7 +306,7 @@ export function ReportPage() {
 
           <div className="report-submit-row">
             <div><UserRoundCheck aria-hidden="true" /><span><strong>{t("Ready to help the next patient?")}</strong><small>{t("You can review every answer before submitting.")}</small></span></div>
-            <button className="button button-coral button-large" type="submit" disabled={submitting}>
+            <button className="button button-coral button-large" type="submit" disabled={submitting || !selectedClinic}>
               {submitting ? t("Checking report…") : t('Submit report')} <ArrowRight aria-hidden="true" />
             </button>
           </div>

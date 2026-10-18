@@ -21,8 +21,8 @@ test('guest navigation, search, strict filters, map, profile, chart, reporting a
  await expect(page.locator('.history-chart')).toBeVisible();await page.locator('.chart-controls').getByRole('button').last().click();await expect(page.locator('.provider-card').first()).toBeVisible();
  await page.getByRole('button',{name:'Save clinic',exact:true}).click();await page.getByRole('button',{name:'Plan this visit',exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();await page.getByRole('button',{name:'Save visit & calculate plan'}).click();await expect(page.getByRole('dialog')).toHaveCount(0);
  await page.locator('.desktop-nav').getByRole('link',{name:'Appointments',exact:true}).click();await expect(page.locator('.appointment-list')).toContainText('Brightwell');
- await page.reload();await dismissTour(page);await expect(page.locator('.appointment-list')).not.toContainText('Brightwell');await expect(page.locator('.saved-clinic-grid')).toHaveCount(0);
- const tab=await context.newPage();await visit(tab,'/saved');await expect(tab.locator('.appointment-list')).not.toContainText('Brightwell');await tab.close();
+ await page.reload();await dismissTour(page);await expect(page.locator('.appointment-list')).toHaveCount(0);await expect(page.locator('.saved-clinic-grid')).toHaveCount(0);
+ const tab=await context.newPage();await visit(tab,'/saved');await expect(tab.locator('.appointment-list')).toHaveCount(0);await tab.close();
  await visit(page,'/find?q=Brightwell');await page.getByRole('button',{name:'Report a wait',exact:true}).click();await page.getByLabel('Minutes waiting so far').fill('27');await page.getByRole('button',{name:'Submit report',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('Report accepted');await page.getByRole('button',{name:'Back to Find Care'}).click();await visit(page,'/clinic/brightwell-urgent-care');await expect(page.locator('.report-feed')).toContainText('27');
 });
 
@@ -138,4 +138,55 @@ test('denied device permission never calls city lookup; lookup failure still use
  await expect(page.locator('.search-location')).toContainText('41.88, -87.63');
  await expect(page.locator('.clinic-card')).toHaveCount(0);
  expect(lookups).toBe(1);
+});
+
+test('tour appears once per browser, stays dismissed on reload and can be replayed manually',async({page,context})=>{
+ await page.goto('/find');
+ const tour=page.getByRole('complementary',{name:'Product tour',exact:true});
+ await expect(tour).toBeVisible();
+ // Reload without finishing: merely showing the introduction counts as the first visit.
+ await page.reload();await expect(page.locator('.clinic-card')).toHaveCount(6);await expect(tour).toHaveCount(0);
+ const tab=await context.newPage();await tab.goto('/find');await expect(tab.locator('.clinic-card')).toHaveCount(6);await expect(tab.locator('.product-tour')).toHaveCount(0);await tab.close();
+ await page.goto('/know');await page.getByRole('button',{name:'Product tour',exact:true}).click();
+ await expect(page).toHaveURL(/\/find/);await expect(tour).toBeVisible();
+ await tour.getByRole('button',{name:'Skip tour',exact:true}).first().click();
+ await page.reload();await expect(page.locator('.clinic-card')).toHaveCount(6);await expect(tour).toHaveCount(0);
+ await page.getByRole('button',{name:'Product tour',exact:true}).click();await expect(tour).toBeVisible();
+ for(let step=0;step<5;step++)await tour.getByRole('button',{name:'Next',exact:true}).click();
+ await tour.getByRole('button',{name:'Done',exact:true}).click();
+ await page.reload();await expect(page.locator('.clinic-card')).toHaveCount(6);await expect(tour).toHaveCount(0);
+ // Signing in and out must not reset a device-level introduction preference.
+ await signup(page,`tour-${Date.now()}@example.test`);await expect(tour).toHaveCount(0);
+ await page.getByRole('button',{name:'Sign out',exact:true}).click();await page.reload();
+ await expect(page.locator('.clinic-card')).toHaveCount(6);await expect(tour).toHaveCount(0);
+});
+
+test('3.1.1 renders empty directory, saved care and report choices without prototype records',async({page})=>{
+ await page.route('**/api/clinics?**',route=>route.fulfill({json:[]}));
+ await page.route('**/api/clinics/brightwell-urgent-care',route=>route.fulfill({status:404,json:{code:'NOT_FOUND'}}));
+ await page.goto('/');await expect(page.locator('.preview-card')).toContainText('Clinics will appear here');
+ await expect(page.locator('.preview-card')).not.toContainText('54');await expect(page.locator('.preview-card')).not.toContainText('91%');
+ await visit(page,'/find');await expect(page.getByText('No clinics are available yet',{exact:true})).toBeVisible();
+ await expect(page.locator('.clinic-card')).toHaveCount(0);await expect(page.locator('.upcoming-visit-card')).toHaveCount(0);
+ await visit(page,'/saved');await expect(page.locator('.saved-empty')).toBeVisible();await expect(page.locator('.appointment-list')).toHaveCount(0);
+ await visit(page,'/report?clinic=brightwell-urgent-care');await expect(page.getByText('No clinics are available for reporting yet.')).toBeVisible();
+ await expect(page.getByRole('button',{name:'Submit report',exact:true})).toBeDisabled();
+ await visit(page,'/know');await expect(page.locator('.about-estimate')).not.toContainText('54');
+ await visit(page,'/clinic/brightwell-urgent-care');await expect(page.getByRole('heading',{name:'We couldn’t find that clinic',exact:true})).toBeVisible();
+});
+
+test('3.1.1 real clinics can render before timing evidence exists and old unapproved responses stay hidden',async({page})=>{
+ const clinic=(await (await page.request.get('/api/clinics/brightwell-urgent-care')).json());
+ clinic.name='Approved directory clinic';clinic.estimates=[];clinic.historicalWaits=[];clinic.reviews=[];clinic.providers=[];delete clinic.rating;
+ clinic.reliability={score:0,level:'low',factors:[],summary:'Not enough recent reports for an estimate.'};
+ await page.route('**/api/clinics?**',route=>route.fulfill({json:[clinic]}));
+ await page.route('**/api/clinics/brightwell-urgent-care',route=>route.fulfill({json:clinic}));
+ await visit(page,'/find');await expect(page.locator('.clinic-card')).toHaveCount(1);await expect(page.locator('.estimate-number')).toHaveText('—');
+ await page.getByRole('link',{name:'View clinic',exact:true}).click();await expect(page.locator('.live-number-panel strong')).toHaveText('—');
+ await expect(page.getByText('History is not available yet.')).toBeVisible();
+ await page.getByRole('button',{name:'Plan this visit',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('Estimate unavailable');
+ await page.keyboard.press('Escape');
+ delete clinic.directorySource;
+ await visit(page,'/find');await expect(page.locator('.clinic-card')).toHaveCount(0);
+ await visit(page,'/clinic/brightwell-urgent-care');await expect(page.getByRole('heading',{name:'We couldn’t find that clinic',exact:true})).toBeVisible();
 });

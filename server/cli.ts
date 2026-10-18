@@ -1,13 +1,13 @@
 import { backup } from 'node:sqlite';
 import { readConfig } from './config.ts';
 import { openDatabase } from './database.ts';
-import { seedDemo,seedTasks } from './seed.ts';
+import { seedTasks } from './seed.ts';
 import { runJobs } from './jobs.ts';
 const config=readConfig();const db=openDatabase(config);
 try {
  const command=process.argv[2];
  if(command==='migrate')console.log(`Migrations applied to ${config.environment}.`);
- else if(command==='seed'){seedDemo(db,config);await runJobs(db,config);console.log('Fictional development seed ready. No accounts were created.');}
+ else if(command==='seed'){seedTasks(db);await runJobs(db,config);console.log('Launch checklist ready. No clinics or accounts were generated.');}
  else if(command==='admin'){
   if(!config.adminEnabled)throw new Error('Administration is disabled on the public production server');
   const email=(process.argv[3]||'').trim().toLowerCase();const user=db.prepare('SELECT id FROM user WHERE email=? AND emailVerified=1').get(email);
