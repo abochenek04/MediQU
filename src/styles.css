@@ -1046,7 +1046,7 @@ h3 {
   overflow: hidden;
   background: var(--teal);
   color: var(--white);
-  padding-block: 66px 88px;
+  padding-block: clamp(24px, 4vh, 40px);
 }
 
 .find-hero-inner {
@@ -1236,7 +1236,7 @@ h3 {
 .find-layout {
   position: relative;
   z-index: 3;
-  margin-top: -36px;
+  padding-top: clamp(28px, 4vw, 48px);
   padding-bottom: 20px;
 }
 
@@ -1337,6 +1337,10 @@ h3 {
   grid-template-columns: 250px minmax(0, 1fr);
   align-items: start;
   gap: 32px;
+  margin-top: 0;
+}
+
+.upcoming-visit-card + .find-main {
   margin-top: 42px;
 }
 
@@ -5735,7 +5739,7 @@ h3 {
   }
 
   .find-hero {
-    padding-block: 48px 72px;
+    padding-block: 28px 32px;
   }
 
   .care-search-row {
