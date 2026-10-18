@@ -12,7 +12,7 @@ const server=createServer(async(req,res)=>{
  res.setHeader('Referrer-Policy','same-origin');
  res.setHeader('X-Frame-Options','DENY');
  res.setHeader('Permissions-Policy','camera=(), microphone=(), geolocation=(self)');
- res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.bigdatacloud.net; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
+ res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
  if(config.origin.startsWith('https:'))res.setHeader('Strict-Transport-Security','max-age=15552000');
  try{
   const pathname=new URL(req.url||'/',config.origin).pathname;
@@ -35,7 +35,7 @@ const server=createServer(async(req,res)=>{
   if(!file.startsWith(root+'/')&&file!==root){res.writeHead(403);res.end();return;}
   let data:Buffer;let type=extname(file);
   try{data=await readFile(file);}catch{if(type){res.writeHead(404);res.end();return;}data=await readFile(resolve(root,'index.html'));type='.html';}
-  res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.md':'text/plain'}as Record<string,string>)[type]||'application/octet-stream');
+  res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.md':'text/plain; charset=utf-8','.txt':'text/plain; charset=utf-8','.json':'application/json; charset=utf-8'}as Record<string,string>)[type]||'application/octet-stream');
   res.setHeader('Cache-Control',type==='.html'?'no-cache':'public, max-age=3600');res.end(req.method==='HEAD'?undefined:data);
  }catch{res.writeHead(500);res.end('Service unavailable');}
 });

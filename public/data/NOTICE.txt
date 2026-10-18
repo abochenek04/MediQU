@@ -1,0 +1,26 @@
+City location data: GeoNames (https://www.geonames.org/)
+Source: https://download.geonames.org/export/dump/cities15000.zip
+Downloaded: 2026-10-18
+License: Creative Commons Attribution 4.0 International
+https://creativecommons.org/licenses/by/4.0/
+Source ZIP SHA-256: 7d1c80d5be04850227384c1f6f9163b56401dc46270be1012e1a2de0a5bf4a70
+
+MediQU's adapted dataset contains only US populated places and administrative
+seats with at least 50,000 residents in this source snapshot. Neighborhoods,
+historical places and other feature types are omitted. Population figures are
+source estimates and may differ from current census counts.
+
+Each cities.json row is [latitude, longitude, name, US state, population].
+Coordinates are rounded public city centers, not user locations.
+
+Within 5 km of a listed town/city center, use its name. Otherwise prefer the
+nearest major city (population at least 250,000) within 100 km. If none is within
+100 km, use the nearest listed town within that distance. This gives larger towns
+their own label while smaller suburbs use a recognizable nearby city.
+
+This is an approximate regional label, not a municipal boundary lookup.
+No city is returned if all listed centers are more than 100 km away.
+This data is provided as is, without guarantees of accuracy or completeness.
+
+The directory is served as a static asset. User coordinates are matched in the
+browser and are never sent to GeoNames or MediQU for the city lookup.

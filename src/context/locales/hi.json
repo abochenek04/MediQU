@@ -675,7 +675,7 @@
   "Location permission was denied. Allow location in your browser’s site settings and try again. Using Durham until then.": "स्थान की अनुमति अस्वीकार कर दी गई। ब्राउज़र की साइट सेटिंग में अनुमति देकर फिर प्रयास करें। तब तक Durham उपयोग होगा।",
   "Location request timed out. Try again with device Location Services enabled. Using Durham until then.": "स्थान अनुरोध का समय समाप्त हो गया। डिवाइस की स्थान सेवाएँ चालू करके फिर प्रयास करें। तब तक Durham उपयोग होगा।",
   "Device location is unavailable. Enable Location Services and use HTTPS or localhost. Using Durham until then.": "डिवाइस का स्थान उपलब्ध नहीं है। स्थान सेवाएँ चालू करें और HTTPS या localhost उपयोग करें। तब तक Durham उपयोग होगा।",
-  "When you use device location, approximate coordinates are shared with BigDataCloud to find your city. MediQU does not save your location.": "डिवाइस का स्थान उपयोग करने पर शहर खोजने के लिए अनुमानित निर्देशांक BigDataCloud के साथ साझा होते हैं। MediQU आपका स्थान सहेजता नहीं है।",
+  "Your approximate location stays on this device and is used to find the nearest city. MediQU does not save your location.": "आपका अनुमानित स्थान इसी डिवाइस पर रहता है और निकटतम शहर खोजने के लिए उपयोग होता है। MediQU आपका स्थान सहेजता नहीं है।",
   "Clinic directory": "क्लिनिक सूची",
   "Clinics will appear here as real directory information is added.": "वास्तविक जानकारी जोड़े जाने पर क्लिनिक यहाँ दिखाई देंगे।",
   "Visit estimates will appear when enough recent reports are available.": "पर्याप्त हाल की रिपोर्ट मिलने पर मुलाकात के अनुमान दिखाई देंगे।",
@@ -692,5 +692,10 @@
   "Weight (lb)": "वज़न (पाउंड)",
   "Height (feet and inches)": "लंबाई (फ़ुट और इंच)",
   "{feet} ft {inches} in": "{feet} फ़ुट {inches} इंच",
-  "These fields are private and are never included in reports or activity metrics.": "ये विवरण निजी हैं और रिपोर्ट या गतिविधि के आँकड़ों में कभी शामिल नहीं किए जाते।"
+  "These fields are private and are never included in reports or activity metrics.": "ये विवरण निजी हैं और रिपोर्ट या गतिविधि के आँकड़ों में कभी शामिल नहीं किए जाते।",
+  "Find my location": "मेरा स्थान खोजें",
+  "Clear location": "स्थान हटाएँ",
+  "Location permission was denied. Allow location in your browser’s site settings and try again.": "स्थान की अनुमति अस्वीकार कर दी गई। ब्राउज़र की साइट सेटिंग में स्थान की अनुमति देकर दोबारा प्रयास करें।",
+  "Location request timed out. Try again with device Location Services enabled.": "स्थान के अनुरोध का समय समाप्त हो गया। डिवाइस की स्थान सेवाएँ चालू करके दोबारा प्रयास करें।",
+  "Device location is unavailable. Enable Location Services and try again.": "डिवाइस का स्थान उपलब्ध नहीं है। स्थान सेवाएँ चालू करके दोबारा प्रयास करें।"
 }

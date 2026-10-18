@@ -14,6 +14,7 @@ import { initialDraft } from '../src/utils/report.ts';
 import type { SearchFilters } from '../src/types.ts';
 import { clinics } from '../src/data/mockData.ts';
 import { searchDirectory } from '../src/services/search.ts';
+import { nearestCity, type City } from '../src/services/locationService.ts';
 import { reserveMailDelivery } from '../server/security.ts';
 
 function harness(overrides:Partial<ServerConfig>={}){
@@ -160,6 +161,9 @@ test('meaning-aware search preserves strict filters and unsupported empty state'
  assert(searchDirectory(clinics,{...f,query:'head pain'}).every(c=>c.symptoms.includes('headache')));
  assert.equal(searchDirectory(clinics,{...f,query:'zzquux unsupported cardiology'}).length,0);
  assert.equal(searchDirectory(clinics,{...f,query:'Brightwel urgent car',insurance:'Not an insurer'}).length,0);
+ assert.equal(searchDirectory(clinics.map(c=>({...c,distanceMiles:1000000})),{...f,maxDistance:0.01}).length,clinics.length,'No default geographic restriction without location consent');
+ assert.equal(searchDirectory(clinics,{...f,origin:{latitude:0,longitude:0}}).length,0);
+ assert.equal(searchDirectory(clinics,{...f,origin:clinics[0].coordinates,maxDistance:0.01})[0]?.id,clinics[0].id);
 });
 
 test('origin and production boundaries, session expiry, retention, job retries and backup restore',async()=>{
@@ -238,4 +242,20 @@ test('profile migration stores pounds/inches, removes gender and runs only once'
   db.prepare('DELETE FROM user WHERE id=?').run('migration-user');
   assert.equal(db.prepare('SELECT count(*) n FROM profiles').get()?.n,0);
  }finally{db?.close();rmSync(root,{recursive:true,force:true});}
+});
+
+
+test('bundled city matching resolves real locations without remote geocoding',()=>{
+ const directory=JSON.parse(readFileSync(new URL('../public/data/cities.json',import.meta.url),'utf8')) as City[];
+ assert(directory.length>500 && directory.length<2000);
+ assert(directory.every(city=>/^[A-Z]{2}$/.test(city[3]) && city[4]>=50000));
+ assert(!directory.some(city=>city[2]==='Niles' && city[3]==='IL'));
+ for(const [latitude,longitude,name] of [[35.99,-78.94,'Durham, NC'],[35.99,-78.9,'Durham, NC'],[41.88,-87.63,'Chicago, IL'],[42.0884,-87.9806,'Arlington Heights, IL'],[42.0189,-87.8028,'Chicago, IL'],[34.0522,-118.2437,'Los Angeles, CA'],[40.7128,-74.006,'New York City, NY']] as const){
+  assert.equal(nearestCity({latitude,longitude},directory),name);
+ }
+ assert.throws(()=>nearestCity({latitude:51.5074,longitude:-0.1278},directory),/City name unavailable/);
+ assert.throws(()=>nearestCity({latitude:0,longitude:0},directory),/City name unavailable/);
+ assert.throws(()=>nearestCity({latitude:NaN,longitude:0},directory),/Invalid location/);
+ assert.throws(()=>nearestCity({latitude:91,longitude:0},directory),/Invalid location/);
+ assert.equal(nearestCity({latitude:0,longitude:179.99},[[0,-179.99,'Dateline city','AK',50000]]),'Dateline city, AK');
 });

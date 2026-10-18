@@ -92,7 +92,7 @@ try {
       [{ ...baseFilters, specialty: 'Pediatrics' }, 1, 'specialty'],
       [{ ...baseFilters, visitMode: 'walk-in' }, 5, 'visit mode'],
       [{ ...baseFilters, timing: 'open-now' }, 4, 'open now'],
-      [{ ...baseFilters, maxDistance: 3 }, 2, 'distance'],
+      [{ ...baseFilters, maxDistance: 3 }, 6, 'no distance constraint before location opt-in'],
       [{ ...baseFilters, query: 'cardiology' }, 0, 'empty state'],
       [{ ...baseFilters, language: 'Arabic' }, 2, 'Arabic language'],
       [{ ...baseFilters, language: 'Chinese' }, 1, 'Chinese language'],
@@ -125,7 +125,7 @@ try {
     }
     const { requestApproximateLocation } = await vite.ssrLoadModule('/src/services/locationService.ts');
     const approximate = await requestApproximateLocation({ getCurrentPosition(success, error, options) {
-      assert.equal(options.enableHighAccuracy, true);
+      assert.equal(options.enableHighAccuracy, false);
       assert.equal(options.timeout, 15000);
       assert.equal(options.maximumAge, 0);
       success({ coords: { latitude: 35.9982123, longitude: -78.9019234 } });

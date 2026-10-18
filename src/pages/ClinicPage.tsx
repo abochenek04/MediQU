@@ -136,7 +136,7 @@ export function ClinicPage({ clinicId }: { clinicId: string }) {
       <div className="clinic-profile-top">
         <div className="shell">
           <nav className="breadcrumb" aria-label={t('Breadcrumb')}>
-            <Link to="/find"><ArrowLeft aria-hidden="true" /> {t("Care near Durham")}</Link>
+            <Link to="/find"><ArrowLeft aria-hidden="true" /> {t("Find care")}</Link>
             <ChevronRight aria-hidden="true" />
             <span aria-current="page">{clinic.name}</span>
           </nav>

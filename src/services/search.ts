@@ -41,12 +41,12 @@ export function relevance(clinic:Clinic,query:string):number {
 export function searchDirectory(clinics:Clinic[],filters:SearchFilters):Clinic[] {
  const query=filters.query.trim();
  const matches=clinics.map(c=>filters.origin?{...c,distanceMiles:distanceMiles(filters.origin,c.coordinates)}:c)
- .filter(c=>(!filters.insurance||c.insurance.includes(filters.insurance))&&(!filters.language||c.languages.includes(filters.language))&&(!filters.minimumRating||(c.rating?.rating??0)>=filters.minimumRating)&&(!filters.specialty||c.specialties.includes(filters.specialty))&&(filters.visitMode==='all'||c.visitModes.includes(filters.visitMode))&&(filters.timing!=='open-now'||c.status==='open')&&(!['morning','afternoon'].includes(filters.timing)||c.historicalWaits.some(r=>r[filters.timing as 'morning'|'afternoon']>0))&&c.distanceMiles<=filters.maxDistance)
+ .filter(c=>(!filters.insurance||c.insurance.includes(filters.insurance))&&(!filters.language||c.languages.includes(filters.language))&&(!filters.minimumRating||(c.rating?.rating??0)>=filters.minimumRating)&&(!filters.specialty||c.specialties.includes(filters.specialty))&&(filters.visitMode==='all'||c.visitModes.includes(filters.visitMode))&&(filters.timing!=='open-now'||c.status==='open')&&(!['morning','afternoon'].includes(filters.timing)||c.historicalWaits.some(r=>r[filters.timing as 'morning'|'afternoon']>0))&&(!filters.origin||c.distanceMiles<=filters.maxDistance))
  .map(c=>({clinic:c,score:query?relevance(c,query):0})).filter(r=>!query||r.score>=50);
  return matches.sort((a,b)=>{
   if(query&&a.score!==b.score)return b.score-a.score;
   if(!query&&(filters.timing==='morning'||filters.timing==='afternoon')) {const period=filters.timing; const mean=(c:Clinic)=>{const records=c.historicalWaits.filter(r=>r[period]>0);return records.reduce((s,r)=>s+r[period],0)/records.length;};return mean(a.clinic)-mean(b.clinic);}
   if(a.clinic.status!==b.clinic.status)return a.clinic.status==='open'?-1:1;
-  return a.clinic.distanceMiles-b.clinic.distanceMiles;
+  return filters.origin ? a.clinic.distanceMiles-b.clinic.distanceMiles : 0;
  }).map(r=>r.clinic);
 }
